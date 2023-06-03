@@ -5,6 +5,8 @@ import numpy as np
 import nibabel as nib
 from sklearn.utils import Bunch
 from nilearn import plotting
+from nilearn.image import new_img_like, load_img
+from nilearn import datasets
 
 
 def load_data(path):
@@ -42,39 +44,113 @@ def load_data(path):
     return data
 
 
-def diff_rz(pre_connectome, post_connectome, verbose=True):
-    """
+def load_choose_atlas(atlas_name, bilat=True):
+    if atlas_name == "yeo_7":
+        atlas_file = datasets.fetch_atlas_yeo_2011()["thick_7"]
+        atlas = nib.load(atlas_file)
+        atlas_labels = [
+            "Visual",
+            "Somatosensory",
+            "Dorsal Attention",
+            "Ventral Attention",
+            "Limbic",
+            "Frontoparietal",
+            "Default",
+        ]
 
-    pre (list) : list with all connectomes from pre condition
-    post(list) : List with all connectomes from post condition
-
-    """
-
-    diff = list()
-    for pre, post in zip(pre_connectome, post_connectome):
-        res = np.arctanh(pre) - np.arctanh(post)
-        diff.append(res)
-
-    if verbose:
-        print(
-            "Computing diff in lists of {}, {} connectome with r to Z arctanh func./n Diff matrix has shape : {} ".format(
-                len(pre_connectome), len(post_connectome), diff[0].shape
-            )
+    elif atlas_name == "yeo_17":
+        atlas_file = datasets.fetch_atlas_yeo_2011()["thick_17"]
+        # Missing ROIs correction
+        atlas = nib.load(atlas_file)
+    elif atlas_name == "difumo64":
+        atlas_path = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\atlases\atlas_difumo64\64difumo2mm_maps.nii.gz"
+        atlas = nib.load(atlas_path)
+        atlas_df = pd.read_csv(
+            r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\atlases\atlas_difumo64\labels_64_dictionary.csv"
         )
+        atlas_labels = atlas_df["Difumo_names"]
+        confounds = atlas_df.iloc[:, -3:]  # GM WM CSF
+        bilat = False
 
-    return diff
+    if bilat == True:
+        atlas = make_mask_bilat(atlas)
+        if atlas_name == "yeo_7":
+            atlas_labels = [
+                "L Visual",
+                "L Somatosensory",
+                "L Dorsal Attention",
+                "L Ventral Attention",
+                "L Limbic",
+                "L Frontoparietal",
+                "L Default",
+                "R Visual",
+                "R Somatosensory",
+                "R Dorsal Attention",
+                "R Ventral Attention",
+                "R Limbic",
+                "R Frontoparietal",
+                "R Default",
+            ]
+    if atlas_name == "yeo_17":
+        print("HERRE")
+        # -- Removing missing ROIs--
+        filt_mask = np.array(atlas.dataobj)
+        filt_mask[filt_mask == 9.0] = 0
+        filt_mask[filt_mask == 26.0] = 0  # 9. is the label of this ROI we are removing
+        atlas = new_img_like(atlas, filt_mask)
+        atlas_labels = np.unique(atlas.get_fdata())[1:]  # remove 0
+
+    if atlas_name == "BASC":
+        atlas_file = datasets.fetch_atlas_basc_multiscale_2015(
+            version="sym", resolution=12
+        )
+    if atlas_name != "difumo":
+        confounds = None
+    return atlas, atlas_labels, confounds
 
 
-def plot_bilat_nodes(correlation_matrix, atlas_file, atlas_name, reduce_roi=False):
+def make_mask_bilat(bilateral_mask):
+    mask_data = bilateral_mask.get_fdata()
+    affine = bilateral_mask.affine
+
+    # Get center X-coord
+    x_dim = mask_data.shape[0]
+    x_center = int(x_dim / 2)
+
+    # Get left mask
+    mask_data_left = mask_data.copy()
+    mask_data_left[:x_center, :, :] = 0
+    # mask_left = nilearn.image.new_img_like(bilateral_mask, mask_data_left, affine=affine, copy_header=True)
+
+    # Get right mask
+    mask_data_right = mask_data.copy()
+    mask_data_right[x_center:, :, :] = 0
+    # mask_right = nilearn.image.new_img_like(bilateral_mask, mask_data_right, affine=affine, copy_header=True)
+
+    # Labels corrections
+    mask_data_right[mask_data_right > 0] += mask_data.max()
+    new_bilat_mask_data = mask_data_left + mask_data_right
+
+    return new_img_like(
+        bilateral_mask, new_bilat_mask_data, affine=affine, copy_header=True
+    )
+
+
+def plot_bilat_nodes(
+    correlation_matrix, atlas, title, mask_bilat=False, reduce_roi=False
+):
     if reduce_roi:
-        load_mask = nib.load(atlas_filename)
+        load_mask = nib.load(atlas)
         filt_mask = np.array(load_mask.dataobj)
         filt_mask[filt_mask == 9.0] = 0  # 9. is the label of this ROI we are removing
         atlas_file = filt_mask
-
-    left_coordinates = plotting.find_parcellation_cut_coords(labels_img=atlas_file)
+    if mask_bilat:
+        atlas = make_mask_bilat(atlas)
+    if len(atlas.shape) > 2:
+        atlas = atlas[0]
+    left_coordinates = plotting.find_parcellation_cut_coords(labels_img=atlas)
     right_coordinates = plotting.find_parcellation_cut_coords(
-        labels_img=atlas_file, label_hemisphere="right"
+        labels_img=atlas, label_hemisphere="right"
     )
 
     plot_connectome(
@@ -82,7 +158,7 @@ def plot_bilat_nodes(correlation_matrix, atlas_file, atlas_name, reduce_roi=Fals
         left_coordinates,
         right_coordinates,
         edge_threshold=None,
-        title=atlas_name,
+        title=title,
     )
     plotting.show()
 
@@ -272,3 +348,38 @@ def plot_connectome(
         display = None
 
     return display
+
+
+def diff_rz(pre_connectome, post_connectome, verbose=True):
+    """
+
+    pre (list) : list with all connectomes from pre condition
+    post(list) : List with all connectomes from post condition
+
+    """
+
+    diff = list()
+    for pre, post in zip(pre_connectome, post_connectome):
+        res = np.arctanh(pre) - np.arctanh(post)
+        diff.append(res)
+
+    if verbose:
+        print(
+            "Computing diff in lists of {}, {} connectome with r to Z arctanh func./n Diff matrix has shape : {} ".format(
+                len(pre_connectome), len(post_connectome), diff[0].shape
+            )
+        )
+
+    return diff
+
+
+# Function definition
+def read_data(p, key):
+    results = dict()
+    results["pre_mean"] = np.load(os.path.join(p, key, "pre_hyp_mean_connectome.npy"))
+    results["post_mean"] = np.load(os.path.join(p, key, "post_hyp_mean_connectome.npy"))
+    results["contrast_mean"] = np.load(
+        os.path.join(p, key, "contrast_mean_connectome.npy")
+    )
+
+    return dict(results)
