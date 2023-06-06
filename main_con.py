@@ -67,6 +67,7 @@ def con_matrix(
             memory="nilearn_cache",
             verbose=0,
         )
+        print("Probabilistic atlas!")
     elif atlas_type == "labels":
         # labels = atlas.labels
         masker = NiftiLabelsMasker(
@@ -88,27 +89,6 @@ def con_matrix(
     results["post_series"] = [masker.fit_transform(ts) for ts in post_data]
     print([ts.shape for ts in results["pre_series"]])
     print([ts.shape for ts in results["post_series"]])
-    gb_signal = signal_clean(
-        np.array(results["pre_series"])
-        .mean(axis=1)
-        .reshape([np.array(results["pre_series"]).shape[0], 1]),
-        high_pass=0.1,
-        t_r=3,
-        standardize="zscore_sample",
-    )
-
-    results["pre_series"] = voxel_masker.fit_transform(pre_data, confounds=gb_signal)
-    gb_signal = signal_clean(
-        results["post_series"]
-        .mean(axis=1)
-        .reshape([results["post_series"].shape[0], 1]),
-        high_pass=0.1,
-        t_r=3,
-        standardize="zscore_sample",
-    )
-    results["post_series"] = voxel_masker.fit_transform(post_data, confounds=gb_signal)
-    print([ts.shape for ts in results["pre_series"]])
-    print([ts.shape for ts in results["post_series"]])
 
     # Filter TS !!!
     # for i, shapes, sub in enumerate()
@@ -119,59 +99,13 @@ def con_matrix(
     correlation_measure = ConnectivityMeasure(
         kind=connectivity_measure, discard_diagonal=True
     )
-
-    results["pre_connectomes"] = correlation_measure.fit_transform(
-        results["pre_series"]
-    )
-    results["pre_mean_connectome"] = correlation_measure.mean_
-    results["post_connectomes"] = correlation_measure.fit_transform(
-        results["post_series"]
-    )
-    results["post_mean_connectome"] = correlation_measure.mean_
-    results["zcontrast_mean_connectome"] = np.arctanh(
-        results["post_mean_connectome"]
-    ) - np.arctanh(results["pre_mean_connectome"])
-    results["contrast_connectomes"] = [
-        post - pre
-        for post, pre in zip(results["post_connectomes"], results["pre_connectomes"])
-    ]
+    results = func.compute_cov_measures(correlation_measure, results)
 
     # --Save--
     if os.path.exists(os.path.join(save_base, save_folder)) is False:
         os.mkdir(os.path.join(save_base, save_folder))
-        save_to = os.path.join(save_base, save_folder)
-
-    for idx, sub in enumerate(data.subjects):
-        np.save(
-            os.path.join(save_to, f"{sub}_{conditions[0]}_connectomes"),
-            results["pre_connectomes"][idx],
-            allow_pickle=True,
-        )
-        np.save(
-            os.path.join(save_to, f"{sub}_{conditions[1]}_connectomes"),
-            results["post_connectomes"][idx],
-            allow_pickle=True,
-        )
-        np.save(
-            os.path.join(save_to, f"{sub}_{conditions[2]}_connectomes"),
-            results["contrast_connectomes"][idx],
-            allow_pickle=True,
-        )
-    np.save(
-        os.path.join(save_to, f"{conditions[0]}_mean_connectome"),
-        results["pre_mean_connectome"],
-        allow_pickle=True,
-    )
-    np.save(
-        os.path.join(save_to, f"{conditions[1]}_mean_connectome"),
-        results["post_mean_connectome"],
-        allow_pickle=True,
-    )
-    np.save(
-        os.path.join(save_to, f"{conditions[2]}_mean_connectome"),
-        results["zcontrast_mean_connectome"],
-        allow_pickle=True,
-    )
+    save_to = os.path.join(save_base, save_folder)
+    func.save_results(data.subjects, save_to, conditions, results)
 
     # --Stats--
     matrices = np.asarray(
@@ -192,30 +126,7 @@ def con_matrix(
     y_auto = np.array(y_full_auto[idcs])
 
     # --X/features (vectorize each connectome)--
-    tril_mask = np.tril(np.ones(results["pre_connectomes"].shape[-2:]), k=-1).astype(
-        bool
-    )
-    results["preX"] = np.stack(
-        [
-            results["pre_connectomes"][i][..., tril_mask]
-            for i in range(0, len(results["pre_connectomes"]))
-        ],
-        axis=0,
-    )
-    results["postX"] = np.stack(
-        [
-            results["post_connectomes"][i][..., tril_mask]
-            for i in range(0, len(results["post_connectomes"]))
-        ],
-        axis=0,
-    )
-    results["contrastX"] = np.stack(
-        [
-            results["contrast_connectomes"][i][..., tril_mask]
-            for i in range(0, len(results["contrast_connectomes"]))
-        ],
-        axis=0,
-    )
+    results = func.extract_features(results)
 
     np.save(os.path.join(save_to, f"features_pre"), results["preX"], allow_pickle=True)
     np.save(
@@ -260,6 +171,7 @@ def con_matrix(
 """
 
 p = r"E:\Users\Dylan\Desktop\UdeM_H22\E_PSY3008\data_desmartaux\HYPNOSIS_ASL_DATA"
+
 save_base = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\results\results_con/"
 con_matrix(
     p,
@@ -268,5 +180,27 @@ con_matrix(
     atlas_name="difumo64",
     atlas_type="maps",
     connectivity_measure="correlation",
-    verbose=True,
+    verbose=False,
 )
+
+"""
+gb_signal = signal_clean(
+        np.array(results["pre_series"])
+        .mean(axis=1)
+        .reshape([np.array(results["pre_series"]).shape[0], 1]),
+        high_pass=0.1,
+        t_r=3,
+        standardize="zscore_sample",
+    )
+
+    results["pre_series"] = voxel_masker.fit_transform(pre_data, confounds=gb_signal)
+    gb_signal = signal_clean(
+        results["post_series"]
+        .mean(axis=1)
+        .reshape([results["post_series"].shape[0], 1]),
+        high_pass=0.1,
+        t_r=3,
+        standardize="zscore_sample",
+    )
+    results["post_series"] = voxel_masker.fit_transform(post_data, confounds=gb_signal)
+"""

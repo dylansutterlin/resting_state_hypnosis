@@ -7,6 +7,8 @@ from sklearn.utils import Bunch
 from nilearn import plotting
 from nilearn.image import new_img_like, load_img
 from nilearn import datasets
+from matplotlib import cm
+from nilearn.plotting import plot_glass_brain
 
 
 def load_data(path):
@@ -163,6 +165,96 @@ def plot_bilat_nodes(
     plotting.show()
 
 
+def compute_cov_measures(correlation_measure, results):
+    """
+    Computes connectomes based on timeseries from diff. condition : pre, post, contrast.
+    As well as mean and individual correl. matrix
+
+    Returns
+    -------
+    dict.
+        dict. with diff. keys associated with each conditions
+    """
+    # --pre connectome--
+    results["pre_connectomes"] = correlation_measure.fit_transform(
+        results["pre_series"]
+    )
+    # -- Mean connectome
+    tmp_pre_mean = correlation_measure.mean_
+    np.fill_diagonal(tmp_pre_mean, 0)
+    results["pre_mean_connectome"] = tmp_pre_mean
+    # -- Post connectomes for indiv. sub.
+    results["post_connectomes"] = correlation_measure.fit_transform(
+        results["post_series"]
+    )
+    # -- Mean connectome from post
+    tmp_post_mean = correlation_measure.mean_
+    np.fill_diagonal(tmp_post_mean, 0)
+    results["post_mean_connectome"] = tmp_post_mean
+
+    # -- fischer r to Z transformation on mean connectomes
+    results["zcontrast_mean_connectome"] = np.arctanh(tmp_post_mean) - np.arctanh(
+        tmp_pre_mean
+    )
+
+    # -- Fischer r to Z transform on indiv. connectivity matrices
+    results["contrast_connectomes"] = sub_post_pre_contrast(
+        results["post_connectomes"], results["pre_connectomes"]
+    )
+    return results
+
+
+def sub_post_pre_contrast(ls_res_post, ls_res_pre):
+    res_ls = []
+    for post, pre in zip(ls_res_post, ls_res_pre):
+        np.fill_diagonal(post, 0)
+        np.fill_diagonal(pre, 0)
+        sub_res = np.arctanh(post) - np.arctanh(pre)
+        res_ls.append(sub_res)
+    return res_ls
+
+
+def extract_features(results):
+    """Vectorize each connectivity matrix and saves as a new key in dict. 'results'
+
+    Parameters
+    ----------
+    result : Dict.
+        Dict containing list of individual connectomes from diff. condition (pre, post, contrast)
+        Stored as different keys
+
+    Returns
+    -------
+    Results dict.
+
+    """
+    tril_mask = np.tril(np.ones(results["pre_connectomes"].shape[-2:]), k=-1).astype(
+        bool
+    )
+    results["preX"] = np.stack(
+        [
+            results["pre_connectomes"][i][..., tril_mask]
+            for i in range(0, len(results["pre_connectomes"]))
+        ],
+        axis=0,
+    )
+    results["postX"] = np.stack(
+        [
+            results["post_connectomes"][i][..., tril_mask]
+            for i in range(0, len(results["post_connectomes"]))
+        ],
+        axis=0,
+    )
+    results["contrastX"] = np.stack(
+        [
+            results["contrast_connectomes"][i][..., tril_mask]
+            for i in range(0, len(results["contrast_connectomes"]))
+        ],
+        axis=0,
+    )
+    return results
+
+
 def sym_matrix_to_vec(symmetric, discard_diagonal=True):
     """Return the flattened lower triangular part of an array.
 
@@ -201,8 +293,50 @@ def sym_matrix_to_vec(symmetric, discard_diagonal=True):
     features = []
 
 
-from matplotlib import cm
-from nilearn.plotting import plot_glass_brain
+def save_results(subjects, save_to, conditions, results):
+    """
+    Parameters
+    ----------
+    subjects : list
+        List of subjects
+    save_to : str
+        Path to save to
+    results : dict.
+        Dict containing results.
+    """
+
+    for idx, sub in enumerate(subjects):
+        
+        np.save(
+            os.path.join(save_to, f"{sub}_{conditions[0]}_connectomes"),
+            results["pre_connectomes"][idx],
+            allow_pickle=True,
+        )
+        np.save(
+            os.path.join(save_to, f"{sub}_{conditions[1]}_connectomes"),
+            results["post_connectomes"][idx],
+            allow_pickle=True,
+        )
+        np.save(
+            os.path.join(save_to, f"{sub}_{conditions[2]}_connectomes"),
+            results["contrast_connectomes"][idx],
+            allow_pickle=True,
+        )
+    np.save(
+        os.path.join(save_to, f"{conditions[0]}_mean_connectome"),
+        results["pre_mean_connectome"],
+        allow_pickle=True,
+    )
+    np.save(
+        os.path.join(save_to, f"{conditions[1]}_mean_connectome"),
+        results["post_mean_connectome"],
+        allow_pickle=True,
+    )
+    np.save(
+        os.path.join(save_to, f"{conditions[2]}_mean_connectome"),
+        results["zcontrast_mean_connectome"],
+        allow_pickle=True,
+    )
 
 
 def plot_connectome(
@@ -383,3 +517,29 @@ def read_data(p, key):
     )
 
     return dict(results)
+
+
+def out(root, folder, atlas_labels, atlas,  atlas_name, mask_bilat = True):
+    results = read_data(root,folder)
+    
+    for correlation_matrix in [results[condition] for condition in results.keys()]:  
+        np.fill_diagonal(correlation_matrix, 0)
+        plotting.plot_matrix(correlation_matrix,labels=atlas_labels,colorbar=True,vmax=0.8,vmin=-0.8)
+        if len(atlas.shape) > 2:
+            plotting.plot_connectome(
+                correlation_matrix,
+                find_probabilistic_atlas_cut_coords(atlas),
+                edge_threshold=None,
+                title=atlas_name)
+            plotting.show()
+        else:
+            plot_bilat_nodes(correlation_matrix,
+            atlas, labels)
+            plotting.show()
+
+    if len(atlas.shape) > 2:
+        plotting.plot_prob_atlas(atlas, title=atlas_name)
+    else:
+        func.plot_bilat_nodes(correlation_matrix, atlas, atlas_name, mask_bilat = True)
+        plotting.plot_roi(nib.load(atlas), title=atlas_name)
+        
