@@ -87,10 +87,10 @@ This project was intended to upskill in the use of the following
 
 ### // Deliverables // 
 
-## <em> Timeseries extraction</em>
 
-## <em>_Atlas choices and comparison_</em>
-### Yeo et al. 7 networks
+## <em>_Atlas choices and covariance estimation_</em>
+___
+### **Yeo et al. 7 networks**
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\yeo7_atals.png" height="200px;" alt=""/>
 </div>
@@ -128,9 +128,11 @@ This project was intended to upskill in the use of the following
    <img src="images\postmat_yeo7.png" height="150px;" alt=""/>
    <img src="images\contrastmat_yeo7.png" height="150px;" alt=""/>
    <img src="images\contrastcon_yeo7.png" height="200px;" alt=""/>
+  " alt=""/>
 </div>
 
-## DifuMo
+___
+# **DifuMo**
    *Fine-grain atlas of functional modes for fMRI analysis*
 
 * article from [Dadi et al, 2020](https://www.sciencedirect.com/science/article/pii/S1053811920306121)
@@ -142,13 +144,30 @@ This project was intended to upskill in the use of the following
    <img src="images\scr_difumo_comp2.png" height="230px;" alt=""/>
 </div>
 
+## Connectivity of interest : Post-pre hypnosis contrast
+  ### 1. Correlation estimation estimation results
+
+
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\contrastmat_diffumo.png" height="240px;" alt=""/>
+   <img src="images\contrast_correlation_viewcon.png" height="200px;" alt=""/>
    <img src="images\contrastcon_diffumo.png" height="230px;" alt=""/>
 </div>
-g
+
+
+### _2. Precision (inv. sparse cov.) estimation results_
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\contrastmat_precision_diffumo.png" height="240px;" alt=""/>
+   <img src="images\contrast_precision_viewcon.png" height="220px;" alt=""/>
+   <img src="images\contrastcon_precision_diffumo.png" height="240px;" alt=""/>
+</div>
+
 ## <em>Inter-subject connectivity analysis </em>
 
+One of the main objective of this project was to assess wether changes in functional connectivity during hypnosis can predict behavioral changes in hypnotic-related variables.
+
+Variables used : 
 
 
 ```{warning}

@@ -590,6 +590,7 @@ def out(
     atlas,
     atlas_name,
     conditions=None,
+    cov_estim="Correlation",
     mat_tresh=None,
     mask_bilat=True,
     con_tresh=None,
@@ -603,7 +604,7 @@ def out(
     ):
         if conditions is not None:
             cond = conditions[i]
-        mat_title = f"{cond} correlation"
+        mat_title = f"{cond} {cov_estim}"
         np.fill_diagonal(correlation_matrix, 0)
         if mat_tresh is not None:
             correlation_matrix = np.where(
@@ -624,7 +625,7 @@ def out(
                 correlation_matrix,
                 find_probabilistic_atlas_cut_coords(atlas),
                 edge_threshold=con_tresh,
-                title=f"{cond} correlation at {con_tresh}",
+                title=f"{cond} {cov_estim} at {con_tresh}",
                 display_mode="lzry",
                 colorbar=True,
             )
