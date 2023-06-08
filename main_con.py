@@ -14,8 +14,8 @@ from nilearn.signal import clean as signal_clean
 
 def con_matrix(
     data_dir,
-    save_base,
-    save_folder,
+    save_folder=None,
+    save_base=None,
     atlas_name="yeo_7",
     atlas_type="labels",
     sphere_coord=None,
@@ -102,42 +102,49 @@ def con_matrix(
     results = func.compute_cov_measures(correlation_measure, results)
 
     # --Save--
-    if os.path.exists(os.path.join(save_base, save_folder)) is False:
-        os.mkdir(os.path.join(save_base, save_folder))
-    save_to = os.path.join(save_base, save_folder)
-    func.save_results(data.subjects, save_to, conditions, results)
+    if save_base != None:
+        if os.path.exists(os.path.join(save_base, save_folder)) is False:
+            os.mkdir(os.path.join(save_base, save_folder))
+        save_to = os.path.join(save_base, save_folder)
+        func.save_results(data.subjects, save_to, conditions, results)
 
-    # --Stats--
-    matrices = np.asarray(
-        [
-            np.load(
-                os.path.join(save_to, f"{sub}_{conditions[2]}_connectomes.npy"),
-                allow_pickle=True,
-            )
-            for sub in data.subjects
+        # --Stats--
+        matrices = np.asarray(
+            [
+                np.load(
+                    os.path.join(save_to, f"{sub}_{conditions[2]}_connectomes.npy"),
+                    allow_pickle=True,
+                )
+                for sub in data.subjects
+            ]
+        )
+        y_full_auto = data.phenotype[
+            "Unnamed: 68"
+        ]  # abs. diff. in perceived automaticity
+        # Access selected sub based on id in y
+        rename_sub = [f"APM{num}" for num in [sub[4:6] for sub in data.subjects]]
+        idcs = [
+            idcs
+            for idcs, index in enumerate(data.phenotype.index)
+            if index in rename_sub
         ]
-    )
-    y_full_auto = data.phenotype["Unnamed: 68"]  # abs. diff. in perceived automaticity
-    # Access selected sub based on id in y
-    rename_sub = [f"APM{num}" for num in [sub[4:6] for sub in data.subjects]]
-    idcs = [
-        idcs for idcs, index in enumerate(data.phenotype.index) if index in rename_sub
-    ]
-    y_auto = np.array(y_full_auto[idcs])
+        y_auto = np.array(y_full_auto[idcs])
 
-    # --X/features (vectorize each connectome)--
-    results = func.extract_features(results)
+        # --X/features (vectorize each connectome)--
+        results = func.extract_features(results)
 
-    np.save(os.path.join(save_to, f"features_pre"), results["preX"], allow_pickle=True)
-    np.save(
-        os.path.join(save_to, f"features_post"), results["postX"], allow_pickle=True
-    )
-    np.save(
-        os.path.join(save_to, f"features_contrast"),
-        results["contrastX"],
-        allow_pickle=True,
-    )
-    np.save(os.path.join(save_to, f"Y"), y_auto, allow_pickle=True)
+        np.save(
+            os.path.join(save_to, f"features_pre"), results["preX"], allow_pickle=True
+        )
+        np.save(
+            os.path.join(save_to, f"features_post"), results["postX"], allow_pickle=True
+        )
+        np.save(
+            os.path.join(save_to, f"features_contrast"),
+            results["contrastX"],
+            allow_pickle=True,
+        )
+        np.save(os.path.join(save_to, f"Y"), y_auto, allow_pickle=True)
 
     # --Prints and plot--
     if verbose:
@@ -160,6 +167,8 @@ def con_matrix(
 
         plotting.plot_roi(atlas, title=atlas_name)
 
+    return results
+
 
 """
 # plot connectivity matrix
@@ -170,18 +179,6 @@ def con_matrix(
     plt.clf()
 """
 
-p = r"E:\Users\Dylan\Desktop\UdeM_H22\E_PSY3008\data_desmartaux\HYPNOSIS_ASL_DATA"
-
-save_base = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\results\results_con/"
-con_matrix(
-    p,
-    save_base,
-    save_folder="difumo64_correlation",
-    atlas_name="difumo64",
-    atlas_type="maps",
-    connectivity_measure="correlation",
-    verbose=False,
-)
 
 """
 gb_signal = signal_clean(
