@@ -1,13 +1,21 @@
 import argparse
-
+import pickle
 import os
 import glob
 import numpy as np
 import nibabel as nib
-from nilearn.maskers import NiftiMapsMasker, NiftiLabelsMasker, NiftiMasker
+from nilearn.maskers import (
+    NiftiMapsMasker,
+    NiftiLabelsMasker,
+    NiftiMasker,
+    NiftiSpheresMasker,
+    MultiNiftiMasker,
+    MultiNiftiMapsMasker,
+)
 from nilearn.connectome import ConnectivityMeasure
 import func
 from nilearn import datasets, plotting, image
+from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
 
@@ -48,24 +56,52 @@ def con_matrix(
     conditions = ["pre_hyp", "post_hyp", "contrast"]
     pre_data = data.pre_hyp
     post_data = data.post_hyp
+    all_data = pre_data + post_data
     results = dict(pre_series=list(), post_series=list())
 
     # --Atlas choices--
     atlas, atlas_labels, confounds = func.load_choose_atlas(atlas_name, bilat=True)
 
+   
     # --Labels--
     # region_labels = connected_label_regions(atlas)
+    '''
+    img_ref = atlas
+    target_affine = img_ref.affine
+    reference_image = atlas
+    all_files = pre_data + post_data
+    resampled_images = []
+    for image_path in all_files:
+        im = nib.load(image_path)
+        resampled_image = image.resample_img(
+            im, target_affine=target_affine, target_shape=reference_image.shape[:-1]
+        )
+        resampled_images.append(resampled_image)
+    '''
 
+    breakpoint()
+    voxel_masker = MultiNiftiMasker(
+        mask_strategy="whole-brain-template",
+        high_pass=0.1,
+        t_r=3,
+        standardize=True,
+        smoothing_fwhm=6,
+        verbose=5,
+    )
+
+    check_masker_fit(data, voxel_masker)
+
+    breakpoint()
     # --Masker parameters--
     if atlas_type == "maps":
-        masker = NiftiMapsMasker(
+        masker = MultiNiftiMapsMasker(
             maps_img=atlas,
-            mask_imgs=atlas_labels,
+            mask_img=voxel_masker.mask_img_,
             t_r=3,
-            high_pass=0.1,
+            smoothing_fwhm=6,
             standardize="zscore_sample",
-            memory="nilearn_cache",
-            verbose=0,
+            verbose=5,
+            resampling_target="maps",
         )
         print("Probabilistic atlas!")
     elif atlas_type == "labels":
@@ -73,33 +109,101 @@ def con_matrix(
         masker = NiftiLabelsMasker(
             labels_img=atlas,
             labels=atlas_labels,
-            standardize="zscore_sample",
+            standardize="psc",
             resampling_target="data",
         )
         print(" Labeled masker!")
-    elif atlas_type == "sphere_seed":
-        sphere_masker = NiftiSpheresMasker(
-            sphere_coord, radius=8, mask_img=None, high_pass=0.1
+
+    elif atlas_type == None:
+        voxel_masker = MultiNiftiMasker(
+            mask_strategy="whole-brain-template",
+            high_pass=0.1,
+            t_r=3,
+            standardize=True,
+            smoothing_fwhm=6,
+            verbose=5,
+        )
+        # mask_strategy="whole-brain-template"
+    # --Timeseries : Fit and apply mask--
+    if atlas_type == None:
+        all_files = pre_data + post_data
+        masker.fit(all_files)
+
+        results["pre_series"] = [masker.transform(ts) for ts in pre_data]
+        # masker.fit(image.mean_img(post_data))
+        results["post_series"] = [masker.transform(ts) for ts in post_data]
+
+        breakpoint()
+
+    if atlas_type != None:
+        all_files = pre_data + post_data
+        masker.fit(all_files)
+        results["pre_series"] = [masker.transform(ts) for ts in pre_data]
+        # masker.fit(post_data)
+        results["post_series"] = [masker.transform(ts) for ts in post_data]
+
+    if sphere_coord != None:
+        sphere_coord = [(54, -28, 26)]
+        seed_masker = NiftiSpheresMasker(
+            sphere_coord, radius=8, standardize="zscore_sample"
         )
 
-    voxel_masker = NiftiMasker(high_pass=0.1, t_r=3, standardize=True, smoothing_fwhm=6)
+        results["seed_pre_series"] = [seed_masker.fit_transform(ts) for ts in pre_data]
+        results["seed_post_series"] = [
+            seed_masker.fit_transform(ts) for ts in post_data
+        ]
 
-    # --Timeseries : Fit and apply mask--
-    results["pre_series"] = [masker.fit_transform(ts) for ts in pre_data]
-    results["post_series"] = [masker.fit_transform(ts) for ts in post_data]
-    print([ts.shape for ts in results["pre_series"]])
-    print([ts.shape for ts in results["post_series"]])
-
-    # Filter TS !!!
-    # for i, shapes, sub in enumerate()
-    # idcs = [idcs for idcs, index in enumerate(data.phenotype.index) if index in rename_sub] # Check indices of Y[i] of sub included in analysis
-    # y_auto = np.array(y_full_auto[idcs])
+    # Compute seed-to-voxel correlation
+    results["seed_to_pre_correlations"] = [
+        (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
+        for brain_time_series, seed_time_series in zip(
+            results["pre_series"], results["seed_pre_series"]
+        )
+    ]
+    results["seed_to_post_correlations"] = [
+        (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
+        for brain_time_series, seed_time_series in zip(
+            results["post_series"], results["seed_post_series"]
+        )
+    ]
 
     # -- Covariance Estimation--
     correlation_measure = ConnectivityMeasure(
         kind=connectivity_measure, discard_diagonal=True
     )
     results = func.compute_cov_measures(correlation_measure, results)
+
+    if sphere_coord != None:
+        results["mean_seed_pre_connectome"] = np.mean(
+            results["seed_to_pre_correlations"], axis=0
+        )
+        results["mean_seed_post_connectome"] = np.mean(
+            results["seed_to_post_correlations"], axis=0
+        )
+        results["mean_seed_contrast_connectome"] = (
+            results["mean_seed_post_connectome"] - results["mean_seed_pre_connectome"]
+        )
+
+    # --Plot--
+    from nilearn import plotting
+
+    # masker = NiftiMasker(mask_img=atlas, standardize=True)
+    # masker.fit(concat_imgs(pre_data))
+    breakpoint()
+    seed_to_voxel_correlations_img = masker.inverse_transform(
+        results["mean_seed_contrast_connectome"].T
+    )
+
+    display = plotting.plot_stat_map(
+        seed_to_voxel_correlations_img,
+        threshold=0.5,
+        vmax=1,
+        cut_coords=sphere_coord[0],
+        title="Seed-to-voxel correlation (OP seed)",
+    )
+    display.add_markers(marker_coords=sphere_coord, marker_color="g", marker_size=300)
+    # At last, we save the plot as pdf.
+    display.savefig("OP_seed_correlation.pdf")
 
     # --Save--
     if save_base != None:
@@ -146,8 +250,14 @@ def con_matrix(
         )
         np.save(os.path.join(save_to, f"Y"), y_auto, allow_pickle=True)
 
+        with open(os.path.join(save_to, "dict_results.pkl"), "wb") as f:
+            pickle.dump(results, f)
+        print("Saved pickle dump!")
+
     # --Prints and plot--
     if verbose:
+        print([ts.shape for ts in results["pre_series"]])
+        print([ts.shape for ts in results["post_series"]])
         print(atlas.shape)
         print(np.unique(atlas.get_fdata(), return_counts=True))
         for correlation_matrix in [

@@ -6,7 +6,7 @@ import nibabel as nib
 from sklearn.utils import Bunch
 from nilearn import plotting
 from nilearn.image import new_img_like, load_img
-from nilearn import datasets
+from nilearn import datasets, image
 from matplotlib import cm
 from nilearn.plotting import plot_glass_brain
 from nilearn.plotting import find_probabilistic_atlas_cut_coords
@@ -169,6 +169,24 @@ def plot_bilat_nodes(
     plotting.show()
 
 
+# masker quality check
+
+
+def check_masker_fit(data, masker):
+    import nilearn.image as image
+    from nilearn import datasets
+    from nilearn.maskers import NiftiMasker
+    from nilearn.plotting import plot_epi, plot_roi, show
+
+
+# print basic information on the dataset
+    print("First functional nifti image (4D) is located " f"at: {data[0]}")
+
+    filename = data[0]
+    mean_im = image.mean_img(filename)
+    plot_epi(mean_im, title="Mean EPI image")
+
+
 def compute_cov_measures(correlation_measure, results):
     """
     Computes connectomes based on timeseries from diff. condition : pre, post, contrast.
@@ -197,24 +215,38 @@ def compute_cov_measures(correlation_measure, results):
     results["post_mean_connectome"] = tmp_post_mean
 
     # -- fischer r to Z transformation on mean connectomes
-    results["zcontrast_mean_connectome"] = np.arctanh(tmp_post_mean) - np.arctanh(
-        tmp_pre_mean
-    )
+
+    if correlation_measure.get_params()["kind"] == "correlation":
+        results["zcontrast_mean_connectome"] = np.arctanh(tmp_post_mean) - np.arctanh(
+            tmp_pre_mean
+        )
+    else:
+        results["zcontrast_mean_connectome"] = tmp_post_mean - tmp_pre_mean
+        print("No fischer r to Z transformation applied")
 
     # -- Fischer r to Z transform on indiv. connectivity matrices
     results["contrast_connectomes"] = sub_post_pre_contrast(
-        results["post_connectomes"], results["pre_connectomes"]
+        results["post_connectomes"],
+        results["pre_connectomes"],
+        correlation_measure.get_params()["kind"],
     )
     return results
 
 
-def sub_post_pre_contrast(ls_res_post, ls_res_pre):
+def sub_post_pre_contrast(ls_res_post, ls_res_pre, cov_kind):
     res_ls = []
-    for post, pre in zip(ls_res_post, ls_res_pre):
-        np.fill_diagonal(post, 0)
-        np.fill_diagonal(pre, 0)
-        sub_res = np.arctanh(post) - np.arctanh(pre)
-        res_ls.append(sub_res)
+    if cov_kind == "correlation":
+        for post, pre in zip(ls_res_post, ls_res_pre):
+            np.fill_diagonal(post, 0)
+            np.fill_diagonal(pre, 0)
+            sub_res = np.arctanh(post) - np.arctanh(pre)
+            res_ls.append(sub_res)
+    else:
+        for post, pre in zip(ls_res_post, ls_res_pre):
+            np.fill_diagonal(post, 0)
+            np.fill_diagonal(pre, 0)
+            sub_res = post - pre
+            res_ls.append(sub_res)
     return res_ls
 
 
@@ -235,6 +267,7 @@ def extract_features(results):
     tril_mask = np.tril(np.ones(results["pre_connectomes"].shape[-2:]), k=-1).astype(
         bool
     )
+
     results["preX"] = np.stack(
         [
             results["pre_connectomes"][i][..., tril_mask]
@@ -619,7 +652,8 @@ def out(
             vmax=0.8,
             vmin=-0.8,
         )
-        if len(atlas.shape) > 3:
+
+        if len(atlas.shape) > 3 and atlas.shape[3] > 1:
             print("plotting probabilistic connectome")
             plotting.plot_connectome(
                 correlation_matrix,
