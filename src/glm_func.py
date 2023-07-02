@@ -6,6 +6,10 @@ import seaborn as sns
 import statsmodels.stats.api as sm
 import statsmodels.api as sms
 import scipy.stats.stats
+import nilearn.image as image
+from nilearn import datasets
+from nilearn.maskers import NiftiMasker
+from nilearn.plotting import plot_epi, plot_roi, show
 
 
 # function checks column outliers and skew; tests normality showing a histogram

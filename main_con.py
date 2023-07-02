@@ -13,19 +13,20 @@ from nilearn.maskers import (
     MultiNiftiMapsMasker,
 )
 from nilearn.connectome import ConnectivityMeasure
-import func
 from nilearn import datasets, plotting, image
 from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
+from src import glm_func
+from scripts import func
+from src import masker_preprocessing as prep
 
 
 def con_matrix(
     data_dir,
     save_folder=None,
     save_base=None,
-    atlas_name="yeo_7",
-    atlas_type="labels",
+    atlas_name=None,
     sphere_coord=None,
     connectivity_measure="correlation",
     plot_atlas=False,
@@ -54,32 +55,16 @@ def con_matrix(
     # --Data--
     data = func.load_data(data_dir)
     conditions = ["pre_hyp", "post_hyp", "contrast"]
-    pre_data = data.pre_hyp
-    post_data = data.post_hyp
-    all_data = pre_data + post_data
+    pre_data, post_data = prep.resample_shape_affine(data)
     results = dict(pre_series=list(), post_series=list())
+    all_data = pre_data + post_data
 
     # --Atlas choices--
-    atlas, atlas_labels, confounds = func.load_choose_atlas(atlas_name, bilat=True)
+    atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
+        atlas_name, bilat=True
+    )
 
-   
-    # --Labels--
-    # region_labels = connected_label_regions(atlas)
-    '''
-    img_ref = atlas
-    target_affine = img_ref.affine
-    reference_image = atlas
-    all_files = pre_data + post_data
-    resampled_images = []
-    for image_path in all_files:
-        im = nib.load(image_path)
-        resampled_image = image.resample_img(
-            im, target_affine=target_affine, target_shape=reference_image.shape[:-1]
-        )
-        resampled_images.append(resampled_image)
-    '''
-
-    breakpoint()
+    # basic masker
     voxel_masker = MultiNiftiMasker(
         mask_strategy="whole-brain-template",
         high_pass=0.1,
@@ -88,60 +73,31 @@ def con_matrix(
         smoothing_fwhm=6,
         verbose=5,
     )
+    (prep.check_masker_fit(da, voxel_masker) for da in [pre_data, post_data])
 
-    check_masker_fit(data, voxel_masker)
+    # transf_imgs, fitted_voxel_masker, brain_mask = glm_func.transform_imgs(
+    #    all_files, voxel_masker, return_series=False
+    # )
 
-    breakpoint()
-    # --Masker parameters--
-    if atlas_type == "maps":
-        masker = MultiNiftiMapsMasker(
-            maps_img=atlas,
-            mask_img=voxel_masker.mask_img_,
-            t_r=3,
-            smoothing_fwhm=6,
-            standardize="zscore_sample",
-            verbose=5,
-            resampling_target="maps",
-        )
-        print("Probabilistic atlas!")
-    elif atlas_type == "labels":
-        # labels = atlas.labels
-        masker = NiftiLabelsMasker(
-            labels_img=atlas,
-            labels=atlas_labels,
-            standardize="psc",
-            resampling_target="data",
-        )
-        print(" Labeled masker!")
+    # --ROI masker parameters--
+    if atlas_name == None:
+        masker = prep.choose_tune_masker(use_atlas_type=False, mask_img=False)
+    else:
+        masker = prep.choose_tune_masker(use_atlas_type=atlas_name, mask_img=False)
 
-    elif atlas_type == None:
-        voxel_masker = MultiNiftiMasker(
-            mask_strategy="whole-brain-template",
-            high_pass=0.1,
-            t_r=3,
-            standardize=True,
-            smoothing_fwhm=6,
-            verbose=5,
-        )
-        # mask_strategy="whole-brain-template"
     # --Timeseries : Fit and apply mask--
-    if atlas_type == None:
-        all_files = pre_data + post_data
-        masker.fit(all_files)
+    print(masker)
+    masker.fit(all_data)
+    results["pre_series"] = [
+        masker.transform(ts, confounds=conf)
+        for ts, conf in zip(pre_data, data.confounds_pre_hyp)
+    ]
+    results["post_series"] = [
+        masker.transform(ts, conf)
+        for ts, conf in zip(post_data, data.confounds_post_hyp)
+    ]
 
-        results["pre_series"] = [masker.transform(ts) for ts in pre_data]
-        # masker.fit(image.mean_img(post_data))
-        results["post_series"] = [masker.transform(ts) for ts in post_data]
-
-        breakpoint()
-
-    if atlas_type != None:
-        all_files = pre_data + post_data
-        masker.fit(all_files)
-        results["pre_series"] = [masker.transform(ts) for ts in pre_data]
-        # masker.fit(post_data)
-        results["post_series"] = [masker.transform(ts) for ts in post_data]
-
+    # --Seed masker--
     if sphere_coord != None:
         sphere_coord = [(54, -28, 26)]
         seed_masker = NiftiSpheresMasker(
@@ -184,75 +140,44 @@ def con_matrix(
             results["mean_seed_post_connectome"] - results["mean_seed_pre_connectome"]
         )
 
-    # --Plot--
-    from nilearn import plotting
+        # --Plot--
+        from nilearn import plotting
 
-    # masker = NiftiMasker(mask_img=atlas, standardize=True)
-    # masker.fit(concat_imgs(pre_data))
-    breakpoint()
-    seed_to_voxel_correlations_img = masker.inverse_transform(
-        results["mean_seed_contrast_connectome"].T
-    )
+        # masker = NiftiMasker(mask_img=atlas, standardize=True)
+        # masker.fit(concat_imgs(pre_data))
 
-    display = plotting.plot_stat_map(
-        seed_to_voxel_correlations_img,
-        threshold=0.5,
-        vmax=1,
-        cut_coords=sphere_coord[0],
-        title="Seed-to-voxel correlation (OP seed)",
-    )
-    display.add_markers(marker_coords=sphere_coord, marker_color="g", marker_size=300)
-    # At last, we save the plot as pdf.
-    display.savefig("OP_seed_correlation.pdf")
+        seed_to_voxel_correlations_img = masker.inverse_transform(
+            results["mean_seed_contrast_connectome"].T
+        )
+
+        display = plotting.plot_stat_map(
+            seed_to_voxel_correlations_img,
+            threshold=0.5,
+            vmax=1,
+            cut_coords=sphere_coord[0],
+            title="Seed-to-voxel correlation (OP seed)",
+        )
+        display.add_markers(
+            marker_coords=sphere_coord, marker_color="g", marker_size=300
+        )
+        # At last, we save the plot as pdf.
+        display.savefig("OP_seed_correlation.pdf")
 
     # --Save--
     if save_base != None:
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
             os.mkdir(os.path.join(save_base, save_folder))
         save_to = os.path.join(save_base, save_folder)
+
         func.save_results(data.subjects, save_to, conditions, results)
-
-        # --Stats--
-        matrices = np.asarray(
-            [
-                np.load(
-                    os.path.join(save_to, f"{sub}_{conditions[2]}_connectomes.npy"),
-                    allow_pickle=True,
-                )
-                for sub in data.subjects
-            ]
-        )
-        y_full_auto = data.phenotype[
-            "Unnamed: 68"
-        ]  # abs. diff. in perceived automaticity
-        # Access selected sub based on id in y
-        rename_sub = [f"APM{num}" for num in [sub[4:6] for sub in data.subjects]]
-        idcs = [
-            idcs
-            for idcs, index in enumerate(data.phenotype.index)
-            if index in rename_sub
-        ]
-        y_auto = np.array(y_full_auto[idcs])
-
-        # --X/features (vectorize each connectome)--
-        results = func.extract_features(results)
-
-        np.save(
-            os.path.join(save_to, f"features_pre"), results["preX"], allow_pickle=True
-        )
-        np.save(
-            os.path.join(save_to, f"features_post"), results["postX"], allow_pickle=True
-        )
-        np.save(
-            os.path.join(save_to, f"features_contrast"),
-            results["contrastX"],
-            allow_pickle=True,
-        )
-        np.save(os.path.join(save_to, f"Y"), y_auto, allow_pickle=True)
+        results = func.extract_features(
+            results
+        )  # apply trilower mask and vectorize connectomes
+        func.npsave_features(save_to, results)
 
         with open(os.path.join(save_to, "dict_results.pkl"), "wb") as f:
             pickle.dump(results, f)
-        print("Saved pickle dump!")
+        print("Saved result dict!")
 
     # --Prints and plot--
     if verbose:
