@@ -24,6 +24,7 @@ from src import masker_preprocessing as prep
 
 def con_matrix(
     data_dir,
+    else_dir,
     save_folder=None,
     save_base=None,
     atlas_name=None,
@@ -53,7 +54,7 @@ def con_matrix(
     """
 
     # --Data--
-    data = func.load_data(data_dir)
+    data = func.load_data(data_dir, else_dir)
     conditions = ["pre_hyp", "post_hyp", "contrast"]
     pre_data, post_data = prep.resample_shape_affine(data)
     results = dict(pre_series=list(), post_series=list())
@@ -63,17 +64,16 @@ def con_matrix(
     atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
         atlas_name, bilat=True
     )
-
+    print("atlas done!")
     # basic masker
     voxel_masker = MultiNiftiMasker(
         mask_strategy="whole-brain-template",
         high_pass=0.1,
         t_r=3,
-        standardize=True,
-        smoothing_fwhm=6,
+        standardize="zscore_sample",
         verbose=5,
     )
-    (prep.check_masker_fit(da, voxel_masker) for da in [pre_data, post_data])
+    # (prep.check_masker_fit(da, voxel_masker) for da in [pre_data, post_data])
 
     # transf_imgs, fitted_voxel_masker, brain_mask = glm_func.transform_imgs(
     #    all_files, voxel_masker, return_series=False

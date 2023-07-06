@@ -14,65 +14,66 @@ from sklearn.covariance import GraphicalLassoCV
 from nilearn.connectome import GroupSparseCovarianceCV
 
 
-def load_data(path):
+def load_data(path, else_path):
     """
     Load subject information into memory
 
     """
+
     data = Bunch(
         subjects=[sub for sub in os.listdir(path) if "APM" in sub],
         func_pre_hyp=[
-            glob.glob(
-                os.path.join(path, sub, "*before*", "cbf_0_srASL_4D_before_4D.nii")
-            )[0]
+            glob.glob(os.path.join(path, sub, "wcbf_0_srASL_4D_before_4D.nii"))[0]
             for sub in os.listdir(path)
             if "APM" in sub
         ],
         func_post_hyp=[
-            glob.glob(
-                os.path.join(path, sub, "*during*", "*cbf_0_srASL_4D_during_4D.nii")
-            )[0]
+            glob.glob(os.path.join(path, sub, "*wcbf_0_srASL_4D_during_4D.nii"))[0]
             for sub in os.listdir(path)
             if "APM" in sub
         ],
         pre_masks=[
             glob.glob(
-                os.path.join(path, sub, "*before*", "mskwmeanCBF_0_srASL_4D_before*")
+                os.path.join(
+                    else_path, sub, "*before*", "mskwmeanCBF_0_srASL_4D_before*"
+                )
             )[0]
-            for sub in os.listdir(path)
+            for sub in os.listdir(else_path)
             if "APM" in sub
         ],
         post_masks=[
             glob.glob(
-                os.path.join(path, sub, "*during*", "mskwmeanCBF_0_srASL_4D_during*")
+                os.path.join(
+                    else_path, sub, "*during*", "mskwmeanCBF_0_srASL_4D_during*"
+                )
             )[0]
-            for sub in os.listdir(path)
+            for sub in os.listdir(else_path)
             if "APM" in sub
         ],
         confounds_pre_hyp=[
             pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
             for file in [
-                glob.glob(os.path.join(path, sub, "*before*", "globalsg_0.txt"))[0]
-                for sub in os.listdir(path)
+                glob.glob(os.path.join(else_path, sub, "*before*", "globalsg_0.txt"))[0]
+                for sub in os.listdir(else_path)
                 if "APM" in sub
             ]
         ],
         confounds_post_hyp=[
             pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
             for file in [
-                glob.glob(os.path.join(path, sub, "*during*", "globalsg_0.txt"))[0]
-                for sub in os.listdir(path)
+                glob.glob(os.path.join(else_path, sub, "*during*", "globalsg_0.txt"))[0]
+                for sub in os.listdir(else_path)
                 if "APM" in sub
             ]
         ],
         anat=[
-            glob.glob(os.path.join(path, sub, "*MEMPRAGE", "wms*.nii"))[0]
-            for sub in os.listdir(path)
+            glob.glob(os.path.join(else_path, sub, "*MEMPRAGE", "wms*.nii"))[0]
+            for sub in os.listdir(else_path)
             if "APM" in sub
         ],
         phenotype=pd.DataFrame(
             pd.read_excel(
-                glob.glob(os.path.join(path, "*variables*"))[0],
+                glob.glob(os.path.join(else_path, "*variables*"))[0],
                 sheet_name=0,
                 index_col=1,
                 header=2,
