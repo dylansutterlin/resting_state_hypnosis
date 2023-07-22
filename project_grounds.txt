@@ -1,0 +1,19 @@
+
+
+Covariance estimation
+
+"Importantly, in order to work with Gaussiandistributed variables, it is necessary to apply a Fisher Z transform4 to the correlations. Note that in these settings, the Ledoit-Wolf estimator [62] is often a good choice to estimate the correlation matrix, as it is parameter-free and gives good estimation performance without imposing any restrictions on the data. For hypothesis testing, correcting for multiple comparison can severely limit statistical power, as the number of tests performed scales as the square of the number of regions used. Controlling for the false discovery rate (FDR) mitigates this problem." (Varoqueaux et al. 2013)
+
+"Multivariate predictive models are attractive in connectomics because they are sensitive to dependencies between features and avoid the need to correct for multiple comparisons since the significance of an entire pattern is evaluated using a single statistical test" (Varoqueaux et al., 2013)
+
+
+caract. small-wordness of the brain networks (Bullmore et al.2009)
+
+"These findings suggest scale does not
+matter if the experimenter simply seeks a yes/no determination
+about whether or not a network is small-world or scale-free, but scale
+does matter if the experimenter seeks to quantify the extent to which
+the network exhibits these topological properties" (Zalesky et al., Neuroimage, 2009)
+
+- Null hypothesis? needs to be well defined what the null H. is when using correlation between nodes.
+

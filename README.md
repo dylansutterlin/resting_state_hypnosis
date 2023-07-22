@@ -82,7 +82,7 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
 2) A jupyter notebook with the prediction analyses and plots used in this report.
 
 
-# Results
+# Method
 
 
 ## Tools used
@@ -179,8 +179,16 @@ The covariance matrix is computed with the [**Nilearn.connectome.ConnectivityMea
   " alt=""/>
 </div>
 
+
+### *Fischer R to Z transfomation to compute the contrast matrix*
+
+For the correlation estimation, since the metric used is pearson r, the values are between -1 and 1. To compute the contrast (post-pre) connectivity matrix, a substraction of the post-hypnosis matrix to the pre-hypnosis matrix was used. Since the substraction of pearson r's is not recommended, a Fischer R to Z transformation was applied on each single subject correlation matrix before the substraction. The substraction was then applied on the Z-transformed matrices. The ```numpy.arctanh``` was used for such transformation. Code example for the mean contrast matrix computation :
+
+```
+contrast_mean_matrix = np.arctanh(tmp_post_mean) - np.arctanh(tmp_pre_mean)
+```
 ___
-# **DifuMo Atlas**
+## **DifuMo Atlas**
    *Fine-grain atlas of functional modes for fMRI analysis*
 
 * Article from [Dadi et al, 2020](https://www.sciencedirect.com/science/article/pii/S1053811920306121) that presents the atlas
@@ -192,33 +200,126 @@ ___
    <img src="images\scr_difumo_comp2.png" height="230px;" alt=""/>
 </div>
 
-## Connectivity of interest : Post-pre hypnosis contrast
-  ### 1. Correlation estimation estimation results
+---
 
+# **Results**
 
-<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\contrastmat_diffumo.png" height="240px;" alt=""/>
-   <img src="images\contrast_correlation_viewcon.png" height="200px;" alt=""/>
-   <img src="images\contrastcon_diffumo.png" height="230px;" alt=""/>
+## **1.** Connectivity results with Difumo64 atlas     
 
-</div>
-
-### *Fischer R to Z transfomation to compute the contrast matrix*
-
-For the correlation estimation, since the metric used is pearson r, the values are between -1 and 1. To compute the contrast (post-pre) connectivity matrix, a substraction of the post-hypnosis matrix to the pre-hypnosis matrix was used. Since the substraction of pearson r's is not recommended, a Fischer R to Z transformation was applied on each single subject correlation matrix before the substraction. The substraction was then applied on the Z-transformed matrices. The ```numpy.arctanh``` was used for such transformation. Code example for the mean contrast matrix computation :
-
-```
-contrast_mean_matrix = np.arctanh(tmp_post_mean) - np.arctanh(tmp_pre_mean)
-```
-
-
-### _2. Precision (inv. sparse cov.) estimation results_
+  ### **1.1** Overview pre, post and contrast connectivity 
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\contrastmat_precision_diffumo.png" height="240px;" alt=""/>
-   <img src="images\contrast_precision_viewcon.png" height="220px;" alt=""/>
-   <img src="images\contrastcon_precision_diffumo.png" height="240px;" alt=""/>
+   <img src="images\1imgs_difumo\pre_connectome.png" height="230px;" alt=""/>
+   
+   <img src="images\1imgs_difumo\post_connectome.png" height="230px;" alt=""/>
+   <img src="images\1imgs_difumo\contrast_connectome.png" height="230px;" alt=""/>
 </div>
+
+   ### **1.2** Contrast (post-pre hyp.)
+   ### **A)** _Correlation_ estimation for edge values
+
+   **Thresholded connectome**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\hist_correl.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\connectome1pct_correl.png" height="600px;" alt=""/>
+   </div>
+
+   - Pair of nodes with highest edge value:
+
+         [Middle frontal gyrus - Superior fornix and isthmus]; Z=0.1566
+         [Heschl’s gyrus - Paracentral gyrus RH]; Z=0.1521
+         [Middle frontal gyrus - Parieto-occipital sulcus anterior]; Z=0.1494
+         [Fusiform gyrus - Cingulate cortex posterior]; Z=0.1475
+         [ventricles - Middle frontal gyrus]; Z=0.1466
+         [Superior frontal sulcus - Dorsomedial prefrontal cortex antero-superior]; Z=0.1461
+         [Middle frontal gyrus - Putamen]; Z=0.1448
+         [Cerebellum I-V - Parieto-occipital sulcus anterior]; Z=0.1428
+         [Middle frontal gyrus anterior - Angular gyrus inferior]; Z=0.1419
+         [Middle frontal gyrus anterior - Putamen]; Z=0.1401
+
+   - Nodes with the most connections (>3) from the thresholded connectome:
+
+         Paracentral lobule superior: 8 non-zero connections
+         Caudate: 5 non-zero connections
+         Superior frontal sulcus: 4 non-zero connections
+         Heschl’s gyrus: 4 non-zero connections
+         Middle frontal gyrus: 4 non-zero connections
+----
+**Density**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_hist_density.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_density.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctdensity.png" height="200px;" alt=""/>
+   </div>
+
+   - 5% nodes with highest density values :
+
+         Parieto-occipital sulcus anterior: 0.0699
+         Calcarine sulcus anterior: 0.0665
+         Middle frontal gyrus anterior: 0.0655
+
+
+
+
+
+
+
+
+### **B)** Precision (inv. sparse cov.) estimation
+
+
+   **Thresholded connectome**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\Bhist_precision.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\Bconnectome1pct_correl.png" height="600px;" alt=""/>
+   </div>
+
+   - Pair of nodes with highest edge value:
+
+         [Occipital pole - Paracentral lobule superior]; Z=0.1647
+         [Paracentral lobule - Paracentral lobule superior]; Z=0.1628
+         [Occipital pole - Paracentral gyrus RH]; Z=0.1596
+         [Fusiform gyrus - Occipital pole]; Z=0.1588
+         [Intraparietal sulcus RH - Superior parietal lobule anterior]; Z=0.1573
+         [Paracentral lobule superior - Precuneus superior]; Z=0.1556
+         [Cingulate gyrus mid-anterior - Calcarine sulcus anterior]; Z=0.1486
+         [Superior temporal sulcus with angular gyrus - Paracentral lobule]; Z=0.1475
+         [Middle temporal gyrus - Heschl’s gyrus]; Z=0.1457
+         [Inferior frontal sulcus - Descending occipital gyrus]; Z=0.1444
+         [Superior parts of Postcentral and Precentral gyri - Paracentral lobule superior]; Z=0.1433
+      -------Negative edges-------
+
+         [Fusiform gyrus posterior - Inferior occipital gyrus]; Z=-0.2077
+         [Fusiform gyrus - Cerebellum Crus II]; Z=-0.2096
+         [Occipital pole - Descending occipital gyrus]; Z=-0.2570
+         [Occipital pole - Inferior occipital gyrus]; Z=-0.2711
+
+   - Nodes with the most connections (>3) from the thresholded connectome:
+
+         Occipital pole: 7 non-zero connections
+         Calcarine cortex posterior: 4 non-zero connections
+         Superior temporal sulcus with angular gyrus: 4 non-zero connections
+         Paracentral lobule superior: 4 non-zero connections
+
+----
+**Density**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\Bnx_hist_density.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_brainplot_density.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_brainplot_5pctdensity.png" height="200px;" alt=""/>
+   </div>
+
+   - 5% nodes with highest density values :
+
+         Occipital pole: 0.06889379027819957
+         Calcarine cortex posterior: 0.06472118546674657
+         Descending occipital gyrus: 0.0642735266790692
+
+
+
+
+
+
 
 ___
 # <em>Inter-subject connectivity analysis </em>
@@ -340,3 +441,20 @@ I am begining a master in psychology at the University of Montréal.
 Thank you to all the BHS teaching assistants for the support and great advices on this project and also to the organizers who made such a wonderful course possible.
 
 </div>
+
+
+# Supplemental material/figures
+
+## 1.2 A)
+
+### Comparison of 5% highest edge density post (correl. estim.)
+
+<img src="images/1imgs_difumo/xsupp_hist_postHyp.png" height="220px;" alt=""/>
+<img src="images/1imgs_difumo/xsupp_brainplot_5pct_post.png" height="220px;" alt=""/>
+
+   Parieto-occipital sulcus superior: 0.30290769035702064
+   Superior parietal lobule posterior: 0.2847421670281322
+   Precuneus anterior: 0.27548093040763855
+   Cingulate gyrus mid-posterior: 0.2749985525257869
+   Parieto-occipital sulcus anterior: 0.2708608648412702
+

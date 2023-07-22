@@ -2,9 +2,24 @@ import nibabel as nib
 import numpy as np
 from nilearn import plotting
 from nilearn.image import mean_img
+import os
+import glob as glob
 
-file = r"E:\Users\Dylan\Desktop\UdeM_H22\E_PSY3008\data_desmartaux\HYPNOSIS_ASL_ANALYSIS\APM_02_H2\02-PCASL_before_hypnosis\wcbf_0_srASL_4D_during_4D.nii"
-img = mean_img(nib.load(file))
+path = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\CBF_normalized"
 
-plotting.plot_epi(img)
-plotting.show()
+dirs = glob.glob(os.path.join(path, "APM*", "*"))
+for i, f in enumerate(dirs):
+    filename = f[-39:]
+    img = mean_img(nib.load(f))
+    plotting.plot_roi(img, title=filename)
+    plotting.show()
+
+    from nilearn.maskers import NiftiMasker
+
+    m = NiftiMasker(mask_strategy="whole-brain-template")
+    m.fit(img)
+    report = m.generate_report()
+    os.chdir(
+        r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\report_test"
+    )
+    report.save_as_html("report_{}.html".format(i))
