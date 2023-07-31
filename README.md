@@ -71,6 +71,8 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
    <img src="images/data_protocol_brief.jpg" height="200px;" alt=""/>
 </div>
 
+> **Note on pain modulation* :
+   Other tasks in the scanning protocol - aside from the 2 resting state scans- included conditions of verbal suggestions either to increase (hyperalgesia cond.) or to decrease (analgesia cond.) pain perception prior to a series of painful stimulation. Subjective pain was assessed after each trial of [verbal suggestion + painful stimulations]. The difference between the pain ratings in the neutral condition and the pain ratings in the analgesia/hyperalgesia condition was computed for each subject. The absolute change in pain modulation was then used as a regressor in the analysis.
 
 ### *Data availability*
    Data access is unfortunately restricted from public open access. However, it can easily be shared on demand. Please contact me at dylan.sutterlin-guindon@umontreal.ca
@@ -200,6 +202,20 @@ ___
    <img src="images\scr_difumo_comp2.png" height="230px;" alt=""/>
 </div>
 
+## Graph theory metrics
+
+- **Degree** : 'The weighted node degree is the sum of the edge weights for edges incident to that node'[(NetworkX docs)](https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.degree.html)
+- **Centralities**  : 'Centrality measures are a way of detecting the most important nodes in a graph. Informally, a central node is one that has a large number of connections to other nodes in the network.' [(NetworkX docs)](https://networkx.org/documentation/stable/reference/algorithms/centrality.html)
+
+<img src="images\METHclossness_Centeno_al2022.jpg" height="400px;" alt=""/>
+Image from 'hands‑on tutorial on network and topological neuroscience' by Centeno et al, 2022
+
+
+- **Clustering** :
+
+
+
+
 ---
 
 # **Results**
@@ -245,27 +261,56 @@ ___
          Heschl’s gyrus: 4 non-zero connections
          Middle frontal gyrus: 4 non-zero connections
 ----
-**Density**
+**Degree** 
+
+'The weighted node degree is the sum of the edge weights for edges incident to that node'
+
+ <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_degree.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_degree.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctdegree.png" height="200px;" alt=""/>
+   </div>
+
+    - 5% nodes with highest degree values :
+
+      Middle frontal gyrus: 3.4630
+      Angular gyrus inferior: 3.2940
+      Calcarine sulcus anterior: 3.1590
+      Middle frontal gyrus anterior: 3.1503
+
+
+**Centrality (betweeness)**
+
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\nx_hist_density.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_density.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_5pctdensity.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_centrality.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_centrality.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctcentrality.png" height="200px;" alt=""/>
    </div>
 
    - 5% nodes with highest density values :
 
-         Parieto-occipital sulcus anterior: 0.0699
-         Calcarine sulcus anterior: 0.0665
-         Middle frontal gyrus anterior: 0.0655
+         Calcarine sulcus anterior: 0.0661
+         Middle frontal gyrus: 0.0584
+         Parieto-occipital sulcus anterior: 0.0568
+
+
+**Clustering**
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_clustering.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_clustering.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctclustering.png" height="200px;" alt=""/>
+   </div>
+
+- 5% nodes with highest density values :
+
+      Superior parietal lobule anterior: 0.1670
+      Paracentral lobule: 0.1635
+      Paracentral lobule superior: 0.1519
 
 
 
-
-
-
-
-
-### **B)** Precision (inv. sparse cov.) estimation
+### **B) Precision (inv. sparse cov.) estimation**
 
 
    **Thresholded connectome**
@@ -302,23 +347,19 @@ ___
          Paracentral lobule superior: 4 non-zero connections
 
 ----
+
 **Density**
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\Bnx_hist_density.png" height="300px;" alt=""/>
    <img src="images\1imgs_difumo\Bnx_brainplot_density.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_hist_degree.png" height="300px;" alt=""/>
    <img src="images\1imgs_difumo\Bnx_brainplot_5pctdensity.png" height="200px;" alt=""/>
    </div>
 
-   - 5% nodes with highest density values :
+   - 5% nodes with highest density values(pos. and neg. values) :
 
-         Occipital pole: 0.06889379027819957
-         Calcarine cortex posterior: 0.06472118546674657
-         Descending occipital gyrus: 0.0642735266790692
-
-
-
-
-
+         Paracentral lobule superior: 0.7882
+         Superior occipital gyrus: -0.6706
+         Parieto-occipital sulcus middle: -0.6943
 
 
 ___
@@ -328,14 +369,24 @@ ___
 One of the main objective of this project was to assess if changes in functional connectivity during hypnosis can predict behavioral changes in hypnotic-related variables.
 
 **Variables used** : 
+- ['SHSS_score', 'raw_change_ANA','raw_change_HYPER', "Abs_chge_pain_hypAna", "Chge_hypnotic_depth", "Mental_relax_absChange", 'Automaticity_post_ind',"Abs_diff_automaticity"]
 - Change in hypnotic depth 
 - Absolute change in _mental relaxation_ 
 - Absolute change in the _feeling of automaticity_ 
 - Absolute change in _pain modulation_ (Hyperalgesia cond. from neutral cond.)*
 - Absolute change in _pain modulation_ (Analgesia cond.from neutral cond.)*
 
-> **Note on pain modulation* :
-   Other tasks in the scanning protocol - aside from the 2 resting state scans- included conditions of verbal suggestions either to increase (hyperalgesia cond.) or to decrease (analgesia cond.) pain perception prior to a series of painful stimulation. Subjective pain was assessed after each trial of [verbal suggestion + painful stimulations]. The difference between the pain ratings in the neutral condition and the pain ratings in the analgesia/hyperalgesia condition was computed for each subject. The absolute change in pain modulation was then used as a regressor in the analysis.
+### **Regression models**
+
+Metrics used (Mean metrics of cross-validation predictions): 
+   - Mean Pearson's r for correlation between VD values and models predicted scores
+   - Mean RMSE
+   - Mean MAE
+   - Mean R2
+
+### A) Correlation estmiation with Difumo64 atlas
+
+
 
 ### *Steps of the analysis*
 1. Vectorize half of the connectivity matrices for each subject and concatenate in a numpy array of shape (n_subjects, n_features). Example of code used for the vectorization :
