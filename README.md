@@ -39,7 +39,7 @@ image: "brain.png"
 ## Background
 Hypnosis can be used to study the neural correlates of consciousness. Hypnosis is defined as an experiential state of focused attention and heightened response to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. 
 
-For a discussion about hypnosis by David Speigel, see [this link](https://www.youtube.com/watch?v=PctD-ki8dCc).
+For a informative discussion about neural correlates involved in hypnosis and clinical implications, by David Speigel, see [this link](https://www.youtube.com/watch?v=PctD-ki8dCc).
 
 ## Data
 
@@ -84,7 +84,7 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
 2) A jupyter notebook with the prediction analyses and plots used in this report.
 
 
-# Method
+# 2. Method
 
 
 ## Tools used
@@ -101,14 +101,22 @@ This project was intended to upskill in the use of the following
 
 ### Overview
 
-1) Atlas choices and covariance estimation
-2) Hypnosis-related functionnal connectivity
+#### 2.1 Atlas choices
+   - Yeo7 atlas
+   - Dictionary of Functional Modes (DiFuMo) 64 ROIs atlas
+#### 2.2 Connectivity estimation methods and trade-offs
+   - Pearson correlation
+   - Partial correlation
+   - Regularized partial correlation (graphical lasso)
+#### 2.3 Extraction of hypnosis-induced connectivity  
+#### 2.4 Graph theory measures
+
+#### 2) Hypnosis-related functionnal connectivity
 3) Machine learning models to predict hypnotic experience from functionnal connectivity
 4) Hypnosis-related measures correlation with machine learning models
 
 
-
-## <em>_Atlas choices and covariance estimation_</em>
+## 2.1 <em>_Atlas choices and covariance estimation_</em>
 ___
 ### **Yeo et al. 7 networks**
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
@@ -137,60 +145,8 @@ ___
 
    To account for this, I had to relabel each ROI with a different label for the right hemisphere. This was done locally with the `scripts.func.make_mask_bilat(atlas)` function, that take each ROI and duplicate it with a different label for the right hemisphere. Hence, after this tweak, the atlas had 14 ROIs and the number of possible pairs is now of 91! 
 
-
-
-### *Covariance estimation comparison* 
-
-The covariance matrix is computed with the [**Nilearn.connectome.ConnectivityMeasure**](https://nilearn.github.io/dev/modules/generated/nilearn.connectome.ConnectivityMeasure.html) class. This class has a `kind` parameter that can be set to `covariance`, `correlation`, `partial correlation`, `tangent` or `precision`. Code example :
-      
-      from nilearn.connectome import ConnectivityMeasure
-      correlation_measure = ConnectivityMeasure(kind='correlation')
-
-
-*A word on Sparse inverse covariance (precision)*
-
-* Citation from [6.2.1 Nilearn](https://nilearn.github.io/stable/connectivity/connectome_extraction.html ) :
->"As shown in [Smith 2011], [Varoquaux 2010], it is more interesting to use the inverse covariance matrix, ie the precision matrix. __It gives only direct connections between regions, as it contains partial covariances__, which are covariances between two regions conditioned on all the others [...] To recover well the interaction structure, a sparse inverse covariance estimator is necessary."
-
-
-#### *__Pre-Hypnosis__ condition comparison of covariance / precision / correlation*
-<div style="text-align: center; background-color: White; border: 1px solid #000; padding: 0px;">
-   <img src="images\precon_covar_yeo7.png" height="200px;" alt=""/>
-   <img src="images\precon_preci_yeo7.png" height="200px;" alt=""/>
-   <img src="images\precon_correlation_yeo7.png" height="200px;" alt=""/>
-</div>
-
-#### *__Post-Hypnosis__ condition comparison of covariance / precision / correlation*
-<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\postcon_covar_yeo7.png" height="200px;" alt=""/>
-   <img src="images\postcon_preci_yeo7.png" height="200px;" alt=""/>
-   <img src="images\postcon_correlation_yeo7.png" height="200px;" alt=""/>
-</div>
-
-### __Connectivity results from Post-pre hypnosis with yeo 7 ROIs__
-
-### *Results from correlation estimation*
-<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\premat_yeo7.png" height="220px;" alt=""/>
-   <img src="images\postmat_yeo7.png" height="220px;" alt=""/>
-   <img src="images\contrastmat_yeo7.png" height="220px;" alt=""/>
-  " alt=""/>
-</div>
-<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\contrastcon_yeo7.png" height="200px;" alt=""/>
-  " alt=""/>
-</div>
-
-
-### *Fischer R to Z transfomation to compute the contrast matrix*
-
-For the correlation estimation, since the metric used is pearson r, the values are between -1 and 1. To compute the contrast (post-pre) connectivity matrix, a substraction of the post-hypnosis matrix to the pre-hypnosis matrix was used. Since the substraction of pearson r's is not recommended, a Fischer R to Z transformation was applied on each single subject correlation matrix before the substraction. The substraction was then applied on the Z-transformed matrices. The ```numpy.arctanh``` was used for such transformation. Code example for the mean contrast matrix computation :
-
-```
-contrast_mean_matrix = np.arctanh(tmp_post_mean) - np.arctanh(tmp_pre_mean)
-```
 ___
-## **DifuMo Atlas**
+### **DifuMo Atlas**
    *Fine-grain atlas of functional modes for fMRI analysis*
 
 * Article from [Dadi et al, 2020](https://www.sciencedirect.com/science/article/pii/S1053811920306121) that presents the atlas
@@ -202,187 +158,193 @@ ___
    <img src="images\scr_difumo_comp2.png" height="230px;" alt=""/>
 </div>
 
-## Graph theory metrics
+
+## 2.2 *Covariance estimation comparison* 
+
+The covariance matrix is computed with the [**Nilearn.connectome.ConnectivityMeasure**](https://nilearn.github.io/dev/modules/generated/nilearn.connectome.ConnectivityMeasure.html) class. This class has the `kind` parameter that can be set to `covariance`, `correlation`, `partial correlation`, `tangent` or `precision`. Code example :
+      
+      from nilearn.connectome import ConnectivityMeasure
+      correlation_measure = ConnectivityMeasure(kind='correlation')
+
+
+*A word on Sparse inverse covariance (precision)*
+
+* Citation from [6.2.1 Nilearn](https://nilearn.github.io/stable/connectivity/connectome_extraction.html ) :
+>"As shown in [Smith 2011], [Varoquaux 2010], it is more interesting to use the inverse covariance matrix, ie the precision matrix. __It gives only direct connections between regions, as it contains partial covariances__, which are covariances between two regions conditioned on all the others [...] To recover well the interaction structure, a sparse inverse covariance estimator is necessary."
+
+### Example of connectivity matrix with different estimation methods, using the DiFuMo64 atlas
+
+#### *__Post-Hypnosis__ condition comparison of correlation / precision / Tangent*
+<div style="text-align: center; background-color: White; border: 1px solid #000; padding: 0px;">
+   <img src="images\method\correlation_mat.png" height="160px;" alt=""/>
+   <img src="images\method\correlation_brainplot.png" height="160px;" alt=""/>
+
+   <img src="images\method\precision_mat.png" height="160px;" alt=""/>
+   <img src="images\method\precision_brainplot.png" height="160px;" alt=""/>
+
+   <img src="images\method\tangent_mat.png" height="175px;" alt=""/>
+   <img src="images\method\tangent_brainplot.png" height="160px;" alt=""/>
+</div>
+
+### Trade-offs between estimation methods
+
+#### *Correlation* 
+
+   "The sample correlation matrix is a poor estimate of the underlying population correlation matrix.[...] the sample correlation matrix captures a lot of sampling noise, intrinsic randomness that arises in the estimation of correlations from short time series. Conclusions drawn from the sample correlation matrix can easily reflect this estimation error" (Varoquaux et al., 2013)
+
+Therefore, as shown in Varoquaux et al. (2010) and Smith et al. (2011), other estimator should be prefered to recover the connectivity structure
+
+#### *Inverse covariance (precision matrix)*
+
+- The inverse covariance matrix captures the direct link between ROIs, by removing the effect of other ROIs. This is done by computing the partial correlation between each pair of ROIs. 
+
+   - "Using inverse-covariance matrices or partial correlations to understand brain connectivity makes the interpretation in terms of interactions between brain regions easier and more robust to the choice of confounds" (Varoquaux et al., 2013)
+   - In _small samples_, the removal of confounding indirect correlations is challenging from a statistical standpoint. To have a good inverse covariance estimate, a sparsity assumption (few connections to estimate) needs to be respected. (Varoquaux et al., 2013)
+
+#### *Tangent space of covariance matrix* (method from Varoquaux et al., 2010a)
+
+Computation of correlation assumes a linear model between the ROIs, which is not always the case. The tangent embedding is a non-linear transformation of the correlation matrix, that is more robust to non-linearities and spatial dependancies in the ROIs.
+
+* "The [Tangent method] is less frequently used but has solid mathematical foundations and a variety of groups have reported good decoding performances with this framework (Varoquaux et al., 2010a; Barachant et al., 2013; Ng et al., 2014; Dodero et al., 2015; Qiu et al., 2015; Rahim et al., 2017; Wong et al., 2018)" (Dad et al., 2019)
+
+* "Using the tangent embedding as a connectivity measure gives a consistent improvement over correlations and partial correlation"(Dadi et al., 2016)
+
+*Image from Rahim et al. (2019) to illustrate the tangent space*
+<div style="text-align: center; background-color: White; border: 1px solid #000; padding: 0px;">
+   <img src="images\method\rahim_al2019_tangent.jpg" height="160px;" alt=""/>   
+</div>
+
+
+### Connectivity estimation choice for this study
+
+The tangent method is chosen for this study, as it is a robust method that is less sensitive to non-linearities and spatial dependancies in the ROIs.
+
+## 2.3 Extraction of hypnosis-induced connectivity 
+
+- Computation of the connectivity matrix for each subject, for each condition (pre/post hypnosis)
+- Computation of the difference between the two conditions (post-pre hypnosis)
+
+   Fischer R to Z transfomation to compute the contrast matrix
+   For the correlation estimation, since the metric used is pearson r, the values are between -1 and 1. To compute the contrast (post-pre) connectivity matrix, a substraction of the post-hypnosis matrix to the pre-hypnosis matrix was used. Since the substraction of pearson r's is not recommended, a Fischer R to Z transformation was applied on each single subject correlation matrix before the substraction. The substraction was then applied on the Z-transformed matrices. The numpy.arctanh was used for such transformation. Code example for the mean contrast matrix computation :
+
+      contrast_mean_matrix = np.arctanh(post_mean) - np.arctanh(pre_mean)
+
+
+
+
+## 2.4 Graph theory metrics
 
 - **Degree** : 'The weighted node degree is the sum of the edge weights for edges incident to that node'[(NetworkX docs)](https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.degree.html)
 - **Centralities**  : 'Centrality measures are a way of detecting the most important nodes in a graph. Informally, a central node is one that has a large number of connections to other nodes in the network.' [(NetworkX docs)](https://networkx.org/documentation/stable/reference/algorithms/centrality.html)
 
-<img src="images\METHclossness_Centeno_al2022.jpg" height="400px;" alt=""/>
-Image from 'hands‑on tutorial on network and topological neuroscience' by Centeno et al, 2022
+   <img src="images\METHclossness_Centeno_al2022.jpg" height="400px;" alt=""/>
+
+   _Image from 'hands‑on tutorial on network and topological neuroscience' by Centeno et al, 2022_
 
 
-- **Clustering** :
-
-
-
-
+- **Clustering** : "The clustering coefficient assesses the tendency for any two neighbours of a vertex to be directly connected (or more strongly connected in the weighted case) to each other and can also be termed cliquishness (Hallquist and Hillary 2018; Watts and Strogatz 1998)" (Centeno et al, 2022)
 ---
 
-# **Results**
+# 3. **Results**
+### Outline
 
-## **1.** Connectivity results with Difumo64 atlas     
-
-  ### **1.1** Overview pre, post and contrast connectivity 
+## Pre, post and contrast connectivity matrices
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\pre_connectome.png" height="230px;" alt=""/>
-   
-   <img src="images\1imgs_difumo\post_connectome.png" height="230px;" alt=""/>
-   <img src="images\1imgs_difumo\contrast_connectome.png" height="230px;" alt=""/>
+   <img src="images\results\pre_mat.png" height="160px;" alt=""/>
+   <img src="images\results\pre_brainplot.png" height="150px;" alt=""/>
+
+   <img src="images\results\post_mat.png" height="160px;" alt=""/>
+   <img src="images\results\post_brainplot.png" height="150px;" alt=""/>
+
+   <img src="images\results\contrast_mat.png" height="160px;" alt=""/>
+   <img src="images\results\contrast_brainplot.png" height="150px;" alt=""/>
 </div>
 
-   ### **1.2** Contrast (post-pre hyp.)
-   ### **A)** _Correlation_ estimation for edge values
+## Tresholded connectome (1%)
 
-   **Thresholded connectome**
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\hist_correl.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\connectome1pct_correl.png" height="600px;" alt=""/>
+   <img src="images\results\hist_contrast.png" height="300px;" alt=""/>
+   <img src="images\results\tresh_mat.png" height="600px;" alt=""/>
+    <img src="images\results\tresh_zedges.png" height="500px;" alt=""/>
    </div>
 
-   - Pair of nodes with highest edge value:
+   *Brain plot of the 1% most significant edges (Z difference post-pre hypnosis)*
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+    <img src="images\results\interactive_plot.png" height="400px;" alt=""/>
+   </div>
 
-         [Middle frontal gyrus - Superior fornix and isthmus]; Z=0.1566
-         [Heschl’s gyrus - Paracentral gyrus RH]; Z=0.1521
-         [Middle frontal gyrus - Parieto-occipital sulcus anterior]; Z=0.1494
-         [Fusiform gyrus - Cingulate cortex posterior]; Z=0.1475
-         [ventricles - Middle frontal gyrus]; Z=0.1466
-         [Superior frontal sulcus - Dorsomedial prefrontal cortex antero-superior]; Z=0.1461
-         [Middle frontal gyrus - Putamen]; Z=0.1448
-         [Cerebellum I-V - Parieto-occipital sulcus anterior]; Z=0.1428
-         [Middle frontal gyrus anterior - Angular gyrus inferior]; Z=0.1419
-         [Middle frontal gyrus anterior - Putamen]; Z=0.1401
+### Nodes with the most non-zero connections from the Tresholded connectome (1%)
 
-   - Nodes with the most connections (>3) from the thresholded connectome:
+      Calcarine sulcus anterior: 7 non-zero connections
+      Paracentral lobule superior: 7 non-zero connections
+      Parieto-occipital sulcus anterior: 5 non-zero connections
+      Cuneus: 5 non-zero connections
+      Occipital pole: 4 non-zero connections
+      Angular gyrus inferior: 4 non-zero connections
+      Central sulcus: 4 non-zero connections
+      Caudate: 4 non-zero connections
+ <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\results\difumo_comp31.jpg" height="150px;" alt=""/>
+   <img src="images\results\difumo_comp44.jpg" height="150px;" alt=""/>
+    <img src="images\results\difumo_comp53.jpg" height="150px;" alt=""/>
+   </div>
 
-         Paracentral lobule superior: 8 non-zero connections
-         Caudate: 5 non-zero connections
-         Superior frontal sulcus: 4 non-zero connections
-         Heschl’s gyrus: 4 non-zero connections
-         Middle frontal gyrus: 4 non-zero connections
-----
-**Degree** 
+## Graphs theory metrics
 
-'The weighted node degree is the sum of the edge weights for edges incident to that node'
+   ### Degree
+   - 'In an undirected weighted network like our rsfMRI matrix, the vertex degree is analogous to the vertex strength (i.e., the sum of all edges of a vertex) and equivalent to its degree centrality' (Centeno et al, 2022)
 
  <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\nx_brainplot_degree.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_hist_degree.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_5pctdegree.png" height="200px;" alt=""/>
+   <img src="images\results\degree_dist.png" height="200px;" alt=""/>
+   <img src="images\results\degree_full_brainplot.png" height="150px;" alt=""/>
+    <img src="images\results\degree_tresh_brainplot.png" height="150px;" alt=""/>
    </div>
 
-    - 5% nodes with highest degree values :
-
-      Middle frontal gyrus: 3.4630
-      Angular gyrus inferior: 3.2940
-      Calcarine sulcus anterior: 3.1590
-      Middle frontal gyrus anterior: 3.1503
-
-
-**Centrality (betweeness)**
-
-   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\nx_brainplot_centrality.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_hist_centrality.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_5pctcentrality.png" height="200px;" alt=""/>
-   </div>
-
-   - 5% nodes with highest density values :
-
-         Calcarine sulcus anterior: 0.0661
-         Middle frontal gyrus: 0.0584
-         Parieto-occipital sulcus anterior: 0.0568
-
-
-**Clustering**
+   ### Centrality (closeness)
+   - "Closeness (shortest path-based) centrality measures how closely or’ directly’ connected a vertex is to the rest of the network." (Centeno et al, 2022)
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\nx_brainplot_clustering.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_hist_clustering.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_5pctclustering.png" height="200px;" alt=""/>
+   <img src="images\results\centrality_dist.png" height="200px;" alt=""/>
+   <img src="images\results\centrality_full_brainplot.png" height="150px;" alt=""/>
+    <img src="images\results\centrality_tresh_brainplot.png" height="150px;" alt=""/>
    </div>
 
-- 5% nodes with highest density values :
-
-      Superior parietal lobule anterior: 0.1670
-      Paracentral lobule: 0.1635
-      Paracentral lobule superior: 0.1519
-
-
-
-### **B) Precision (inv. sparse cov.) estimation**
-
-
-   **Thresholded connectome**
-   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\Bhist_precision.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\Bconnectome1pct_correl.png" height="600px;" alt=""/>
+### Clustering coefficient
+- "The clustering coefficient assesses the tendency for any two neighbours of a vertex to be directly connected (or more strongly connected in the weighted case)" (Centeno et al, 2022)
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\results\clustering_dist.png" height="200px;" alt=""/>
+   <img src="images\results\clustering_full_brainplot.png" height="150px;" alt=""/>
+    <img src="images\results\clustering_tresh_brainplot.png" height="150px;" alt=""/>
    </div>
 
-   - Pair of nodes with highest edge value:
 
-         [Occipital pole - Paracentral lobule superior]; Z=0.1647
-         [Paracentral lobule - Paracentral lobule superior]; Z=0.1628
-         [Occipital pole - Paracentral gyrus RH]; Z=0.1596
-         [Fusiform gyrus - Occipital pole]; Z=0.1588
-         [Intraparietal sulcus RH - Superior parietal lobule anterior]; Z=0.1573
-         [Paracentral lobule superior - Precuneus superior]; Z=0.1556
-         [Cingulate gyrus mid-anterior - Calcarine sulcus anterior]; Z=0.1486
-         [Superior temporal sulcus with angular gyrus - Paracentral lobule]; Z=0.1475
-         [Middle temporal gyrus - Heschl’s gyrus]; Z=0.1457
-         [Inferior frontal sulcus - Descending occipital gyrus]; Z=0.1444
-         [Superior parts of Postcentral and Precentral gyri - Paracentral lobule superior]; Z=0.1433
-      -------Negative edges-------
+## Predictive models
 
-         [Fusiform gyrus posterior - Inferior occipital gyrus]; Z=-0.2077
-         [Fusiform gyrus - Cerebellum Crus II]; Z=-0.2096
-         [Occipital pole - Descending occipital gyrus]; Z=-0.2570
-         [Occipital pole - Inferior occipital gyrus]; Z=-0.2711
-
-   - Nodes with the most connections (>3) from the thresholded connectome:
-
-         Occipital pole: 7 non-zero connections
-         Calcarine cortex posterior: 4 non-zero connections
-         Superior temporal sulcus with angular gyrus: 4 non-zero connections
-         Paracentral lobule superior: 4 non-zero connections
-
-----
-
-**Density**
-   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\Bnx_brainplot_density.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\Bnx_hist_degree.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\Bnx_brainplot_5pctdensity.png" height="200px;" alt=""/>
-   </div>
-
-   - 5% nodes with highest density values(pos. and neg. values) :
-
-         Paracentral lobule superior: 0.7882
-         Superior occipital gyrus: -0.6706
-         Parieto-occipital sulcus middle: -0.6943
-
-
-___
-# <em>Inter-subject connectivity analysis </em>
-## <em>Prediction of hypnosis-related variables </em>
-
-One of the main objective of this project was to assess if changes in functional connectivity during hypnosis can predict behavioral changes in hypnotic-related variables.
+### Prediction of hypnosis-related variables
 
 **Variables used** : 
-- ['SHSS_score', 'raw_change_ANA','raw_change_HYPER', "Abs_chge_pain_hypAna", "Chge_hypnotic_depth", "Mental_relax_absChange", 'Automaticity_post_ind',"Abs_diff_automaticity"]
-- Change in hypnotic depth 
-- Absolute change in _mental relaxation_ 
-- Absolute change in the _feeling of automaticity_ 
-- Absolute change in _pain modulation_ (Hyperalgesia cond. from neutral cond.)*
-- Absolute change in _pain modulation_ (Analgesia cond.from neutral cond.)*
+- SHSS score
+- Raw change in pain -ANA condition
+- Raw change in pain - Hyper condition
+- Change in hypnotic depth
+- Change in mental relaxation 
+- Automaticity post induction
+- Change in automaticity
+
+- Variables in the excel file : ['SHSS_score', 'raw_change_ANA','raw_change_HYPER', "Abs_chge_pain_hypAna", "Chge_hypnotic_depth", "Mental_relax_absChange", 'Automaticity_post_ind',"Abs_diff_automaticity"]
+
+### Model
+- Ridge regression
+### Connectivity matrix (ROI-ROI correlation) as independent variables
+
 
 ### **Regression models**
 
-Metrics used (Mean metrics of cross-validation predictions): 
-   - Mean Pearson's r for correlation between VD values and models predicted scores
-   - Mean RMSE
-   - Mean MAE
-   - Mean R2
+### 1.3.1 Connectivity matrix (ROI-ROI correlation) as independent variables
+
+
+
 
 ### A) Correlation estmiation with Difumo64 atlas
 
@@ -476,17 +438,6 @@ ___
 
 
 
-
-<br/>
-
-> //information_source: all classifiers were trained and tested on the **connectome**. Next, the plan is to train classifiers on the beta maps of the GLM//. 
-
-
-## About the Author
-
-I am begining a master in psychology at the University of Montréal. 
-
-
 ## Acknowledgement
 
 Thank you to all the BHS teaching assistants for the support and great advices on this project and also to the organizers who made such a wonderful course possible.
@@ -496,9 +447,161 @@ Thank you to all the BHS teaching assistants for the support and great advices o
 
 # Supplemental material/figures
 
-## 1.2 A)
+### **A)** _Correlation_ for connectivity estimation (r for edge values)
+   **Thresholded connectome**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\hist_correl.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\connectome1pct_correl.png" height="600px;" alt=""/>
+   </div>
 
-### Comparison of 5% highest edge density post (correl. estim.)
+   - Pair of nodes with highest change in edge value (Z difference post-pre):
+
+         [Middle frontal gyrus - Superior fornix and isthmus]; Z=0.1566
+         [Heschl’s gyrus - Paracentral gyrus RH]; Z=0.1521
+         [Middle frontal gyrus - Parieto-occipital sulcus anterior]; Z=0.1494
+         [Fusiform gyrus - Cingulate cortex posterior]; Z=0.1475
+         [ventricles - Middle frontal gyrus]; Z=0.1466
+         [Superior frontal sulcus - Dorsomedial prefrontal cortex antero-superior]; Z=0.1461
+         [Middle frontal gyrus - Putamen]; Z=0.1448
+         [Cerebellum I-V - Parieto-occipital sulcus anterior]; Z=0.1428
+         [Middle frontal gyrus anterior - Angular gyrus inferior]; Z=0.1419
+         [Middle frontal gyrus anterior - Putamen]; Z=0.1401
+
+   - Nodes with the most connections (>3) from the thresholded connectome:
+
+         Paracentral lobule superior: 8 non-zero connections
+         Caudate: 5 non-zero connections
+         Superior frontal sulcus: 4 non-zero connections
+         Heschl’s gyrus: 4 non-zero connections
+         Middle frontal gyrus: 4 non-zero connections
+----
+**Degree** 
+'The weighted node degree is the sum of the edge weights for edges incident to that node'
+
+ <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_degree.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_degree.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctdegree.png" height="200px;" alt=""/>
+   </div>
+
+    - 5% nodes with highest degree values :
+      Middle frontal gyrus: 3.4630
+      Angular gyrus inferior: 3.2940
+      Calcarine sulcus anterior: 3.1590
+      Middle frontal gyrus anterior: 3.1503
+
+**Centrality (betweeness)**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_centrality.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_centrality.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctcentrality.png" height="200px;" alt=""/>
+   </div>
+
+   - 5% nodes with highest centrality values :
+
+         Calcarine sulcus anterior: 0.0661
+         Middle frontal gyrus: 0.0584
+         Parieto-occipital sulcus anterior: 0.0568
+
+**Clustering**
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_clustering.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_clustering.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctclustering.png" height="200px;" alt=""/>
+   </div>
+
+- 5% nodes with highest clustering values :
+
+      Superior parietal lobule anterior: 0.1670
+      Paracentral lobule: 0.1635
+      Paracentral lobule superior: 0.1519
+
+### **B) Precision (inv. sparse cov.) estimation**
+
+
+   **Thresholded connectome**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\Bhist_precision.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\Bconnectome1pct_correl.png" height="600px;" alt=""/>
+   </div>
+
+   - Pair of nodes with highest change in edge value (Z difference post-pre):
+
+         [Occipital pole - Paracentral lobule superior]; Z=0.1647
+         [Paracentral lobule - Paracentral lobule superior]; Z=0.1628
+         [Occipital pole - Paracentral gyrus RH]; Z=0.1596
+         [Fusiform gyrus - Occipital pole]; Z=0.1588
+         [Intraparietal sulcus RH - Superior parietal lobule anterior]; Z=0.1573
+         [Paracentral lobule superior - Precuneus superior]; Z=0.1556
+         [Cingulate gyrus mid-anterior - Calcarine sulcus anterior]; Z=0.1486
+         [Superior temporal sulcus with angular gyrus - Paracentral lobule]; Z=0.1475
+         [Middle temporal gyrus - Heschl’s gyrus]; Z=0.1457
+         [Inferior frontal sulcus - Descending occipital gyrus]; Z=0.1444
+         [Superior parts of Postcentral and Precentral gyri - Paracentral lobule superior]; Z=0.1433
+      -------Negative edges-------
+
+         [Fusiform gyrus posterior - Inferior occipital gyrus]; Z=-0.2077
+         [Fusiform gyrus - Cerebellum Crus II]; Z=-0.2096
+         [Occipital pole - Descending occipital gyrus]; Z=-0.2570
+         [Occipital pole - Inferior occipital gyrus]; Z=-0.2711
+
+   - Nodes with the most connections (>3) from the thresholded connectome:
+
+         Occipital pole: 7 non-zero connections
+         Calcarine cortex posterior: 4 non-zero connections
+         Superior temporal sulcus with angular gyrus: 4 non-zero connections
+         Paracentral lobule superior: 4 non-zero connections
+
+----
+
+**Density**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\Bnx_brainplot_density.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_hist_degree.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_brainplot_5pctdensity.png" height="200px;" alt=""/>
+   </div>
+
+   - 5% nodes with highest density values(pos. and neg. values) :
+
+         Paracentral lobule superior: 0.7882
+         Superior occipital gyrus: -0.6706
+         Parieto-occipital sulcus middle: -0.6943
+
+**Centrality (betweeness)**
+
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\Bnx_brainplot_centrality.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_hist_centrality.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_brainplot_5pctcentrality.png" height="200px;" alt=""/>
+   </div>
+
+   - 5% nodes with highest centrality values :
+
+         Occipital pole: 0.0753
+         Paracentral lobule superior: 0.0445
+         Superior temporal sulcus with angular gyrus: 0.0394
+
+**Clustering**
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\Bnx_brainplot_clustering.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_hist_clustering.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\Bnx_brainplot_5pctclustering.png" height="200px;" alt=""/>
+   </div>
+
+- 5% nodes with highest clustering values :
+
+      Superior parietal lobule anterior: 0.1670
+      Paracentral lobule: 0.1635
+      Paracentral lobule superior: 0.1519
+   
+   - (Not displayed on graph) 5% nodes with lowest clustering values :
+
+         Cingulate gyrus mid-anterior: -0.013501491129290272
+         Inferior frontal gyrus: -0.013918529960704935
+         Anterior Cingulate Cortex: -0.01404254150619912
+
+## C) Comparison of 5% highest edge density post (correl. estim.)
 
 <img src="images/1imgs_difumo/xsupp_hist_postHyp.png" height="220px;" alt=""/>
 <img src="images/1imgs_difumo/xsupp_brainplot_5pct_post.png" height="220px;" alt=""/>
@@ -509,3 +612,21 @@ Thank you to all the BHS teaching assistants for the support and great advices o
    Cingulate gyrus mid-posterior: 0.2749985525257869
    Parieto-occipital sulcus anterior: 0.2708608648412702
 
+# References
+
+Kamalaker Dadi, Alexandre Abraham, Mehdi Rahim, Bertrand Thirion, Gaël Varoquaux. Comparing functional connectivity based predictive models across datasets. PRNI 2016: 6th International Workshop on Pattern Recognition in Neuroimaging, Jun 2016, Trento, Italy. ￿hal-01319131￿
+
+Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux,
+Benchmarking functional connectome-based predictive models for resting-state fMRI,
+NeuroImage,Volume 192,2019,Pages 115-134,ISSN 1053-8119,https://doi.org/10.1016/j.neuroimage.2019.02.062.
+
+
+S. Smith, K. Miller, G. Salimi-Khorshidi, M. Webster, C. Beckmann, T. Nichols, J. Ramsey, M. Woolrich, Network modelling methods for fMRI, Neuroimage 54 (2011) 875.
+
+Gael Varoquaux, Flore Baronnet, Andreas Kleinschmidt, Pierre Fillard, and Bertrand Thirion. Detection of brain functional-connectivity difference in post-stroke patients using group-level covariance modeling. In Tianzi Jiang, Nassir Navab, Josien P. W. Pluim, and Max A. Viergever, editors, Medical image computing and computer-assisted intervention - MICCAI 2010, Lecture notes in computer science, 200–208. Berlin, Heidelberg, 2010. Springer. doi:10/cn2h9c
+
+G. Varoquaux, A. Gramfort, J.B. Poline, B. Thirion, Brain covariance selection: better individual functional connectivity models using population prior, in: NIPS, 2010.
+
+Mehdi Rahim, Bertrand Thirion, Gaël Varoquaux,
+Population shrinkage of covariance (PoSCE) for better individual brain functional-connectivity estimation,
+Medical Image Analysis,Volume 54,2019,Pages 138-148,ISSN 61-8415, https://doi.org/10.1016/j.media.2019.03.001.

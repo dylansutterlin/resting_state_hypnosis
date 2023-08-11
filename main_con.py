@@ -59,7 +59,6 @@ def con_matrix(
     pre_data, post_data = prep.resample_shape_affine(data)
     results = dict(pre_series=list(), post_series=list())
     all_data = pre_data + post_data
-    breakpoint()
     # --Atlas choices--
     atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
         atlas_name, bilat=True
