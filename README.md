@@ -36,7 +36,7 @@ image: "brain.png"
    <img src="images/cover_hypnosis.png" height="200px;" alt=""/>
 </div>
 
-## Background
+# 1. Background
 Hypnosis can be used to study the neural correlates of consciousness. Hypnosis is defined as an experiential state of focused attention and heightened response to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. 
 
 For a informative discussion about neural correlates involved in hypnosis and clinical implications, by David Speigel, see [this link](https://www.youtube.com/watch?v=PctD-ki8dCc).
@@ -86,20 +86,7 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
 
 # 2. Method
 
-
-## Tools used
-
-This project was intended to upskill in the use of the following
- * `Nilearn` to analyse fMRI data in python.
- * `Scikit-learn` for ML models appllied to functionnal connectivity measures.
- * `Jupyter notebook`.
- * `Markdown` and `Github` for  open science coding practices.
- * Python debugger `pdb`.
- * Github copilot for code autocompletion and VScode for code editing.
-
-
-
-### Overview
+### Section overview
 
 #### 2.1 Atlas choices
    - Yeo7 atlas
@@ -107,13 +94,11 @@ This project was intended to upskill in the use of the following
 #### 2.2 Connectivity estimation methods and trade-offs
    - Pearson correlation
    - Partial correlation
-   - Regularized partial correlation (graphical lasso)
+   - Tangent space embedding
 #### 2.3 Extraction of hypnosis-induced connectivity  
 #### 2.4 Graph theory measures
+2.5  Predict Hypnosis-related variables from functionnal connectivity
 
-#### 2) Hypnosis-related functionnal connectivity
-3) Machine learning models to predict hypnotic experience from functionnal connectivity
-4) Hypnosis-related measures correlation with machine learning models
 
 
 ## 2.1 <em>_Atlas choices and covariance estimation_</em>
@@ -159,7 +144,7 @@ ___
 </div>
 
 
-## 2.2 *Covariance estimation comparison* 
+## 2.2 *Covariance estimation* 
 
 The covariance matrix is computed with the [**Nilearn.connectome.ConnectivityMeasure**](https://nilearn.github.io/dev/modules/generated/nilearn.connectome.ConnectivityMeasure.html) class. This class has the `kind` parameter that can be set to `covariance`, `correlation`, `partial correlation`, `tangent` or `precision`. Code example :
       
@@ -203,16 +188,18 @@ Therefore, as shown in Varoquaux et al. (2010) and Smith et al. (2011), other es
 
 #### *Tangent space of covariance matrix* (method from Varoquaux et al., 2010a)
 
-Computation of correlation assumes a linear model between the ROIs, which is not always the case. The tangent embedding is a non-linear transformation of the correlation matrix, that is more robust to non-linearities and spatial dependancies in the ROIs.
+Computation of correlation assumes that the ROIs form a linear model, which is not always the case. The tangent embedding is a projection of the correlation matrix, that is more robust to non-linearities and spatial dependancies in the ROIs.
+*Image from Rahim et al. (2019) to illustrate the tangent space*
+
+<div style="text-align: center; background-color: White; border: 1px solid #000; padding: 0px;">
+   <img src="images\method\rahim_al2019_tangent.jpg" height="160px;" alt=""/>   
+</div>
 
 * "The [Tangent method] is less frequently used but has solid mathematical foundations and a variety of groups have reported good decoding performances with this framework (Varoquaux et al., 2010a; Barachant et al., 2013; Ng et al., 2014; Dodero et al., 2015; Qiu et al., 2015; Rahim et al., 2017; Wong et al., 2018)" (Dad et al., 2019)
 
 * "Using the tangent embedding as a connectivity measure gives a consistent improvement over correlations and partial correlation"(Dadi et al., 2016)
 
-*Image from Rahim et al. (2019) to illustrate the tangent space*
-<div style="text-align: center; background-color: White; border: 1px solid #000; padding: 0px;">
-   <img src="images\method\rahim_al2019_tangent.jpg" height="160px;" alt=""/>   
-</div>
+
 
 
 ### Connectivity estimation choice for this study
@@ -222,7 +209,7 @@ The tangent method is chosen for this study, as it is a robust method that is le
 ## 2.3 Extraction of hypnosis-induced connectivity 
 
 - Computation of the connectivity matrix for each subject, for each condition (pre/post hypnosis)
-- Computation of the difference between the two conditions (post-pre hypnosis)
+- Computation of the difference between the two conditions (post-pre hypnosis) for each subject connectome.
 
    Fischer R to Z transfomation to compute the contrast matrix
    For the correlation estimation, since the metric used is pearson r, the values are between -1 and 1. To compute the contrast (post-pre) connectivity matrix, a substraction of the post-hypnosis matrix to the pre-hypnosis matrix was used. Since the substraction of pearson r's is not recommended, a Fischer R to Z transformation was applied on each single subject correlation matrix before the substraction. The substraction was then applied on the Z-transformed matrices. The numpy.arctanh was used for such transformation. Code example for the mean contrast matrix computation :
@@ -243,12 +230,36 @@ The tangent method is chosen for this study, as it is a robust method that is le
 
 
 - **Clustering** : "The clustering coefficient assesses the tendency for any two neighbours of a vertex to be directly connected (or more strongly connected in the weighted case) to each other and can also be termed cliquishness (Hallquist and Hillary 2018; Watts and Strogatz 1998)" (Centeno et al, 2022)
+
+## 2.5 Prediction of hypnosis-related variables
+
+### *Steps of the analysis*
+1. Vectorize half of the connectivity matrices for each subject and concatenate in a numpy array of shape (n_subjects, n_features). Example of code used for the vectorization :
+
+   ```
+   # Triangular lower masker on connectivity matrix
+   M = results["pre_connectomes"]
+   tril_mask = np.tril(np.ones(M.shape[-2:]), k=-1).astype(bool)
+
+   # Stack the vectorized matrices 
+   results["X"] = np.stack(M[i][..., tril_mask] for i in range(0, len(M)),axis=0)
+
+   ```
+2. Principal component analysis (0.80% explained variance) was applied to the feature matrix to reduce the dimensionality of the data, because multiple regression is not suited when nb. of features > nb. of subjects. 
+
+   ```
+   from sklearn.decomposition import PCA
+   pca = PCA(n_components=0.80)
+   results["X_pca"] = pca.fit_transform(results["X"])
+   ```
+3. Multiple regession with **Ridge regression** estimator was used to predict the change in hypnosis-related variables with the contrast (post-pre) connectivity.
+
+
 ---
 
 # 3. **Results**
-### Outline
 
-## Pre, post and contrast connectivity matrices
+## Pre-hypnosis, post-hypnosis and contrast (post-pre) functional connectivity matrices
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\results\pre_mat.png" height="160px;" alt=""/>
@@ -301,6 +312,8 @@ The tangent method is chosen for this study, as it is a robust method that is le
     <img src="images\results\degree_tresh_brainplot.png" height="150px;" alt=""/>
    </div>
 
+Note : The nodes represented in the tresholded brain plot are the first six nodes displayed in the first plot, e.i. the nodes with the highest degree value.
+
    ### Centrality (closeness)
    - "Closeness (shortest path-based) centrality measures how closely or’ directly’ connected a vertex is to the rest of the network." (Centeno et al, 2022)
 
@@ -323,118 +336,107 @@ The tangent method is chosen for this study, as it is a robust method that is le
 
 ### Prediction of hypnosis-related variables
 
-**Variables used** : 
+**Dependent variables** : 
 - SHSS score
 - Raw change in pain -ANA condition
 - Raw change in pain - Hyper condition
+- Absolute change in pain (Hypnosis, Analgesia)
 - Change in hypnotic depth
 - Change in mental relaxation 
 - Automaticity post induction
 - Change in automaticity
 
-- Variables in the excel file : ['SHSS_score', 'raw_change_ANA','raw_change_HYPER', "Abs_chge_pain_hypAna", "Chge_hypnotic_depth", "Mental_relax_absChange", 'Automaticity_post_ind',"Abs_diff_automaticity"]
+   Variables names in the excel file : ['SHSS_score', 'raw_change_ANA','raw_change_HYPER', "Abs_chge_pain_hypAna", "Chge_hypnotic_depth", "Mental_relax_absChange", 'Automaticity_post_ind',"Abs_diff_automaticity"]
 
-### Model
-- Ridge regression
-### Connectivity matrix (ROI-ROI correlation) as independent variables
+### Model and procedure
+- **Ridge regression** was the chosen model for its simplicity and its ability to deal with multicollinearity by penalizing the coefficients.
+- Cross-validation (10 folds), with a shufflesplit spliting strategy (80:20) was applied.
+- **PCA** with 80% explained variance was applied prior to the regression to reduce the number of features.
 
-
-### **Regression models**
-
-### 1.3.1 Connectivity matrix (ROI-ROI correlation) as independent variables
-
-
-
-
-### A) Correlation estmiation with Difumo64 atlas
-
-
-
-### *Steps of the analysis*
-1. Vectorize half of the connectivity matrices for each subject and concatenate in a numpy array of shape (n_subjects, n_features). Example of code used for the vectorization :
-
-   ```
-   # Triangular lower masker on connectivity matrix
-   M = results["pre_connectomes"]
-   tril_mask = np.tril(np.ones(M.shape[-2:]), k=-1).astype(bool)
-
-   # Stack the vectorized matrices 
-   results["X"] = np.stack(M[i][..., tril_mask] for i in range(0, len(M)),axis=0)
-
-   ```
-2. Principal component analysis (0.80% explained variance) was applied to the feature matrix to reduce the dimensionality of the data, because multiple regression is not suited when nb. of features > nb. of subjects. 
-
-   ```
-   from sklearn.decomposition import PCA
-   pca = PCA(n_components=0.80)
-   results["X_pca"] = pca.fit_transform(results["X"])
-   ```
-3. Multiple regession with **Ordinary Least Square** (OLS) estimator was used to predict the change in hypnosis-related variables with the contrast (post-pre) connectivity.
-
-         # Ordinary Least Sqaure estimator
-         from statsmodels.api import OLS
-
-4. Correct for multiple comparisons with **False Discovery Rate** (FDR)
-
-         # FDR correction
-         from statsmodels.stats.multitest import fdrcorrection
-
-### *Regression results*
-> Prediction of **change in hypnotic depth** with Post-pre covariance
-   
-      Feature 0 is significant (p < 0.05) with FDR correction
-      Feature 4 is significant (p < 0.05) with FDR correction
-      Feature 10 is significant (p < 0.05) with FDR correction
-      Feature 12 is significant (p < 0.05) with FDR correction
-      Feature 13 is significant (p < 0.05) with FDR correction
-      Feature 16 is significant (p < 0.05) with FDR correction
-
-> *Linear assumptions!*
-- Predicted vs observed values | Residuals vs predicted values plot for significant regressors
+      pipeline = Pipeline([('std', StandardScaler()),('pca', PCA(n_components=0.80)), ('ridge', Ridge())])
+      k = 10  # Number of folds
+      kf = ShuffleSplit(n_splits=k, test_size=0.20, random_state=5)
       
+### **Regression results**
 
-<img src="images/lin_assump_auto.png" height="220px;" alt=""/>
+### Connectivity matrix (ROI-ROI correlation) for prediction
+The full connectivity matrix of each subject was used for prediction (before applying the PCA). Each edges (2016 in total) was considered as a feature.
 
-We notice that the residuals are not normally distributed, and that the variance is not constant (right plot). This indicates that the linear assumptions are not met.
+Note : the metrics reported are the mean of the 10 folds and each regression line is the correlation (pearson) between predicted values and the real values for one fold.
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\results\pred_mat_SHSS.png" height="200px;" alt=""/>
+   <img src="images\results\pred_mat_ANA.png" height="200px;" alt=""/>
+    <img src="images\results\pred_mat_HYPER.png" height="200px;" alt=""/>
+    <img src="images\results\pred_mat_automaticity.png" height="200px;" alt=""/>
+   <img src="images\results\pred_mat_relax.png" height="200px;" alt=""/>
+    <img src="images\results\pred_mat_depth.png" height="200px;" alt=""/>
+   </div>
+ 
+** Prediction of change in pain (ANA and HYPER) not reported.
+
+### Node degree  as independent variables
+
+The feature matrix used for prediction has the shape (N=31 x Nodes=64).
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\results\pred_degree_SHSS.png" height="200px;" alt=""/>
+   <img src="images\results\pred_degree_ANA.png" height="200px;" alt=""/>
+    <img src="images\results\pred_degree_HYPER.png" height="200px;" alt=""/>
+    <img src="images\results\pred_degree_ANAHYPER.png" height="200px;" alt=""/>
+   <img src="images\results\pred_degree_automaticity.png" height="200px;" alt=""/>
+   </div>
+** Prediction of change in mental relaxation and hypnotic depth not reported.
 
 
-## <em>Machine learning classification</em>
+## <em>Classification of low, medium and high SHSS groups</em>
 
-### Classification between connectivity matrices from pre, post and post-pre conditions
+The SHSS score was used to classify the subjects in three groups : low (0-2), medium (3-5) and high (6-8), based on the connectivity matrices, on the node degree, on the node centrality and on the clustering coefficient.
 
+### Distribution of SHSS classes
+<img src="images/results/clf_hist_SHSS.png" height="300;" alt=""/>
 
-      x1 = dict_features['post']
-      x2 = dict_features['pre']
-      x3 = dict_features['contrast']
-      y_cond = np.concatenate((np.zeros(x1.shape[0]), np.ones(x2.shape[0]),
-       np.full(x3.shape[0], 2)),axis=0)
-      X = np.concatenate((x1, x2, x3), axis=0)
-   Dim. of x1,x2,x3 _(n_subjects, n_features)_  : (32, 2016), (32, 2016), (32, 2016) 
-   **X shape = (96, 2016)**
-
-### **Multiclass condition**
-* Algorithms : 
-   * Ensemble classifier : VotingClassifier
+### **Algorithm**
+   * **Ensemble classifier** (VotingClassifier) including :
       * LogisticRegression
       * RandomForestClassifier
       * SVC
+**PCA** was applied prior to the classification to reduce the number of features.
 
-* Metrics : 
-   - Ensemble classifier cross val. scores : [0.83%, 0.54%, 0.63%, 0.63%, 0.67%]
-   - Only SVC cross val scores : ['0.67%', '0.71%', '0.79%', '0.62%', '0.62%']
-         
-   **SVC mean confusion matrix :**
-<img src="images/ML_multi_confMat_correlation.png" height="420px;" alt=""/>
+- A **stratefiedKFold** (5 folds) was used to split the data into train and test sets. This method accounts for the unbalanced distribution of the classes.
 
-```{warning}
-Note that binary classification is giving 100% accuracy. This is most likely biased! Eventhough I made sure not to make the common mistake of testing on train data, there is probably some noise pattern specific to each run that the model uses to make such a neat distinction. Overall, this model is not very useful, because classifying two runs appart is not very informative on brain connectivity.
-```
+### Classification with the full connectivity matrix (2016 features before PCA)
 
+   Accuracy: 0.4516
+   Precision: 0.4452
+   Recall: 0.4516
+   F1-score: 0.4415
+   
+<img src="images/results/clf_cm_degree.png" height="420px;" alt=""/>
 
-___
-## <em>Seed-to-ROIs connectivity  </em>
+### Classification with centrality based features (64 features before PCA)
 
-### 
+   Accuracy: 0.3871
+   Precision: 0.3903
+   Recall: 0.3871
+   F1-score: 0.3870
+<img src="images/results/clf_cm_centrality.png" height="420px;" alt=""/>
+
+### Classification with centrality based features (64 features before PCA)
+
+   Accuracy: 0.3871
+   Precision: 0.3903
+   Recall: 0.3871
+   F1-score: 0.3870
+<img src="images/results/clf_cm_centrality.png" height="420px;" alt=""/>
+
+### Classification with clustering based features (64 features before PCA)
+
+   Accuracy: 0.3548
+   Precision: 0.3592
+   Recall: 0.3548
+   F1-score: 0.3557
+<img src="images/results/clf_cm_clustering.png" height="420px;" alt=""/>
 
 
 
@@ -601,7 +603,8 @@ Thank you to all the BHS teaching assistants for the support and great advices o
          Inferior frontal gyrus: -0.013918529960704935
          Anterior Cingulate Cortex: -0.01404254150619912
 
-## C) Comparison of 5% highest edge density post (correl. estim.)
+## C) 5% highest edge density post-hypnosis(correl. estim.)
+   (For comparison purpose with the contrast results)
 
 <img src="images/1imgs_difumo/xsupp_hist_postHyp.png" height="220px;" alt=""/>
 <img src="images/1imgs_difumo/xsupp_brainplot_5pct_post.png" height="220px;" alt=""/>
