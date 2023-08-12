@@ -308,8 +308,8 @@ The tangent method is chosen for this study, as it is a robust method that is le
 
  <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\results\degree_dist.png" height="500px;" alt=""/>
-   <img src="images\results\degree_full_brainplot.png" height="400px;" alt=""/>
-    <img src="images\results\degree_tresh_brainplot.png" height="400px;" alt=""/>
+   <img src="images\results\degree_full_brainplot.png" height="300px;" alt=""/>
+    <img src="images\results\degree_tresh_brainplot.png" height="300px;" alt=""/>
    </div>
 
 Note : The nodes represented in the tresholded brain plot are the first six nodes displayed in the first plot, e.i. the nodes with the highest degree value.
@@ -319,16 +319,16 @@ Note : The nodes represented in the tresholded brain plot are the first six node
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\results\centrality_dist.png" height="500px;" alt=""/>
-   <img src="images\results\centrality_full_brainplot.png" height="400px;" alt=""/>
-    <img src="images\results\centrality_tresh_brainplot.png" height="400px;" alt=""/>
+   <img src="images\results\centrality_full_brainplot.png" height="300px;" alt=""/>
+    <img src="images\results\centrality_tresh_brainplot.png" height="300px;" alt=""/>
    </div>
 
 ### Clustering coefficient
 - "The clustering coefficient assesses the tendency for any two neighbours of a vertex to be directly connected (or more strongly connected in the weighted case)" (Centeno et al, 2022)
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\results\clustering_dist.png" height="500px;" alt=""/>
-   <img src="images\results\clustering_full_brainplot.png" height="400px;" alt=""/>
-    <img src="images\results\clustering_tresh_brainplot.png" height="400px;" alt=""/>
+   <img src="images\results\clustering_full_brainplot.png" height="300px;" alt=""/>
+    <img src="images\results\clustering_tresh_brainplot.png" height="300px;" alt=""/>
    </div>
 
 
@@ -365,12 +365,12 @@ The full connectivity matrix of each subject was used for prediction (before app
 Note : the metrics reported are the mean of the 10 folds and each regression line is the correlation (pearson) between predicted values and the real values for one fold.
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\results\pred_mat_SHSS.png" height="350px;" alt=""/>
-   <img src="images\results\pred_mat_ANA.png" height="350px;" alt=""/>
-    <img src="images\results\pred_mat_HYPER.png" height="350px;" alt=""/>
-    <img src="images\results\pred_mat_automaticity.png" height="350px;" alt=""/>
-   <img src="images\results\pred_mat_relax.png" height="350px;" alt=""/>
-    <img src="images\results\pred_mat_depth.png" height="350px;" alt=""/>
+   <img src="images\results\pred_mat_SHSS.png" height="300px;" alt=""/>
+   <img src="images\results\pred_mat_ANA.png" height="300px;" alt=""/>
+    <img src="images\results\pred_mat_HYPER.png" height="300px;" alt=""/>
+    <img src="images\results\pred_mat_automaticity.png" height="300px;" alt=""/>
+   <img src="images\results\pred_mat_relax.png" height="300px;" alt=""/>
+    <img src="images\results\pred_mat_depth.png" height="300px;" alt=""/>
    </div>
  
 ** Prediction of change in pain (ANA and HYPER) not reported.
@@ -380,11 +380,11 @@ Note : the metrics reported are the mean of the 10 folds and each regression lin
 The feature matrix used for prediction has the shape (N=31 x Nodes=64).
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\results\pred_degree_SHSS.png" height="350px;" alt=""/>
-   <img src="images\results\pred_degree_ANA.png" height="350px;" alt=""/>
-    <img src="images\results\pred_degree_HYPER.png" height="350px;" alt=""/>
-    <img src="images\results\pred_degree_ANAHYPER.png" height="350px;" alt=""/>
-   <img src="images\results\pred_degree_automaticity.png" height="350px;" alt=""/>
+   <img src="images\results\pred_degree_SHSS.png" height="300px;" alt=""/>
+   <img src="images\results\pred_degree_ANA.png" height="300px;" alt=""/>
+    <img src="images\results\pred_degree_HYPER.png" height="300px;" alt=""/>
+    <img src="images\results\pred_degree_ANAHYPER.png" height="300px;" alt=""/>
+   <img src="images\results\pred_degree_automaticity.png" height="300px;" alt=""/>
    </div>
 ** Prediction of change in mental relaxation and hypnotic depth not reported.
 
