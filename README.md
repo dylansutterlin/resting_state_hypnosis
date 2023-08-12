@@ -1,40 +1,15 @@
----
-type: "project" # DON'T TOUCH THIS ! :)
-date: "2023-06-09" # Date you first upload your project.
-# Title of your project (we like creative title)
-title: ""
-
-# List the names of the collaborators within the [ ]. If alone, simple put your name within []
-names: [Dylan Sutterlin]
-
-# Your project GitHub repository URL
-github_repo: https://github.com/brainhack-school2023/sutterlin_project
-
-# If you are working on a project that has website, indicate the full url including "https://" below or leave it empty.
-website: 
-
-# List +- 4 keywords that best describe your project within []. Note that the project summary also involves a number of key words. Those are listed on top of the [github repository](https://github.com/PSY6983-2021/project_template), click `manage topics`.
-# Please only lowercase letters
-tags: [ASL-fMRI, hypnosis, connectome, ML]
-
-# Summarize your project in < ~75 words. This description will appear at the top of your page and on the list page with other projects..
-
-summary: "This project aims to better understand neural correlates of hypnosis, which is defined as an experiential experience of focused attention and heighten reponse to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact to produce the subjective change in phenomenological experience associated with hypnosis."
-
-# If you want to add a cover image (listpage and image in the right), add it to your directory and indicate the name
-# below with the extension.
-image: "brain.png"
----
-<!-- This is an html comment and this won't appear in the rendered page. You are now editing the "content" area, the core of your description. Everything that you can do in markdown is allowed below. We added a couple of comments to guide your through documenting your progress. -->
-
-
-# 
-
 
 
 <div style="text-align: center;">
    <img src="images/cover_hypnosis.png" height="200px;" alt=""/>
 </div>
+
+
+Summary: "This project aims to better understand neural correlates of hypnosis, which is defined as an experiential experience of focused attention and heighten reponse to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact to produce the subjective change in phenomenological experience associated with hypnosis."
+
+tags: [ASL-fMRI, hypnosis, connectome, ML]
+
+
 
 # 1. Background
 Hypnosis can be used to study the neural correlates of consciousness. Hypnosis is defined as an experiential state of focused attention and heightened response to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. 
