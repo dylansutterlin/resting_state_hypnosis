@@ -5,7 +5,7 @@
 </div>
 
 
-Summary: "This project aims to better understand neural correlates of hypnosis, which is defined as an experiential experience of focused attention and heighten reponse to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact to produce the subjective change in phenomenological experience associated with hypnosis."
+Summary: "This project aims to better understand neural correlates of hypnosis, which is defined as an experiential experience of focused attention and heighten reponse to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact to produce the subjective change in phenomenological experience associated with hypnosis. We used Arterial Spin Labeling fMRI (Simens 3T) data acquired at rest (from Rainville et al., 2019), both before and after a hypnotic induction. The functional connectivity matrix for each subject was computed, for each condition (pre/post hypnosis) and for the contrast (post-pre hypnosis). We then used graph theory metrics to characterize the individual connectomes during hypnosis (contrast post-pre). A 10-fold,  used ridge regression to predict the change in hypnosis-related variables with the contrast (post-pre) connectivity."
 
 tags: [ASL-fMRI, hypnosis, connectome, ML]
 
@@ -19,11 +19,11 @@ For a informative discussion about neural correlates involved in hypnosis and cl
 ## Data
 
 ### *Arterial spin labelling protocol*
-Data Used comes from Rainville et al. (2019) and hypnosis was used during the fMRI scanning acquisition with a Simens 3T scanner.
+Data Used comes from [Rainville et al. (2019)](https://pubmed.ncbi.nlm.nih.gov/31526265/) and hypnosis was used during the fMRI scanning acquisition with a Simens 3T scanner.
 
 *Outline*
 
->33 participants (f=17 27 y.o mean)
+>33 participants (female=17,male = 16,  27 y.o mean)
 >
 >* 2 resting state scans (6 minutes each)
 >* Conditions : Pre-hypnosis, Post-hypnosis
@@ -34,11 +34,9 @@ Data Used comes from Rainville et al. (2019) and hypnosis was used during the fM
 >   - Hypnotic experience (HEQ)
    
 
- A 6 minutes resting state scan was first acquired at the beginning of the protocol. Other tasks detailed in Rainville et al. (2021) were performed following the resting state acquisition, but are not used in this project. At the end of the protocol, participant took part in a 15 minutes hypnotic induction prior to a second resting state scan (6 minutes).
+ A 6 minutes resting state scan was first acquired at the beginning of the protocol. Other tasks detailed in [Desmarteaux et al. (2021)](https://www.frontiersin.org/articles/10.3389/fpain.2021.757384/full) were performed following the resting state acquisition, but are not used in this project. At the end of the protocol, participant took part in a 15 minutes hypnotic induction prior to a second resting state scan (6 minutes).
 
 The functional MRI signal was **Arterial splin labeling** which measure crebral blood flow over time. Altough this signal is not as precise as the BOLD signal (lower S/N ratio), it has the advantage of being absolute and not relative to a baseline. This is particularly useful for the resting state scan, as the baseline is not well defined.
-
-
 
 
 
@@ -50,12 +48,12 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
    Other tasks in the scanning protocol - aside from the 2 resting state scans- included conditions of verbal suggestions either to increase (hyperalgesia cond.) or to decrease (analgesia cond.) pain perception prior to a series of painful stimulation. Subjective pain was assessed after each trial of [verbal suggestion + painful stimulations]. The difference between the pain ratings in the neutral condition and the pain ratings in the analgesia/hyperalgesia condition was computed for each subject. The absolute change in pain modulation was then used as a regressor in the analysis.
 
 ### *Data availability*
-   Data access is unfortunately restricted from public open access. However, it can easily be shared on demand. Please contact me at dylan.sutterlin-guindon@umontreal.ca
+   Data access is unfortunately restricted from public open access. However, group results can be shared on demand. Please contact me at dylan.sutterlin-guindon@umontreal.ca
 
 
 ### *Deliverables*
 
-1) A github repository with all the code and documentation organized in a standard way; main.py, src, scripts, images, notebooks and a README.md file.
+1) A github repository with all the code and documentation organized in a standard way; main.py, src, scripts, images, notebooks and a README.md (this document) file.
 2) A jupyter notebook with the prediction analyses and plots used in this report.
 
 
@@ -72,7 +70,7 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
    - Tangent space embedding
 #### 2.3 Extraction of hypnosis-induced connectivity  
 #### 2.4 Graph theory measures
-2.5  Predict Hypnosis-related variables from functionnal connectivity
+#### 2.5  Prediction of hypnosis-related variables from functionnal connectivity
 
 
 
@@ -146,7 +144,7 @@ The covariance matrix is computed with the [**Nilearn.connectome.ConnectivityMea
    <img src="images\method\tangent_brainplot.png" height="160px;" alt=""/>
 </div>
 
-### Trade-offs between estimation methods
+### Trade-offs between connectivity estimation methods
 
 #### *Correlation* 
 
@@ -170,29 +168,25 @@ Computation of correlation assumes that the ROIs form a linear model, which is n
    <img src="images\method\rahim_al2019_tangent.jpg" height="160px;" alt=""/>   
 </div>
 
-* "The [Tangent method] is less frequently used but has solid mathematical foundations and a variety of groups have reported good decoding performances with this framework (Varoquaux et al., 2010a; Barachant et al., 2013; Ng et al., 2014; Dodero et al., 2015; Qiu et al., 2015; Rahim et al., 2017; Wong et al., 2018)" (Dad et al., 2019)
+* "The [Tangent method] is less frequently used but has solid mathematical foundations and a variety of groups have reported good decoding performances with this framework (Varoquaux et al., 2010a; Barachant et al., 2013; Ng et al., 2014; Dodero et al., 2015; Qiu et al., 2015; Rahim et al., 2017; Wong et al., 2018)" (Dadi et al., 2019)
 
 * "Using the tangent embedding as a connectivity measure gives a consistent improvement over correlations and partial correlation"(Dadi et al., 2016)
 
 
-
-
 ### Connectivity estimation choice for this study
 
-The tangent method is chosen for this study, as it is a robust method that is less sensitive to non-linearities and spatial dependancies in the ROIs.
+The tangent method was chosen for this study, as it is a robust method that is less sensitive to non-linearities and spatial dependancies in the ROIs.
 
-## 2.3 Extraction of hypnosis-induced connectivity 
+## 2.3 Extraction of hypnosis-related connectivity 
 
 - Computation of the connectivity matrix for each subject, for each condition (pre/post hypnosis)
-- Computation of the difference between the two conditions (post-pre hypnosis) for each subject connectome.
+- Computation of the difference between the two conditions (post-pre hypnosis element-wise in the adjacency/connectivity matrices) for each subject connectome.
 
-   Fischer R to Z transfomation to compute the contrast matrix
-   For the correlation estimation, since the metric used is pearson r, the values are between -1 and 1. To compute the contrast (post-pre) connectivity matrix, a substraction of the post-hypnosis matrix to the pre-hypnosis matrix was used. Since the substraction of pearson r's is not recommended, a Fischer R to Z transformation was applied on each single subject correlation matrix before the substraction. The substraction was then applied on the Z-transformed matrices. The numpy.arctanh was used for such transformation. Code example for the mean contrast matrix computation :
+   A Fischer R to Z transfomation was applied to each connectivity matriz prior to the the (post - pre) substraction. This was done to avoid substraction of pearson r's, which is not recommended. The numpy.arctanh was used for such transformation. Code example :
 
-      contrast_mean_matrix = np.arctanh(post_mean) - np.arctanh(pre_mean)
-
-
-
+      # Element-wise substraction of the two matrices
+      contrast_matrix = np.arctanh(post_matrix) - np.arctanh(pre_matrix) 
+  
 
 ## 2.4 Graph theory metrics
 
@@ -208,8 +202,24 @@ The tangent method is chosen for this study, as it is a robust method that is le
 
 ## 2.5 Prediction of hypnosis-related variables
 
+The main goal of this project, beside to explore the functional connectome related to hypnosis, is to predict hypnosis-related variables from the functional connectivity. The hypnosis-related variables used are the following :
+
+**Dependent variables** : 
+- SHSS score
+- Raw change in pain -ANA condition
+- Raw change in pain - Hyper condition
+- Absolute change in pain (Hyperalgesia, Analgesia, Ana+Hyper )
+- Change in hypnotic depth
+- Change in mental relaxation 
+- Automaticity post induction
+- Change in automaticity
+
+   Variables names in the excel file : ['SHSS_score', 'raw_change_ANA','raw_change_HYPER', "Abs_chge_pain_hypAna", "Chge_hypnotic_depth", "Mental_relax_absChange", 'Automaticity_post_ind',"Abs_diff_automaticity"]
+
+The  graphs' metrics described in section **2.5** above were used to predict the change in hypnosis-related variables with the contrast (post-pre) connectivity.
+
 ### *Steps of the analysis*
-1. Vectorize half of the connectivity matrices for each subject and concatenate in a numpy array of shape (n_subjects, n_features). Example of code used for the vectorization :
+1. Vectorize half of the connectivity matrices, excluding the main diagonal, for each subject and concatenate in a numpy array of shape (n_subjects, n_features). Example of code used for the vectorization :
 
    ```
    # Triangular lower masker on connectivity matrix
@@ -315,13 +325,12 @@ Note : The nodes represented in the tresholded brain plot are the first six node
 - SHSS score
 - Raw change in pain -ANA condition
 - Raw change in pain - Hyper condition
-- Absolute change in pain (Hypnosis, Analgesia)
+- Absolute change in pain (Hyperalgesia, Analgesia, Ana+Hyper )
 - Change in hypnotic depth
 - Change in mental relaxation 
 - Automaticity post induction
 - Change in automaticity
 
-   Variables names in the excel file : ['SHSS_score', 'raw_change_ANA','raw_change_HYPER', "Abs_chge_pain_hypAna", "Chge_hypnotic_depth", "Mental_relax_absChange", 'Automaticity_post_ind',"Abs_diff_automaticity"]
 
 ### Model and procedure
 - **Ridge regression** was the chosen model for its simplicity and its ability to deal with multicollinearity by penalizing the coefficients.
