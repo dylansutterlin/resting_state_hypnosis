@@ -5,7 +5,7 @@
 </div>
 
 
-Summary: "This project aims to better understand neural correlates of hypnosis, which is defined as an experiential experience of focused attention and heighten reponse to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact to produce the subjective change in phenomenological experience associated with hypnosis. We used Arterial Spin Labeling fMRI (Simens 3T) data acquired at rest (from Rainville et al., 2019), both before and after hypnotic induction. The functional connectivity matrix for each subject was computed, for each condition (pre/post hypnosis) and for the contrast (post-pre hypnosis). We then used graph theory metrics (degree, clustering and centrality) to characterize the individual connectomes during hypnosis (contrast post-pre). A 10-fold (80:20 split) ridge regression was trained to predict (separately) each of the hypnosis-related dependent variables. The feature matrices used to train the model were the full connectivity matrix, the degree-based, clustering-based and centrality-based matrices.
+Summary: "This project aims to better understand neural correlates of hypnosis, which is defined as an experiential experience of focused attention and heighten reponse to suggestions. Hypnotic experience can be assessed in part trough the feeling of automaticity associated with hypnotic experience, with hypnotic depth measures and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact together to produce the subjective change in phenomenological experience associated with hypnosis. We used Arterial Spin Labeling fMRI (Siemens 3T) data acquired at rest (from Rainville et al., 2019), both before and after hypnotic induction. The functional connectivity matrix for each subject was computed, for each condition (pre and post hypnosis) and then substracted to extract the contrast connectivity (post-pre hypnosis) induced by hypnosis. We then used the contrast connectivity matrices and graph theory metrics extracted from the connectomes (degree, clustering and centrality) to predict hypnosis-related behavioral variables. A 10-fold (80:20 train-test split) ridge regression was trained to predict (separately) the dependent variables.'
 
 
 tags: [ASL-fMRI, hypnosis, connectome, ML]
@@ -13,7 +13,7 @@ tags: [ASL-fMRI, hypnosis, connectome, ML]
 
 
 # 1. Background
-Hypnosis can be used to study the neural correlates of consciousness. Hypnosis is defined as an experiential state of focused attention and heightened response to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. 
+Hypnosis is defined as an experiential state of focused attention and heightened response to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. Efficiency of hypnosis to modulate pain is well grounded in litterature (see Thompson et al., 2019 for a systematic review).
 
 For a informative discussion about neural correlates involved in hypnosis and clinical implications, by David Speigel, see [this link](https://www.youtube.com/watch?v=PctD-ki8dCc).
 
@@ -35,10 +35,9 @@ Data Used comes from [Rainville et al. (2019)](https://pubmed.ncbi.nlm.nih.gov/3
 >   - Hypnotic experience (HEQ)
    
 
- A 6 minutes resting state scan was first acquired at the beginning of the protocol. Other tasks detailed in [Desmarteaux et al. (2021)](https://www.frontiersin.org/articles/10.3389/fpain.2021.757384/full) were performed following the resting state acquisition, but are not used in this project. At the end of the protocol, participant took part in a 15 minutes hypnotic induction prior to a second resting state scan (6 minutes).
+ A 6 minutes resting state scan was first acquired at the beginning of the protocol (pre hypnosis). Other pain-related tasks detailed in [Desmarteaux et al. (2021)](https://www.frontiersin.org/articles/10.3389/fpain.2021.757384/full) were performed following the initial resting state acquisition. These tasks invlove a series of painful stimulations coupled with hypnotic suggestions to either increase or decrease the pain. Some variables related to this part of the protocol were used in the present project as dependent varibles (e.g. the efficiency of pain modulation induced by hypnosis). Other hypnosis-related measures are derived from this part of the protocol, e.g. measures of feeling of automaticity, mental relaxation and hypnotic depth. At the end of the protocol, participant took part in a 15 minutes hypnotic induction prior to a second (post hypnosis) resting state scan (6 minutes).
 
-The functional MRI signal was **Arterial splin labeling** which measure crebral blood flow over time. Altough this signal is not as precise as the BOLD signal (lower S/N ratio), it has the advantage of being absolute and not relative to a baseline. This is particularly useful for the resting state scan, as the baseline is not well defined.
-
+The functional MRI signal is **Arterial splin labeling** which measure crebral blood flow over time. Altough this signal is not as precise as the BOLD signal (lower S/N ratio), it has the advantage of being absolute and not relative to a baseline. This is particularly useful for the resting state scan, as the baseline is not well defined.
 
 
 <div style="text-align: center; background-color: white; border: 1px solid #000; padding: 20px;">
@@ -46,7 +45,7 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
 </div>
 
 > **Note on pain modulation* :
-   Other tasks in the scanning protocol - aside from the 2 resting state scans- included conditions of verbal suggestions either to increase (hyperalgesia cond.) or to decrease (analgesia cond.) pain perception prior to a series of painful stimulation. Subjective pain was assessed after each trial of [verbal suggestion + painful stimulations]. The difference between the pain ratings in the neutral condition and the pain ratings in the analgesia/hyperalgesia condition was computed for each subject. The absolute change in pain modulation was then used as a regressor in the analysis.
+   Other tasks in the scanning protocol - aside from the 2 resting state scans- included conditions of verbal suggestions either to increase (hyperalgesia cond.) or to decrease (analgesia cond.) pain experience prior to a series of painful stimulation. Subjective pain was assessed after each trial of [verbal suggestion + painful stimulations]. The difference between the pain ratings in the neutral condition and the pain ratings in the analgesia/hyperalgesia condition was computed for each subject. The absolute change in pain modulation was then used as a regressor in the analysis.
 
 ### *Data availability*
    Data access is unfortunately restricted from public open access. However, group results can be shared on demand. Please contact me at dylan.sutterlin-guindon@umontreal.ca
@@ -76,6 +75,8 @@ The functional MRI signal was **Arterial splin labeling** which measure crebral 
 
 
 ## 2.1 <em>_Atlas choices and covariance estimation_</em>
+
+_The following section on the Yeo atlas is mainly to ground this project in a knowledge sharing perspective and for transparacy, as this atlas was not utlimately the one chosen for the main analyses. The DiFuMo atlas, presented after, was used for the project._
 ___
 ### **Yeo et al. 7 networks**
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
@@ -88,7 +89,7 @@ ___
       atlas = datasets.fetch_atlas_yeo_2011()["thick_7"]
 
 
-   This atlas was first chosen for its parcimony as it only comprises 7 networks. With that many ROIs, the number of possible pairs is 21 and it would not be desirable to have too much regressors in  multiple regression model where we have few samples. is a *deterministic atlas*.
+   This atlas was first consider for its parcimony as it only comprises 7 networks. With that many ROIs, the number of possible pairs is 21 and it would not be desirable to have too much regressors in  multiple regression models where we have few samples. is a *deterministic atlas*.
    As metionned in the [nilearn docs](https://nilearn.github.io/dev/modules/generated/nilearn.datasets.fetch_atlas_yeo_2011.html) :
    
       "A deterministic atlas is a hard parcellation of the brain into non-overlaping regions, that might have been obtained by segmentation or clustering methods. These objects are represented as 3D images of the brain composed of integer values, called ‘labels’, which define the different regions."
@@ -108,15 +109,18 @@ ___
 ### **DifuMo Atlas**
    *Fine-grain atlas of functional modes for fMRI analysis*
 
-* Article from [Dadi et al, 2020](https://www.sciencedirect.com/science/article/pii/S1053811920306121) that presents the atlas
+* This atlas is originally presented in [Dadi et al, 2020](https://www.sciencedirect.com/science/article/pii/S1053811920306121)
 * Can be downloaded [here](https://parietal-inria.github.io/DiFuMo/64)
-* **Labels provided**
+   - Note that finer parcellation of the atlas are also available [here](https://parietal-inria.github.io/DiFuMo)
+* **Labels are provided** 
+* It is a probabilstic atlas (4 dimenional Nifti file of shape Xdim, Ydim, Zdim, Number of ROIs). Each 3D slice of this 4D file contains a ROI. Hence, some voxels can be in more than one ROI. 
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\scr_difumo_comp1.png" height="240px;" alt=""/>
    <img src="images\scr_difumo_comp2.png" height="230px;" alt=""/>
 </div>
 
+This atlas was chosen for its balance between parsimony (64 ROIs) and for its anatomico-functional precision. Also, the process used for the development of this atlas is very rigorous in the computation of the functional ROIs (modes), but also in the labeling process of the ROIs.
 
 ## 2.2 *Covariance estimation* 
 
@@ -176,18 +180,20 @@ Computation of correlation assumes that the ROIs form a linear model, which is n
 
 ### Connectivity estimation choice for this study
 
-The tangent method was chosen for this study, as it is a robust method that is less sensitive to non-linearities and spatial dependancies in the ROIs.
+The tangent method was chosen for this study, as it is a mathematically well grounded method and as it is less sensitive to non-linearities and spatial dependancies in the ROIs.
 
 ## 2.3 Extraction of hypnosis-related connectivity 
 
 - Computation of the connectivity matrix for each subject, for each condition (pre/post hypnosis)
-- Computation of the difference between the two conditions (post-pre hypnosis element-wise in the adjacency/connectivity matrices) for each subject connectome.
+- Computation of the difference between the two conditions (post-pre hypnosis element-wise in the adjacency/connectivity matrices) for each subject's connectome.
 
    A Fischer R to Z transfomation was applied to each connectivity matriz prior to the the (post - pre) substraction. This was done to avoid substraction of pearson r's, which is not recommended. The numpy.arctanh was used for such transformation. Code example :
 
       # Element-wise substraction of the two matrices
+      import numpy as np
       contrast_matrix = np.arctanh(post_matrix) - np.arctanh(pre_matrix) 
   
+- The edges' values of the resulted contrast connectome are thus the difference in Z scores obtained from the element-wise Z score substraction post-pre.
 
 ## 2.4 Graph theory metrics
 
@@ -238,14 +244,25 @@ The  graphs' metrics described in section **2.5** above were used to predict the
    pca = PCA(n_components=0.80)
    results["X_pca"] = pca.fit_transform(results["X"])
    ```
-3. Multiple regession with **Ridge regression** estimator was used to predict the change in hypnosis-related variables with the contrast (post-pre) connectivity.
+3. Multiple regession with **Ridge regression** model was used to predict the change in hypnosis-related variables with the contrast (post-pre) connectivity. 
 
 
 ---
 
 # 3. **Results**
 
-## Pre-hypnosis, post-hypnosis and contrast (post-pre) functional connectivity matrices
+### Section overview
+
+#### 3.1 Pre-hypnosis, post-hypnosis and contrast (post-pre) mean functional connectivity trends 
+
+#### 3.2 Tresholded connectome (1% strongest edge values)
+
+#### 3.3 Graph theory measures
+#### 3.4 Predictive models
+#### 3.5 Classification of low, medium and highly hypnostizable groups 
+
+
+## 3.1 Pre-hypnosis, post-hypnosis and contrast (post-pre) functional connectivity matrices
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\results\pre_mat.png" height="160px;" alt=""/>
@@ -258,7 +275,9 @@ The  graphs' metrics described in section **2.5** above were used to predict the
    <img src="images\results\contrast_brainplot.png" height="150px;" alt=""/>
 </div>
 
-## Tresholded connectome (1%)
+## 3.2 Tresholded mean hypnosis-induced connectome (1% strongest edges)
+
+The presented connectome is the  mean of each contrast (post - pre hypnosis) individual connectomes. The edges are the difference post-pre in Z scores. It hence reflects the mean hypnosis-induced change in connectivity.
 
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\results\hist_contrast.png" height="400px;" alt=""/>
@@ -266,12 +285,14 @@ The  graphs' metrics described in section **2.5** above were used to predict the
     <img src="images\results\tresh_zedges.png" height="600px;" alt=""/>
    </div>
 
-   *Brain plot of the 1% most significant edges (Z difference post-pre hypnosis)*
+   *Brain plot of the 1% strongest edge values (Z difference post-pre hypnosis)*
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
     <img src="images\results\interactive_plot.png" height="500px;" alt=""/>
    </div>
 
 ### Nodes with the most non-zero connections from the Tresholded connectome (1%)
+
+The tresholded mean connectome (the one reported above) was binarized. The logic is to assign 1 to an edge/connection if it survives the 1% highest edge treshold, else edge = 0. From that binarized matrix, the frequency of the remaining connections is extracted for each node/ROI. The nodes with the most non-zero connections, e.i. having the most frequent high edge values (according to the 1% treshold) are reported below :  
 
       Calcarine sulcus anterior: 7 non-zero connections
       Paracentral lobule superior: 7 non-zero connections
@@ -281,13 +302,15 @@ The  graphs' metrics described in section **2.5** above were used to predict the
       Angular gyrus inferior: 4 non-zero connections
       Central sulcus: 4 non-zero connections
       Caudate: 4 non-zero connections
+
+   #### Visualization of the top 3 most strongly connected ROIs
  <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\results\difumo_comp31.jpg" height="300px;" alt=""/>
    <img src="images\results\difumo_comp44.jpg" height="300px;" alt=""/>
     <img src="images\results\difumo_comp53.jpg" height="300px;" alt=""/>
    </div>
 
-## Graphs theory metrics
+## 3.3 Graphs theory metrics
 
    ### Degree
    - 'In an undirected weighted network like our rsfMRI matrix, the vertex degree is analogous to the vertex strength (i.e., the sum of all edges of a vertex) and equivalent to its degree centrality' (Centeno et al, 2022)
@@ -318,10 +341,10 @@ Note : The nodes represented in the tresholded brain plot are the first six node
    </div>
 
 
-## Predictive models
+## 3.4 Predictive models
 
 ### Prediction of hypnosis-related variables
-
+---
 **Dependent variables** : 
 - SHSS score
 - Raw change in pain -ANA condition
@@ -344,7 +367,7 @@ Note : The nodes represented in the tresholded brain plot are the first six node
       
 ### **Regression results**
 
-### Connectivity matrix (ROI-ROI correlation) for prediction
+### A) Connectivity matrix (ROI-ROI correlation) for prediction
 The full connectivity matrix of each subject was used for prediction (before applying the PCA). Each edges (2016 in total) was considered as a feature.
 
 Note : the metrics reported are the mean of the 10 folds and each regression line is the correlation (pearson) between predicted values and the real values for one fold.
@@ -360,7 +383,7 @@ Note : the metrics reported are the mean of the 10 folds and each regression lin
  
 ** Prediction of change in pain (ANA and HYPER) not reported.
 
-### Node degree  as independent variables
+### B) Node degree  as independent variables
 
 The feature matrix used for prediction has the shape (N=31 x Nodes=64).
 
@@ -374,9 +397,9 @@ The feature matrix used for prediction has the shape (N=31 x Nodes=64).
 ** Prediction of change in mental relaxation and hypnotic depth not reported.
 
 
-## <em>Classification of low, medium and high SHSS groups</em>
+## 3.5 Classification of low, medium and highly hypnostizable groups
 
-The SHSS score was used to classify the subjects in three groups : low (0-2), medium (3-5) and high (6-8), based on the connectivity matrices, on the node degree, on the node centrality and on the clustering coefficient.
+The Standford Hypnotic Susceptibility Scale (SHSS) score was used to classify the subjects in three groups : low (0-2), medium (3-5) and high (6-8), based on the connectivity matrices, on the node degree, on the node centrality and on the clustering coefficient.
 
 ### Distribution of SHSS classes
 <img src="images/results/clf_hist_SHSS.png" height="300;" alt=""/>
@@ -427,84 +450,33 @@ The SHSS score was used to classify the subjects in three groups : low (0-2), me
 
 ## Acknowledgement
 
-Thank you to all the BHS teaching assistants for the support and great advices on this project and also to the organizers who made such a wonderful course possible.
+This project was in part executed as part of the BrainHack School (BHS) project. Thank you to all the BHS teaching assistants for the support and great advices on this project and also to the organizers who made such a interactive and dynamic course possible. This project was executed in collaboration and under the supervision of Pierre Rainville and Mathieu Landry, and some additional help from Jen-I Chen regarding data analysis and preprocessing.
 
-</div>
+
+# References
+
+Gael Varoquaux, Flore Baronnet, Andreas Kleinschmidt, Pierre Fillard, and Bertrand Thirion. Detection of brain functional-connectivity difference in post-stroke patients using group-level covariance modeling. In Tianzi Jiang, Nassir Navab, Josien P. W. Pluim, and Max A. Viergever, editors, Medical image computing and computer-assisted intervention - MICCAI 2010, Lecture notes in computer science, 200–208. Berlin, Heidelberg, 2010. Springer. doi:10/cn2h9c
+
+G. Varoquaux, A. Gramfort, J.B. Poline, B. Thirion, Brain covariance selection: better individual functional connectivity models using population prior, in: NIPS, 2010.
+
+Kamalaker Dadi, Alexandre Abraham, Mehdi Rahim, Bertrand Thirion, Gaël Varoquaux. Comparing functional connectivity based predictive models across datasets. PRNI 2016: 6th International Workshop on Pattern Recognition in Neuroimaging, Jun 2016, Trento, Italy. hal-01319131
+
+Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux,
+Benchmarking functional connectome-based predictive models for resting-state fMRI,
+NeuroImage,Volume 192,2019,Pages 115-134,ISSN 1053-8119,https://doi.org/10.1016/j.neuroimage.2019.02.062.
+
+Mehdi Rahim, Bertrand Thirion, Gaël Varoquaux,
+Population shrinkage of covariance (PoSCE) for better individual brain functional-connectivity estimation,
+Medical Image Analysis,Volume 54,2019,Pages 138-148,ISSN 61-8415, https://doi.org/10.1016/j.media.2019.03.001.
+
+S. Smith, K. Miller, G. Salimi-Khorshidi, M. Webster, C. Beckmann, T. Nichols, J. Ramsey, M. Woolrich, Network modelling methods for fMRI, Neuroimage 54 (2011) 875.
+
+Thompson T, Terhune DB, Oram C, Sharangparni J, Rouf R, Solmi M. The effectiveness of hypnosis for pain relief: A systematic review and metaanalysis of 85 controlled experimental trials. Neurosci Biobehav Rev. (2019). 99:298–310 .doi: 10.1016/j.neubiorev.2019.02.013
 
 
 # Supplemental material/figures
 
-### **A)** _Correlation_ for connectivity estimation (r for edge values)
-   **Thresholded connectome**
-   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\hist_correl.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\connectome1pct_correl.png" height="600px;" alt=""/>
-   </div>
-
-   - Pair of nodes with highest change in edge value (Z difference post-pre):
-
-         [Middle frontal gyrus - Superior fornix and isthmus]; Z=0.1566
-         [Heschl’s gyrus - Paracentral gyrus RH]; Z=0.1521
-         [Middle frontal gyrus - Parieto-occipital sulcus anterior]; Z=0.1494
-         [Fusiform gyrus - Cingulate cortex posterior]; Z=0.1475
-         [ventricles - Middle frontal gyrus]; Z=0.1466
-         [Superior frontal sulcus - Dorsomedial prefrontal cortex antero-superior]; Z=0.1461
-         [Middle frontal gyrus - Putamen]; Z=0.1448
-         [Cerebellum I-V - Parieto-occipital sulcus anterior]; Z=0.1428
-         [Middle frontal gyrus anterior - Angular gyrus inferior]; Z=0.1419
-         [Middle frontal gyrus anterior - Putamen]; Z=0.1401
-
-   - Nodes with the most connections (>3) from the thresholded connectome:
-
-         Paracentral lobule superior: 8 non-zero connections
-         Caudate: 5 non-zero connections
-         Superior frontal sulcus: 4 non-zero connections
-         Heschl’s gyrus: 4 non-zero connections
-         Middle frontal gyrus: 4 non-zero connections
-----
-**Degree** 
-'The weighted node degree is the sum of the edge weights for edges incident to that node'
-
- <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\nx_brainplot_degree.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_hist_degree.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_5pctdegree.png" height="200px;" alt=""/>
-   </div>
-
-    - 5% nodes with highest degree values :
-      Middle frontal gyrus: 3.4630
-      Angular gyrus inferior: 3.2940
-      Calcarine sulcus anterior: 3.1590
-      Middle frontal gyrus anterior: 3.1503
-
-**Centrality (betweeness)**
-   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\nx_brainplot_centrality.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_hist_centrality.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_5pctcentrality.png" height="200px;" alt=""/>
-   </div>
-
-   - 5% nodes with highest centrality values :
-
-         Calcarine sulcus anterior: 0.0661
-         Middle frontal gyrus: 0.0584
-         Parieto-occipital sulcus anterior: 0.0568
-
-**Clustering**
-<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\1imgs_difumo\nx_brainplot_clustering.png" height="200px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_hist_clustering.png" height="300px;" alt=""/>
-   <img src="images\1imgs_difumo\nx_brainplot_5pctclustering.png" height="200px;" alt=""/>
-   </div>
-
-- 5% nodes with highest clustering values :
-
-      Superior parietal lobule anterior: 0.1670
-      Paracentral lobule: 0.1635
-      Paracentral lobule superior: 0.1519
-
-### **B) Precision (inv. sparse cov.) estimation**
-
+### **A)** Precision (inv. sparse cov.) estimation**
 
    **Thresholded connectome**
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
@@ -588,6 +560,76 @@ Thank you to all the BHS teaching assistants for the support and great advices o
          Inferior frontal gyrus: -0.013918529960704935
          Anterior Cingulate Cortex: -0.01404254150619912
 
+
+### **B) _Correlation_ for connectivity estimation (r for edge values)
+   **Thresholded connectome**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\hist_correl.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\connectome1pct_correl.png" height="600px;" alt=""/>
+   </div>
+
+   - Pair of nodes with highest change in edge value (Z difference post-pre):
+
+         [Middle frontal gyrus - Superior fornix and isthmus]; Z=0.1566
+         [Heschl’s gyrus - Paracentral gyrus RH]; Z=0.1521
+         [Middle frontal gyrus - Parieto-occipital sulcus anterior]; Z=0.1494
+         [Fusiform gyrus - Cingulate cortex posterior]; Z=0.1475
+         [ventricles - Middle frontal gyrus]; Z=0.1466
+         [Superior frontal sulcus - Dorsomedial prefrontal cortex antero-superior]; Z=0.1461
+         [Middle frontal gyrus - Putamen]; Z=0.1448
+         [Cerebellum I-V - Parieto-occipital sulcus anterior]; Z=0.1428
+         [Middle frontal gyrus anterior - Angular gyrus inferior]; Z=0.1419
+         [Middle frontal gyrus anterior - Putamen]; Z=0.1401
+
+   - Nodes with the most connections (>3) from the thresholded connectome:
+
+         Paracentral lobule superior: 8 non-zero connections
+         Caudate: 5 non-zero connections
+         Superior frontal sulcus: 4 non-zero connections
+         Heschl’s gyrus: 4 non-zero connections
+         Middle frontal gyrus: 4 non-zero connections
+----
+**Degree** 
+'The weighted node degree is the sum of the edge weights for edges incident to that node'
+
+ <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_degree.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_degree.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctdegree.png" height="200px;" alt=""/>
+   </div>
+
+    - 5% nodes with highest degree values :
+      Middle frontal gyrus: 3.4630
+      Angular gyrus inferior: 3.2940
+      Calcarine sulcus anterior: 3.1590
+      Middle frontal gyrus anterior: 3.1503
+
+**Centrality (betweeness)**
+   <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_centrality.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_centrality.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctcentrality.png" height="200px;" alt=""/>
+   </div>
+
+   - 5% nodes with highest centrality values :
+
+         Calcarine sulcus anterior: 0.0661
+         Middle frontal gyrus: 0.0584
+         Parieto-occipital sulcus anterior: 0.0568
+
+**Clustering**
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\1imgs_difumo\nx_brainplot_clustering.png" height="200px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_hist_clustering.png" height="300px;" alt=""/>
+   <img src="images\1imgs_difumo\nx_brainplot_5pctclustering.png" height="200px;" alt=""/>
+   </div>
+
+- 5% nodes with highest clustering values :
+
+      Superior parietal lobule anterior: 0.1670
+      Paracentral lobule: 0.1635
+      Paracentral lobule superior: 0.1519
+      
 ## C) 5% highest edge density post-hypnosis(correl. estim.)
    (For comparison purpose with the contrast results)
 
@@ -598,23 +640,4 @@ Thank you to all the BHS teaching assistants for the support and great advices o
    Superior parietal lobule posterior: 0.2847421670281322
    Precuneus anterior: 0.27548093040763855
    Cingulate gyrus mid-posterior: 0.2749985525257869
-   Parieto-occipital sulcus anterior: 0.2708608648412702
-
-# References
-
-Kamalaker Dadi, Alexandre Abraham, Mehdi Rahim, Bertrand Thirion, Gaël Varoquaux. Comparing functional connectivity based predictive models across datasets. PRNI 2016: 6th International Workshop on Pattern Recognition in Neuroimaging, Jun 2016, Trento, Italy. ￿hal-01319131￿
-
-Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux,
-Benchmarking functional connectome-based predictive models for resting-state fMRI,
-NeuroImage,Volume 192,2019,Pages 115-134,ISSN 1053-8119,https://doi.org/10.1016/j.neuroimage.2019.02.062.
-
-
-S. Smith, K. Miller, G. Salimi-Khorshidi, M. Webster, C. Beckmann, T. Nichols, J. Ramsey, M. Woolrich, Network modelling methods for fMRI, Neuroimage 54 (2011) 875.
-
-Gael Varoquaux, Flore Baronnet, Andreas Kleinschmidt, Pierre Fillard, and Bertrand Thirion. Detection of brain functional-connectivity difference in post-stroke patients using group-level covariance modeling. In Tianzi Jiang, Nassir Navab, Josien P. W. Pluim, and Max A. Viergever, editors, Medical image computing and computer-assisted intervention - MICCAI 2010, Lecture notes in computer science, 200–208. Berlin, Heidelberg, 2010. Springer. doi:10/cn2h9c
-
-G. Varoquaux, A. Gramfort, J.B. Poline, B. Thirion, Brain covariance selection: better individual functional connectivity models using population prior, in: NIPS, 2010.
-
-Mehdi Rahim, Bertrand Thirion, Gaël Varoquaux,
-Population shrinkage of covariance (PoSCE) for better individual brain functional-connectivity estimation,
-Medical Image Analysis,Volume 54,2019,Pages 138-148,ISSN 61-8415, https://doi.org/10.1016/j.media.2019.03.001.
+   Parieto-occipital sulcus anterior: 0.2708608648412702    
