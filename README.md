@@ -113,12 +113,23 @@ ___
 * Can be downloaded [here](https://parietal-inria.github.io/DiFuMo/64)
    - Note that finer parcellation of the atlas are also available [here](https://parietal-inria.github.io/DiFuMo)
 * **Labels are provided** 
-* It is a probabilstic atlas (4 dimenional Nifti file of shape Xdim, Ydim, Zdim, Number of ROIs). Each 3D slice of this 4D file contains a ROI. Hence, some voxels can be in more than one ROI. 
+Exemple of ROI/modes shown on the website
 
 <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\scr_difumo_comp1.png" height="240px;" alt=""/>
    <img src="images\scr_difumo_comp2.png" height="230px;" alt=""/>
 </div>
+
+* It is a probabilstic atlas (4 dimenional Nifti file of shape Xdim, Ydim, Zdim, Number of ROIs). Each 3D slice of this 4D file contains a ROI. Hence, some voxels can be in more than one ROI. 
+
+_Image from Dadi et al. (2020), e.i. the article introducing the DiFuMo atlas._ 
+
+<img src="images\method\Dadi_DiFuMo_overlapFig.jpg" height="230px;" alt=""/>
+
+It shows the *'Comparison of modes overlap for all proposed DiFuMo atlases. The y-axis shows how many voxels are at the intersect of exactly n modes (x-axis), without thresholding the modes. On average, at least two modes are shared between voxels.'*(Dadi et al. 2020)
+
+
+
 
 This atlas was chosen for its balance between parsimony (64 ROIs) and for its anatomico-functional precision. Also, the process used for the development of this atlas is very rigorous in the computation of the functional ROIs (modes), but also in the labeling process of the ROIs.
 
@@ -450,7 +461,7 @@ The Standford Hypnotic Susceptibility Scale (SHSS) score was used to classify th
 
 ## Acknowledgement
 
-This project was in part executed as part of the BrainHack School (BHS) project. Thank you to all the BHS teaching assistants for the support and great advices on this project and also to the organizers who made such a interactive and dynamic course possible. This project was executed in collaboration and under the supervision of Pierre Rainville and Mathieu Landry, and some additional help from Jen-I Chen regarding data analysis and preprocessing.
+This project was in part executed as part of the [BrainHack School (BHS)](https://school-brainhack.github.io/) project. Thank you to all the BHS teaching assistants for the support and great advices on this project and also to the organizers who made such a interactive and dynamic course possible. This project was executed in collaboration and under the supervision of Pierre Rainville and Mathieu Landry, and some additional help from Jen-I Chen regarding data analysis and preprocessing.
 
 
 # References
