@@ -334,14 +334,22 @@ The tresholded mean connectome (the one reported above) was binarized. The logic
 
 Note : The nodes represented in the tresholded brain plot are the first six nodes displayed in the first plot, e.i. the nodes with the highest degree value.
 
-   ### Centrality (closeness)
+   ### Closeness centrality 
    - "Closeness (shortest path-based) centrality measures how closely or’ directly’ connected a vertex is to the rest of the network." (Centeno et al, 2022)
 
-<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
-   <img src="images\results\centrality_dist.png" height="500px;" alt=""/>
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">   <img src="images\results\centrality_dist.png" height="500px;" alt=""/>
    <img src="images\results\centrality_full_brainplot.png" height="300px;" alt=""/>
     <img src="images\results\centrality_tresh_brainplot.png" height="300px;" alt=""/>
    </div>
+
+ ### Betweeness centrality 
+   - "Betweenness (shortest path-based) centrality is the proportion of all vertex-pairs shortest paths in a network that pass through a particular vertex (Newman 2008; Freeman 1977)" (Centeno et al, 2022)
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">   <img src="images\results\betcentrality_dist.png" height="500px;" alt=""/>
+   <img src="images\results\betcentrality_full_brainplot.png" height="300px;" alt=""/>
+    <img src="images\results\betcentrality_tresh_brainplot.png" height="300px;" alt=""/>
+   </div>
+
 
 ### Clustering coefficient
 - "The clustering coefficient assesses the tendency for any two neighbours of a vertex to be directly connected (or more strongly connected in the weighted case)" (Centeno et al, 2022)
@@ -378,7 +386,7 @@ Note : The nodes represented in the tresholded brain plot are the first six node
       
 ### **Regression results**
 
-### A) Connectivity matrix (ROI-ROI correlation) for prediction
+### A) Connectivity matrix (ROI-ROI connectivity) for prediction
 The full connectivity matrix of each subject was used for prediction (before applying the PCA). Each edges (2016 in total) was considered as a feature.
 
 Note : the metrics reported are the mean of the 10 folds and each regression line is the correlation (pearson) between predicted values and the real values for one fold.
