@@ -95,7 +95,7 @@ ___
       "A deterministic atlas is a hard parcellation of the brain into non-overlaping regions, that might have been obtained by segmentation or clustering methods. These objects are represented as 3D images of the brain composed of integer values, called ‘labels’, which define the different regions."
    This implies the use of [**Nilearn.maskers.NiftiLabelsMasker**](https://nilearn.github.io/dev/modules/generated/nilearn.maskers.NiftiLabelsMasker.html) class to extract timeseries from each regions of interest (ROI).
 
-* **Symetrical bilateral mask** 
+*/ **Symetrical bilateral mask** 
 
    Since the atlas is symetrical, it is labeled bilaterally with the same label in the left and right hemispheres. When the connectivity matrix is directly computed on this atlas, it renders a symetrical connectome without inter-hemispheric connections, as illustrated in this connectome from a [nilearn tutorial](https://nilearn.github.io/dev/auto_examples/03_connectivity/plot_atlas_comparison.html#sphx-glr-auto-examples-03-connectivity-plot-atlas-comparison-py) :
 
@@ -139,7 +139,7 @@ The covariance matrix is computed with the [**Nilearn.connectome.ConnectivityMea
       
       from nilearn.connectome import ConnectivityMeasure
       correlation_measure = ConnectivityMeasure(kind='correlation')
-
+      
 
 *A word on Sparse inverse covariance (precision)*
 
@@ -337,7 +337,7 @@ Note : The nodes represented in the tresholded brain plot are the first six node
    ### Closeness centrality 
    - "Closeness (shortest path-based) centrality measures how closely or’ directly’ connected a vertex is to the rest of the network." (Centeno et al, 2022)
 
-<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">   <img src="images\results\centrality_dist.png" height="500px;" alt=""/>
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">   <img src="images\results\centrality_dist.png" height="300px;" alt=""/>
    <img src="images\results\centrality_full_brainplot.png" height="300px;" alt=""/>
     <img src="images\results\centrality_tresh_brainplot.png" height="300px;" alt=""/>
    </div>
@@ -378,11 +378,11 @@ Note : The nodes represented in the tresholded brain plot are the first six node
 ### Model and procedure
 - **Ridge regression** was the chosen model for its simplicity and its ability to deal with multicollinearity by penalizing the coefficients.
 - Cross-validation (10 folds), with a shufflesplit spliting strategy (80:20) was applied.
-- **PCA** with 80% explained variance was applied prior to the regression to reduce the number of features.
+- **PCA** with 90% explained variance was applied prior to the regression to reduce the number of features.
 
-      pipeline = Pipeline([('std', StandardScaler()),('pca', PCA(n_components=0.80)), ('ridge', Ridge())])
+      pipeline = Pipeline([('std', StandardScaler()),('pca', PCA(n_components=0.90)), ('ridge', Ridge())])
       k = 10  # Number of folds
-      kf = ShuffleSplit(n_splits=k, test_size=0.20, random_state=5)
+      kf = ShuffleSplit(n_splits=k, test_size=0.20, random_state=random_seed)
       
 ### **Regression results**
 
@@ -395,14 +395,14 @@ Note : the metrics reported are the mean of the 10 folds and each regression lin
    <img src="images\results\pred_mat_SHSS.png" height="300px;" alt=""/>
    <img src="images\results\pred_mat_ANA.png" height="300px;" alt=""/>
     <img src="images\results\pred_mat_HYPER.png" height="300px;" alt=""/>
+    <img src="images\results\pred_mat_ANAHYPER.png" height="300px;" alt=""/>
     <img src="images\results\pred_mat_automaticity.png" height="300px;" alt=""/>
    <img src="images\results\pred_mat_relax.png" height="300px;" alt=""/>
     <img src="images\results\pred_mat_depth.png" height="300px;" alt=""/>
    </div>
- 
-** Prediction of change in pain (ANA and HYPER) not reported.
 
-### B) Node degree  as independent variables
+
+### B) Node degree as independent variables
 
 The feature matrix used for prediction has the shape (N=31 x Nodes=64).
 
@@ -495,7 +495,7 @@ Thompson T, Terhune DB, Oram C, Sharangparni J, Rouf R, Solmi M. The effectivene
 
 # Supplemental material/figures
 
-### **A)** Precision (inv. sparse cov.) estimation**
+### **1)** Precision (inv. sparse cov.) estimation**
 
    **Thresholded connectome**
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
@@ -580,7 +580,7 @@ Thompson T, Terhune DB, Oram C, Sharangparni J, Rouf R, Solmi M. The effectivene
          Anterior Cingulate Cortex: -0.01404254150619912
 
 
-### **B) _Correlation_ for connectivity estimation (r for edge values)
+### **2) _Correlation_ for connectivity estimation (r for edge values)
    **Thresholded connectome**
    <div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
    <img src="images\1imgs_difumo\hist_correl.png" height="300px;" alt=""/>
@@ -649,7 +649,7 @@ Thompson T, Terhune DB, Oram C, Sharangparni J, Rouf R, Solmi M. The effectivene
       Paracentral lobule: 0.1635
       Paracentral lobule superior: 0.1519
       
-## C) 5% highest edge density post-hypnosis(correl. estim.)
+## 3) 5% highest edge density post-hypnosis(correl. estim.)
    (For comparison purpose with the contrast results)
 
 <img src="images/1imgs_difumo/xsupp_hist_postHyp.png" height="220px;" alt=""/>
@@ -660,3 +660,38 @@ Thompson T, Terhune DB, Oram C, Sharangparni J, Rouf R, Solmi M. The effectivene
    Precuneus anterior: 0.27548093040763855
    Cingulate gyrus mid-posterior: 0.2749985525257869
    Parieto-occipital sulcus anterior: 0.2708608648412702    
+
+## 4) Results of prediciton (***SVR*** reg.) with Kfold(k=5) CV strategy in comparison as ShuffleSplit
+
+Find below sections A and B of the results of the prediction of hypnosis-related variables with the connectivity matrix and the node degree as independent variables. 
+
+### A) Connectivity matrix (ROI-ROI connectivity) for prediction
+The full connectivity matrix of each subject was used for prediction (before applying the PCA). Each edges (2016 in total) was considered as a feature.
+
+Note : the metrics reported are the mean of the 10 folds and each regression line is the correlation (pearson) between predicted values and the real values for one fold.
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\supp_mat\pred_mat_SHSS.png" height="300px;" alt=""/>
+   <img src="images\supp_mat\pred_mat_ANA.png" height="300px;" alt=""/>
+    <img src="images\supp_mat\pred_mat_HYPER.png" height="300px;" alt=""/>
+    <img src="images\supp_mat\pred_mat_ANAHYPER.png" height="300px;" alt=""/>
+    <img src="images\supp_mat\pred_mat_automaticity.png" height="300px;" alt=""/>
+   <img src="images\supp_mat\pred_mat_relax.png" height="300px;" alt=""/>
+    <img src="images\supp_mat\pred_mat_depth.png" height="300px;" alt=""/>
+   </div>
+
+
+### B) Node degree as independent variables
+
+The feature matrix used for prediction has the shape (N=31 x Nodes=64).
+
+<div style="text-align: center; background-color: White; border: 5px solid #000; padding: 0px;">
+   <img src="images\supp_mat\pred_degree_SHSS.png" height="300px;" alt=""/>
+   <img src="images\supp_mat\pred_degree_ANA.png" height="300px;" alt=""/>
+    <img src="images\supp_mat\pred_degree_HYPER.png" height="300px;" alt=""/>
+    <img src="images\supp_mat\pred_degree_ANAHYPER.png" height="300px;" alt=""/>
+   <img src="images\supp_mat\pred_degree_automaticity.png" height="300px;" alt=""/>
+   </div>
+** Prediction of change in mental relaxation and hypnotic depth not reported.
+
+
