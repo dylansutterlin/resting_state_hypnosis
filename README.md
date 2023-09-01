@@ -413,7 +413,6 @@ The feature matrix used for prediction has the shape (N=31 x Nodes=64).
     <img src="images\results\pred_degree_ANAHYPER.png" height="300px;" alt=""/>
    <img src="images\results\pred_degree_automaticity.png" height="300px;" alt=""/>
    <img src="images\results\pred_degree_relax.png" height="300px;" alt=""/>
-   </div>
    <img src="images\results\pred_degree_depth.png" height="300px;" alt=""/>
    </div>
 
