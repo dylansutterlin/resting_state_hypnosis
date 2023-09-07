@@ -17,7 +17,7 @@ from nilearn import datasets, plotting, image
 from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
-from src import glm_func
+from src import glm_func, graphs_regressionCV
 from scripts import func
 from src import masker_preprocessing as prep
 
@@ -38,9 +38,14 @@ def con_matrix(
     Parameters
     ----------
     data_dir : str
-        Path to data
+        Path to data, fMRI images (.hdr or .nii)
+    else_dir : str
+        Path to each subject's folder containing regressors and confounds
+        **This arg was added to account for data structure, e.i. fMRI imgages stored in diff folder than regressors and other data
     save_base : str
         Path to saving folder
+    save_folder : str
+        Name of folder/atlas/condition to name the folder in which results will be saved, e.g. 'yeo_7'
     path_to_atlas : _type_, optional
         Path to atlas, by default None
     atlas_type : str, optional
@@ -58,6 +63,7 @@ def con_matrix(
     conditions = ["pre_hyp", "post_hyp", "contrast"]
     pre_data, post_data = prep.resample_shape_affine(data)
     results = dict(pre_series=list(), post_series=list())
+    results["subjects"] = data.subjects
     all_data = pre_data + post_data
     # --Atlas choices--
     atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
@@ -98,7 +104,6 @@ def con_matrix(
 
     # --Seed masker--
     if sphere_coord != None:
-        sphere_coord = [(54, -28, 26)]
         seed_masker = NiftiSpheresMasker(
             sphere_coord, radius=8, standardize="zscore_sample"
         )
@@ -140,15 +145,12 @@ def con_matrix(
         )
 
         # --Plot--
-        from nilearn import plotting
-
         # masker = NiftiMasker(mask_img=atlas, standardize=True)
         # masker.fit(concat_imgs(pre_data))
 
         seed_to_voxel_correlations_img = masker.inverse_transform(
             results["mean_seed_contrast_connectome"].T
         )
-
         display = plotting.plot_stat_map(
             seed_to_voxel_correlations_img,
             threshold=0.5,
@@ -159,8 +161,13 @@ def con_matrix(
         display.add_markers(
             marker_coords=sphere_coord, marker_color="g", marker_size=300
         )
-        # At last, we save the plot as pdf.
-        display.savefig("OP_seed_correlation.pdf")
+        # display.savefig("OP_seed_correlation.pdf")
+
+    # Regression
+    xlsx_path = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\test_dataset\test_data_ASL\Hypnosis_variables_20190114_pr_jc.xlsx"
+    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
+    X_ls, metrics_names = graphs_regressionCV.graph_metrics(results, Y, labels)
+    result_regression = graphs_regressionCV.regression_cv(X_ls, metrics_names)
 
     # --Save--
     if save_base != None:
@@ -176,6 +183,8 @@ def con_matrix(
 
         with open(os.path.join(save_to, "dict_results.pkl"), "wb") as f:
             pickle.dump(results, f)
+        with open(os.path.join(save_to, "dict_regression.pkl"), "wb") as f:
+            pickle.dump(result_regression, f)
         print("Saved result dict!")
 
     # --Prints and plot--
