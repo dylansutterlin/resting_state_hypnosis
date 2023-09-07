@@ -696,3 +696,13 @@ The feature matrix used for prediction has the shape (N=31 x Nodes=64).
 ** Prediction of change in mental relaxation and hypnotic depth not reported.
 
 
+
+### Seed to ROI (DiFuMo64) connectivity
+
+Seed choices : Main regions reported in Desmarteaux et al. (2021)
+- PO (54, -28, 26)
+- HPG : (-20, -26, -14)
+- aMCC : (-2, 20, 32)
+- ACC : (-8. 44 28)
+- PCC : (-6, -26, 46)
+
