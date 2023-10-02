@@ -24,7 +24,8 @@ from src import masker_preprocessing as prep
 
 def con_matrix(
     data_dir,
-    else_dir,
+    conf_dir,
+    cwd,
     save_folder=None,
     save_base=None,
     atlas_name=None,
@@ -39,9 +40,10 @@ def con_matrix(
     ----------
     data_dir : str
         Path to data, fMRI images (.hdr or .nii)
-    else_dir : str
+    conf_dir : str
         Path to each subject's folder containing regressors and confounds
-        **This arg was added to account for data structure, e.i. fMRI imgages stored in diff folder than regressors and other data
+        **This arg was added to account for data structure, e.i. fMRI imgages stored in diff folder than regressors and other data and
+        for some permission reasons on the server, it wasn't possible to move the confound file, could be fixed in the futur!**
     save_base : str
         Path to saving folder
     save_folder : str
@@ -59,7 +61,7 @@ def con_matrix(
     """
 
     # --Data--
-    data = func.load_data(data_dir, else_dir)
+    data = func.load_data(data_dir, conf_dir)
     conditions = ["pre_hyp", "post_hyp", "contrast"]
     pre_data, post_data = prep.resample_shape_affine(data)
     results = dict(pre_series=list(), post_series=list())
@@ -67,7 +69,7 @@ def con_matrix(
     all_data = pre_data + post_data
     # --Atlas choices--
     atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-        atlas_name, bilat=True
+        atlas_name, cwd, bilat=True
     )
     print("atlas done!")
     # basic masker
@@ -164,6 +166,9 @@ def con_matrix(
         # display.savefig("OP_seed_correlation.pdf")
 
     # Regression
+    xlsx_path = (
+        r"/data/rainville/HYPNOSIS_ASL_RAW_DATA/Hypnosis_variables_20190114_pr_jc.xlsx"
+    )
     xlsx_path = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\test_dataset\test_data_ASL\Hypnosis_variables_20190114_pr_jc.xlsx"
     Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
     X_ls, metrics_names = graphs_regressionCV.graph_metrics(results, Y, labels)

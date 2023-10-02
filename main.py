@@ -1,21 +1,26 @@
-from main_con import con_matrix
+from scripts import main_con as main
 
-p = r"/data/rainville//HYPNOSIS_ASL_ANALYSIS/CBF_normalized/"
-else_dir = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS"
-save_base = r"/data/rainville/dylanSutterlin/results/connectivity"
+p = r"/home/p1226014/projects/def-rainvilp/p1226014/hypnosis_rest/CBF_normalized/"
+conf_dir = (
+    r"/home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc"
+)
+save_base = r"/home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/results"
+
+# p = r"/data/rainville//HYPNOSIS_ASL_ANALYSIS/CBF_normalized/"
+# else_dir = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS"
+# save_base = r"/data/rainville/dylanSutterlin/results/connectivity"
 # atlas_name = ["yeo_7", "difumo64"]
 
-# p = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\CBF_normalized"
-# else_dir = (
-# r"E:\Users\Dylan\Desktop\UdeM_H22\E_PSY3008\data_desmartaux\wHYPNOSIS_ASL_ANALYSIS"
+
 # )
 # save_base = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\results\results_con"
 # atlas_name = ["yeo_7", "difumo64"]
 
-con_matrix(
+main.con_matrix(
     p,
-    else_dir=else_dir,
+    conf_dir=conf_dir,
     save_base=save_base,
+    cwd=os.getcwd(),
     save_folder="difumo64_tangentZ",
     atlas_name="difumo64",
     sphere_coord=[
@@ -25,6 +30,6 @@ con_matrix(
         (-8, 44, 28),
         (-6, -26, 46),
     ],
-    connectivity_measure="correlation",
+    connectivity_measure="tangent",
     verbose=False,
 )

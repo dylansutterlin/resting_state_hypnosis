@@ -84,7 +84,7 @@ def load_data(path, else_path):
     return data
 
 
-def load_choose_atlas(atlas_name, bilat=True):
+def load_choose_atlas(atlas_name, cwd, bilat=True):
     if atlas_name == "yeo_7":
         atlas_file = datasets.fetch_atlas_yeo_2011()["thick_7"]
         atlas = nib.load(atlas_file)
@@ -107,10 +107,12 @@ def load_choose_atlas(atlas_name, bilat=True):
 
     elif atlas_name == "difumo64":
         atlas_path = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\atlases\atlas_difumo64\64difumo2mm_maps.nii.gz"
+        # r"/data/rainville/dylanSutterlin/resting_state_hypnosis/atlases/atlas_difumo64/64difumo2mm_maps.nii.gz"
         atlas = nib.load(atlas_path)
         atlas_df = pd.read_csv(
             r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\atlases\atlas_difumo64\labels_64_dictionary.csv"
         )
+        # r"/data/rainville/dylanSutterlin/resting_state_hypnosis/atlases/atlas_difumo64/labels_64_dictionary.csv"
         atlas_labels = atlas_df["Difumo_names"]
         confounds = atlas_df.iloc[:, -3:]  # GM WM CSF
         bilat = False

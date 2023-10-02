@@ -103,6 +103,7 @@ def load_process_y(xlsx_path, subjects):
         "total_chge_pain_hypAna",
         "Chge_hypnotic_depth",
         "Mental_relax_absChange",
+        "Automaticity_post_ind",
         "Abs_diff_automaticity",
     ]
 
@@ -110,12 +111,19 @@ def load_process_y(xlsx_path, subjects):
 
 
 def graph_metrics(results, Y, labels):
+    """
+    Compute graph metrics for each subject's graph
+    and return a list of feature matrices
+    results : dict
+    Y : dataframe, index = subject names and columns = target columns
+    labels : list of strings from the atlas ROIs
+    """
     # Single-subject graphs
     As = [
         results["contrast_connectomes"][i]
         for i in range(len(results["contrast_connectomes"]))
     ]
-    rawGs = {nx.from_numpy_matrix(A, create_using=nx.Graph) for A in As}
+    rawGs = {nx.from_numpy_array(A, create_using=nx.Graph) for A in As}
     rawGs = {
         nx.relabel_nodes(G, dict(zip(range(len(G.nodes())), labels))) for G in rawGs
     }
@@ -272,7 +280,16 @@ def compute_permutation(
     return score, perm_scores, pvalue
 
 
-def regression_cv(X_ls, metrics_names):
+def regression_cv(X_ls, Y, target_columns, metrics_names):
+    """
+    Compute the regression with cross-validation for each graph metric
+    and return a dict of results
+    X_ls : list of feature matrices
+    Y : dataframe, index = subject names and columns = target columns
+    target_columns : list of strings from the target columns
+    metrics_names : list of strings from the graph metrics
+    """
+
     # SVR model for each graph metric
     from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
     from sklearn.model_selection import KFold, GridSearchCV
@@ -329,6 +346,13 @@ def regression_cv(X_ls, metrics_names):
                 r2 = r2_score(y_test, y_pred)
                 mse = mean_squared_error(y_test, y_pred)
                 rmse = np.sqrt(mse)
+                cov_x = np.cov(
+                    pipeline.named_steps["pca"]
+                    .transform(X_test)
+                    .transpose()
+                    .astype(np.float64)
+                )
+                cov_y = np.cov(y_test.transpose().astype(np.float64))
 
                 # Append metrics to the respective lists
                 pearson_r_scores.append(pearson_r)
@@ -337,7 +361,14 @@ def regression_cv(X_ls, metrics_names):
                 rmse_scores.append(rmse)
                 n_components.append(pipeline.named_steps["pca"].n_components_)
                 coefficients = pipeline.named_steps["reg"].coef_
-                all_coefficients.append(coefficients)
+
+                # correction from Eqn 6 (Haufe et al., 2014)
+                corr_coeffs = np.matmul(cov_x, coefficients.transpose()) * (1 / cov_y)
+                all_coefficients.append(
+                    pipeline.named_steps["pca"].inverse_transform(
+                        corr_coeffs.transpose()
+                    )
+                )
 
             # Permutation tests
             r2score, _, r2p_value = compute_permutation(
@@ -395,6 +426,7 @@ def regression_cv(X_ls, metrics_names):
                 "rmse_p_value": rmse_p_value,
                 "y_preds": y_preds,
                 "y_tests": y_tests,
+                "corr_coeffs": all_coefficients,
             }
 
         result_dict[g_metric] = result_per_col
