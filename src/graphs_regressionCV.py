@@ -3,7 +3,6 @@ import numpy as np
 import os
 import glob as glob
 import pickle
-import func
 import pandas as pd
 from sklearn.model_selection import permutation_test_score
 from scipy.stats import pearsonr
@@ -110,7 +109,7 @@ def load_process_y(xlsx_path, subjects):
     return Y, target_columns
 
 
-def graph_metrics(results, Y, labels):
+def graph_metrics(results, Y, labels, results_key="contrast_connectomes"):
     """
     Compute graph metrics for each subject's graph
     and return a list of feature matrices
@@ -119,10 +118,7 @@ def graph_metrics(results, Y, labels):
     labels : list of strings from the atlas ROIs
     """
     # Single-subject graphs
-    As = [
-        results["contrast_connectomes"][i]
-        for i in range(len(results["contrast_connectomes"]))
-    ]
+    As = [results[results_key][i] for i in range(len(results[results_key]))]
     rawGs = {nx.from_numpy_array(A, create_using=nx.Graph) for A in As}
     rawGs = {
         nx.relabel_nodes(G, dict(zip(range(len(G.nodes())), labels))) for G in rawGs
@@ -171,8 +167,16 @@ def graph_metrics(results, Y, labels):
     # ---Feature matrices based on subjects' graphs---#
     participant_names = list(Gs.keys())
     node_names = list(Gs[participant_names[0]].nodes())
-    # Adjacency matrix as a feature matrix see shape in prints
-    X_con = results["contrastX"]
+
+    # Lower triangular mask
+    tril_mask = np.tril(np.ones(results[results_key].shape[-2:]), k=-1).astype(bool)
+    X_con = np.stack(
+        [
+            results[results_key][i][..., tril_mask]
+            for i in range(0, len(results[results_key]))
+        ],
+        axis=0,
+    )
 
     X_degree = np.zeros((len(participant_names), len(node_names)))
     # Fill the features matrix with degree strength values

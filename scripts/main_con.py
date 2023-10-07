@@ -166,10 +166,8 @@ def con_matrix(
         # display.savefig("OP_seed_correlation.pdf")
 
     # Regression
-    xlsx_path = (
-        r"/data/rainville/HYPNOSIS_ASL_RAW_DATA/Hypnosis_variables_20190114_pr_jc.xlsx"
-    )
-    xlsx_path = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\test_dataset\test_data_ASL\Hypnosis_variables_20190114_pr_jc.xlsx"
+    xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
+    xlsx_path = os.path.join(cwd, "atlases", xlsx_file)
     Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
     X_ls, metrics_names = graphs_regressionCV.graph_metrics(results, Y, labels)
     result_regression = graphs_regressionCV.regression_cv(X_ls, metrics_names)

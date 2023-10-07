@@ -5,7 +5,12 @@
 </div>
 
 
-Summary: "This project aims to better understand neural correlates of hypnosis, which is defined as an experiential experience of focused attention and heighten reponse to suggestions. Hypnotic experience can be assessed in part trough the feeling of automaticity associated with hypnotic experience, with hypnotic depth measures and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact together to produce the subjective change in phenomenological experience associated with hypnosis. We used Arterial Spin Labeling fMRI (Siemens 3T) data acquired at rest (from Rainville et al., 2019), both before and after hypnotic induction. The functional connectivity matrix for each subject was computed, for each condition (pre and post hypnosis) and then substracted to extract the contrast connectivity (post-pre hypnosis) induced by hypnosis. We then used the contrast connectivity matrices and graph theory metrics extracted from the connectomes (degree, clustering and centrality) to predict hypnosis-related behavioral variables. A 10-fold (80:20 train-test split) ridge regression was trained to predict (separately) the dependent variables.'
+Summary: 
+
+
+Hypnosis is defined as an experiential experience of focused attention and heighten reponse to suggestions. It has been proven useful to reduce several symptoms, especially pain. 
+
+This project aims to better understand neural correlates of hypnosis, which . Hypnotic experience can be assessed in part trough the feeling of automaticity associated with hypnotic experience, with hypnotic depth measures and with hypnotizalibility scores. The brain's functionnal connectivity might reflect which brain regions interact together to produce the subjective change in phenomenological experience associated with hypnosis. We used Arterial Spin Labeling fMRI (Siemens 3T) data acquired at rest (from Rainville et al., 2019), both before and after hypnotic induction. The functional connectivity matrix for each subject was computed, for each condition (pre and post hypnosis) and then substracted to extract the contrast connectivity (post-pre hypnosis) induced by hypnosis. We then used the contrast connectivity matrices and graph theory metrics extracted from the connectomes (degree, clustering and centrality) to predict hypnosis-related behavioral variables. A 10-fold (80:20 train-test split) ridge regression was trained to predict (separately) the dependent variables.'
 
 
 tags: [ASL-fMRI, hypnosis, connectome, ML]
