@@ -37,11 +37,49 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 To test job submissions, etc.
 
-'''
+```bash
 salloc --time=1:0:0 --mem=3G --ntasks=1 --account=def-rainvilp 
 module load python/3.10
 module load  scipy-stack
-
+source ENV/bin/activate
 python ../main.py
-'''
+```
+
+
+### Git on```{language}
+
+```
+
+git config --global user.name "DylanSutterlin"
+git config --global user.email "dylan.sutterlin-guindon@umontreal.ca"
+
+
+git init 
+git add .
+git commit -m "first commit"
+git remote add https://github.com/dylansutterlin/resting_state_hypnosis
+git remote -v # to check that remote has been added
+
+git checkout -b beluga # switch to beluga
+git branch --show-current # just to print the branch if unsure
+
+git push --set-upstream origin main # Asks username and password
+
+# () to set up ssh
+ssh-keygen -t ed25519 -C "dylan.sutterlin-guindon@umontreal.ca"
+```
+
+### BASH
+
+```
+cp [options] sourcefile targetfile
+
+###
+paths
+
+/data/rainville/dylanSutterlin/Hypnosis_variables_20190114_pr_jc.xlsx
+
+path = /data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized
+
+result = /data/rainville/dylanSutterlin/results/connectivity 
 

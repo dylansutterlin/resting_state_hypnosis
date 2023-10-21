@@ -14,14 +14,14 @@ from nilearn.plotting import plot_epi, plot_roi, plot_stat_map
 from scripts import func
 
 
-def choose_tune_masker(
+def choose_tune_masker(main_pwd,
     use_atlas_type=False,
     mask_img=None,
     tr=None,
     smoothing_fwhm=None,
-    standardize=None,
-    verbose=None,
-    resampling_target=None,
+    standardize=False,
+    verbose=5,
+    resampling_target='data',
     atlas_type=None,
     confounds=None,
 ):
@@ -48,16 +48,6 @@ def choose_tune_masker(
     confounds : str, optional
         Confounds, by default None
     """
-    if tr == None:
-        tr = 3
-    if smoothing_fwhm == None:
-        smoothing_fwhm = 6
-    if standardize == None:
-        standardize = "zscore_sample"
-    if verbose == None:
-        verbose = 5
-    if resampling_target == None:
-        resampling_target = "data"  # default
 
     if use_atlas_type != False:
         if use_atlas_type == True:
@@ -65,15 +55,15 @@ def choose_tune_masker(
             atlas_name = "yeo_7"
 
             atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-                atlas_name, bilat=True
+                main_pwd, atlas_name, bilat=True
             )
         else:
             atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-                use_atlas_type, bilat=True
+                main_pwd, use_atlas_type, bilat=True
             )
 
         if atlas_type == "maps":
-            masker = MultiNiftiMapsMasker(
+            masker = NiftiMapsMasker(
                 maps_img=atlas,
                 t_r=tr,
                 smoothing_fwhm=smoothing_fwhm,
@@ -94,7 +84,7 @@ def choose_tune_masker(
             print(" Labeled masker!")
 
         return masker
-
+    # ! Default options be aware !
     elif atlas_type == None:
         masker = MultiNiftiMasker(
             mask_strategy="whole-brain-template",

@@ -11,26 +11,30 @@ from matplotlib import cm
 from nilearn.plotting import plot_glass_brain
 from nilearn.plotting import find_probabilistic_atlas_cut_coords
 from sklearn.covariance import GraphicalLassoCV
+from sklearn.preprocessing import MinMaxScaler
 from nilearn.connectome import GroupSparseCovarianceCV
 
 
-def load_data(path, else_path):
+def load_data(path, else_path, main_cwd):
     """
     Load subject information into memory
 
     """
+    print("---STARTING FILE ORDER MATCHING---")
+    sorted_subs = sorted([sub for sub in os.listdir(path) if "APM" in sub])
+    # TESTTT
+    #sorted_subs = sorted_subs[0:3]
 
+    print("---LOADING DATA---")
     data = Bunch(
-        subjects=[sub for sub in os.listdir(path) if "APM" in sub],
-        func_pre_hyp=[
+        subjects=sorted_subs,
+        func_pre=[
             glob.glob(os.path.join(path, sub, "wcbf_0_srASL_4D_before_4D.nii"))[0]
-            for sub in os.listdir(path)
-            if "APM" in sub
+            for sub in sorted_subs
         ],
-        func_post_hyp=[
+        func_post=[
             glob.glob(os.path.join(path, sub, "*wcbf_0_srASL_4D_during_4D.nii"))[0]
-            for sub in os.listdir(path)
-            if "APM" in sub
+            for sub in sorted_subs
         ],
         pre_masks=[
             glob.glob(
@@ -38,8 +42,7 @@ def load_data(path, else_path):
                     else_path, sub, "*before*", "mskwmeanCBF_0_srASL_4D_before*"
                 )
             )[0]
-            for sub in os.listdir(else_path)
-            if "APM" in sub
+            for sub in sorted_subs
         ],
         post_masks=[
             glob.glob(
@@ -47,33 +50,29 @@ def load_data(path, else_path):
                     else_path, sub, "*during*", "mskwmeanCBF_0_srASL_4D_during*"
                 )
             )[0]
-            for sub in os.listdir(else_path)
-            if "APM" in sub
+            for sub in sorted_subs
         ],
         confounds_pre_hyp=[
             pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
             for file in [
                 glob.glob(os.path.join(else_path, sub, "*before*", "globalsg_0.txt"))[0]
-                for sub in os.listdir(else_path)
-                if "APM" in sub
+                for sub in sorted_subs
             ]
         ],
         confounds_post_hyp=[
             pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
             for file in [
                 glob.glob(os.path.join(else_path, sub, "*during*", "globalsg_0.txt"))[0]
-                for sub in os.listdir(else_path)
-                if "APM" in sub
+                for sub in sorted_subs
             ]
         ],
         anat=[
             glob.glob(os.path.join(else_path, sub, "*MEMPRAGE", "wms*.nii"))[0]
-            for sub in os.listdir(else_path)
-            if "APM" in sub
+            for sub in sorted_subs
         ],
         phenotype=pd.DataFrame(
             pd.read_excel(
-                glob.glob(os.path.join(else_path, "*variables*"))[0],
+                glob.glob(os.path.join(main_cwd, "atlases", "*variables*"))[0],
                 sheet_name=0,
                 index_col=1,
                 header=2,
@@ -84,7 +83,7 @@ def load_data(path, else_path):
     return data
 
 
-def load_choose_atlas(atlas_name, cwd, bilat=True):
+def load_choose_atlas(main_cwd, atlas_name, bilat=True):
     if atlas_name == "yeo_7":
         atlas_file = datasets.fetch_atlas_yeo_2011()["thick_7"]
         atlas = nib.load(atlas_file)
@@ -106,13 +105,15 @@ def load_choose_atlas(atlas_name, cwd, bilat=True):
         atlas_type = "labels"
 
     elif atlas_name == "difumo64":
-        atlas_path = r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\atlases\atlas_difumo64\64difumo2mm_maps.nii.gz"
-        # r"/data/rainville/dylanSutterlin/resting_state_hypnosis/atlases/atlas_difumo64/64difumo2mm_maps.nii.gz"
+        atlas_path = os.path.join(
+            main_cwd, "atlases", "atlas_difumo64", "64difumo2mm_maps.nii.gz"
+        )
         atlas = nib.load(atlas_path)
         atlas_df = pd.read_csv(
-            r"C:\Users\Dylan\Desktop\UM_Bsc_neurocog\E22\Projet_Ivado_rainvillelab\connectivity_project\resting_state_hypnosis\atlases\atlas_difumo64\labels_64_dictionary.csv"
+            os.path.join(
+                main_cwd, "atlases", "atlas_difumo64", "labels_64_dictionary.csv"
+            )
         )
-        # r"/data/rainville/dylanSutterlin/resting_state_hypnosis/atlases/atlas_difumo64/labels_64_dictionary.csv"
         atlas_labels = atlas_df["Difumo_names"]
         confounds = atlas_df.iloc[:, -3:]  # GM WM CSF
         bilat = False
@@ -187,62 +188,54 @@ def compute_cov_measures(correlation_measure, results):
     """
     Computes connectomes based on timeseries from diff. condition : pre, post, contrast.
     As well as mean and individual correl. matrix
-
+    This function applies a R to Z transform and normalizes between 0-1 the weights of the adj matrix
     Returns
     -------
     dict.
         dict. with diff. keys associated with each conditions
     """
-    # --pre connectome--
-    results["pre_connectomes"] = correlation_measure.fit_transform(
-        results["pre_series"]
-    )
-    # -- Mean connectome
-    tmp_pre_mean = correlation_measure.mean_
-    np.fill_diagonal(tmp_pre_mean, 0)
-    results["pre_mean_connectome"] = tmp_pre_mean
-    # -- Post connectomes for indiv. sub.
-    results["post_connectomes"] = correlation_measure.fit_transform(
-        results["post_series"]
-    )
-    # -- Mean connectome from post
-    tmp_post_mean = correlation_measure.mean_
-    np.fill_diagonal(tmp_post_mean, 0)
-    results["post_mean_connectome"] = tmp_post_mean
+    pre_connectomes = correlation_measure.fit_transform(results["pre_series"])
+    post_connectomes = correlation_measure.fit_transform(results["post_series"])
 
-    # -- fischer r to Z transformation on mean connectomes
-
-    if correlation_measure.get_params()["kind"] == "correlation":
-        results["zcontrast_mean_connectome"] = np.arctanh(tmp_post_mean) - np.arctanh(
-            tmp_pre_mean
-        )
-    else:
-        results["zcontrast_mean_connectome"] = tmp_post_mean - tmp_pre_mean
-        print("No fischer r to Z transformation applied")
-
-    # -- Fischer r to Z transform on indiv. connectivity matrices
-    results["contrast_connectomes"] = sub_post_pre_contrast(
-        results["post_connectomes"],
-        results["pre_connectomes"],
-        correlation_measure.get_params()["kind"],
-    )
-    return results
+    return pre_connectomes, post_connectomes
 
 
-def sub_post_pre_contrast(ls_res_post, ls_res_pre, cov_kind):
+def proc_connectomes(ls_connectomes,arctanh=False, remove_negw=False, normalize=False):
+    """
+    arctanh() is the r to Z transformation, then negative weights are removed and the matrix is normalized between 0-1
+    """
+    proc_ls = []
+    for array in ls_connectomes:
+
+        scaler = MinMaxScaler(feature_range=(array.min(), array.max()))
+
+        if arctanh:
+            array = np.arctanh(array)  # R to Z transf
+        elif remove_negw: # Remove negative edges
+            array[array < 0] = 0
+        elif normalize:
+            shape_save = array.shape
+            array.reshape(-1)
+            print(array.shape)
+            normalized_array = scaler.fit_transform(array)
+            array = normalized_array.reshape(shape_save)
+        np.fill_diagonal(array, 0)
+        proc_ls.append(array)
+
+    return proc_ls
+
+
+def weight_substraction_postpre(ls_res_post, ls_res_pre):
+    """
+    Element wise substraction of post - pre connectomes. Applied to weights of the adj. matrix
+    *Order of the list of arrays is important*
+    return : list of arrays
+    """
     res_ls = []
-    if cov_kind == "correlation":
-        for post, pre in zip(ls_res_post, ls_res_pre):
-            np.fill_diagonal(post, 0)
-            np.fill_diagonal(pre, 0)
-            sub_res = np.arctanh(post) - np.arctanh(pre)
-            res_ls.append(sub_res)
-    else:
-        for post, pre in zip(ls_res_post, ls_res_pre):
-            np.fill_diagonal(post, 0)
-            np.fill_diagonal(pre, 0)
-            sub_res = post - pre
-            res_ls.append(sub_res)
+    for post, pre in zip(ls_res_post, ls_res_pre):
+        sub_res = post - pre
+        res_ls.append(sub_res)
+
     return res_ls
 
 
@@ -324,51 +317,6 @@ def sym_matrix_to_vec(symmetric, discard_diagonal=True):
     # def reg_model(connectomes)
 
     features = []
-
-
-def save_results(subjects, save_to, conditions, results):
-    """
-    Parameters
-    ----------
-    subjects : list
-        List of subjects
-    save_to : str
-        Path to save to
-    results : dict.
-        Dict containing results.
-    """
-
-    for idx, sub in enumerate(subjects):
-        np.save(
-            os.path.join(save_to, f"{sub}_{conditions[0]}_connectomes"),
-            results["pre_connectomes"][idx],
-            allow_pickle=True,
-        )
-        np.save(
-            os.path.join(save_to, f"{sub}_{conditions[1]}_connectomes"),
-            results["post_connectomes"][idx],
-            allow_pickle=True,
-        )
-        np.save(
-            os.path.join(save_to, f"{sub}_{conditions[2]}_connectomes"),
-            results["contrast_connectomes"][idx],
-            allow_pickle=True,
-        )
-    np.save(
-        os.path.join(save_to, f"{conditions[0]}_mean_connectome"),
-        results["pre_mean_connectome"],
-        allow_pickle=True,
-    )
-    np.save(
-        os.path.join(save_to, f"{conditions[1]}_mean_connectome"),
-        results["post_mean_connectome"],
-        allow_pickle=True,
-    )
-    np.save(
-        os.path.join(save_to, f"{conditions[2]}_mean_connectome"),
-        results["zcontrast_mean_connectome"],
-        allow_pickle=True,
-    )
 
 
 def npsave_features(save_to, results):

@@ -1,6 +1,7 @@
 import argparse
 import pickle
 import os
+import copy
 import glob
 import numpy as np
 import nibabel as nib
@@ -25,9 +26,9 @@ from src import masker_preprocessing as prep
 def con_matrix(
     data_dir,
     conf_dir,
-    cwd,
-    save_folder=None,
+    pwd_main,
     save_base=None,
+    save_folder=None,
     atlas_name=None,
     sphere_coord=None,
     connectivity_measure="correlation",
@@ -60,147 +61,192 @@ def con_matrix(
         Wether to print/plot outputs, by default False
     """
 
+    print("INITIAL----")
     # --Data--
-    data = func.load_data(data_dir, conf_dir)
+    data = func.load_data(data_dir, conf_dir, pwd_main)
     conditions = ["pre_hyp", "post_hyp", "contrast"]
-    pre_data, post_data = prep.resample_shape_affine(data)
-    results = dict(pre_series=list(), post_series=list())
-    results["subjects"] = data.subjects
-    all_data = pre_data + post_data
+    #pre_data, post_data = prep.resample_shape_affine(data)
+    pre_data = data.func_pre
+    post_data = data.func_post
+    results_con = dict(subjects=data.subjects, pre_series=list(), post_series=list())
+    results_graph = dict(pre=dict(), post=dict(), change=dict())
+    results_pred = dict(pre=dict(), post=dict(), change=dict())
+
     # --Atlas choices--
     atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-        atlas_name, cwd, bilat=True
+        pwd_main, atlas_name, bilat=True
     )
+    print("ATLAS : ", atlas)
+    print("TYPE ATLAS", type(atlas))
     print("atlas done!")
-    # basic masker
+    # basic voxel masker
     voxel_masker = MultiNiftiMasker(
         mask_strategy="whole-brain-template",
-        high_pass=0.1,
-        t_r=3,
         standardize="zscore_sample",
         verbose=5,
     )
-    # (prep.check_masker_fit(da, voxel_masker) for da in [pre_data, post_data])
-
-    # transf_imgs, fitted_voxel_masker, brain_mask = glm_func.transform_imgs(
-    #    all_files, voxel_masker, return_series=False
-    # )
 
     # --ROI masker parameters--
     if atlas_name == None:
-        masker = prep.choose_tune_masker(use_atlas_type=False, mask_img=False)
+        masker = prep.choose_tune_masker(
+            main_pwd=pwd_main, use_atlas_type=False, mask_img=False, standardize = None
+        )
     else:
-        masker = prep.choose_tune_masker(use_atlas_type=atlas_name, mask_img=False)
+        masker = prep.choose_tune_masker(
+            main_pwd=pwd_main, use_atlas_type=atlas_name, mask_img=False
+        )
 
-    # --Timeseries : Fit and apply mask--
-    print(masker)
-    masker.fit(all_data)
-    results["pre_series"] = [
-        masker.transform(ts, confounds=conf)
-        for ts, conf in zip(pre_data, data.confounds_pre_hyp)
-    ]
-    results["post_series"] = [
-        masker.transform(ts, conf)
-        for ts, conf in zip(post_data, data.confounds_post_hyp)
-    ]
+   # --Timeseries : Fit and apply mask--
+    #p = r'/data/rainville/dylanSutterlin/resting_hypnosis/results/difumo64_correlation_Ridge'
+    provide_data=False
+    if provide_data != False:
+        with open(os.path.join(p,'fitted_timeSeries.pkl'), 'rb') as f:
+            load_results = pickle.load(f)
+        results_con['pre_series'] = load_results['pre_series']
+        results_con['post_series'] = load_results['post_series']
+    else:
+        masker.fit(pre_data)
+        results_con["pre_series"] = [masker.transform(ts) for ts in pre_data]
+        masker.fit(post_data)
+        results_con["post_series"] = [masker.transform(ts) for ts in post_data]
+
+        #with open(os.path.join(p, 'fitted_timeSeries.pkl'), 'wb') as f:
+        #    pickle.dump(results_con, f)
 
     # --Seed masker--
     if sphere_coord != None:
         seed_masker = NiftiSpheresMasker(
             sphere_coord, radius=8, standardize="zscore_sample"
         )
-
-        results["seed_pre_series"] = [seed_masker.fit_transform(ts) for ts in pre_data]
-        results["seed_post_series"] = [
+        results_con["seed_pre_series"] = [
+            seed_masker.fit_transform(ts) for ts in pre_data
+        ]
+        results_con["seed_post_series"] = [
             seed_masker.fit_transform(ts) for ts in post_data
         ]
-
-    # Compute seed-to-voxel correlation
-    results["seed_to_pre_correlations"] = [
-        (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
-        for brain_time_series, seed_time_series in zip(
-            results["pre_series"], results["seed_pre_series"]
-        )
-    ]
-    results["seed_to_post_correlations"] = [
-        (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
-        for brain_time_series, seed_time_series in zip(
-            results["post_series"], results["seed_post_series"]
-        )
-    ]
+        # Compute seed-to-voxel correlation
+        results_con["seed_to_pre_correlations"] = [
+            (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
+            for brain_time_series, seed_time_series in zip(
+                results_con["pre_series"], results_con["seed_pre_series"]
+            )
+        ]
+        results_con["seed_to_post_correlations"] = [
+            (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
+            for brain_time_series, seed_time_series in zip(
+                results_con["post_series"], results_con["seed_post_series"]
+            )
+        ]
 
     # -- Covariance Estimation--
-    correlation_measure = ConnectivityMeasure(
-        kind=connectivity_measure, discard_diagonal=True
+    covariance_measure = ConnectivityMeasure(
+        kind=connectivity_measure, discard_diagonal=False,standardize = True
     )
-    results = func.compute_cov_measures(correlation_measure, results)
-
-    if sphere_coord != None:
-        results["mean_seed_pre_connectome"] = np.mean(
-            results["seed_to_pre_correlations"], axis=0
-        )
-        results["mean_seed_post_connectome"] = np.mean(
-            results["seed_to_post_correlations"], axis=0
-        )
-        results["mean_seed_contrast_connectome"] = (
-            results["mean_seed_post_connectome"] - results["mean_seed_pre_connectome"]
-        )
-
-        # --Plot--
-        # masker = NiftiMasker(mask_img=atlas, standardize=True)
-        # masker.fit(concat_imgs(pre_data))
-
-        seed_to_voxel_correlations_img = masker.inverse_transform(
-            results["mean_seed_contrast_connectome"].T
-        )
-        display = plotting.plot_stat_map(
-            seed_to_voxel_correlations_img,
-            threshold=0.5,
-            vmax=1,
-            cut_coords=sphere_coord[0],
-            title="Seed-to-voxel correlation (OP seed)",
-        )
-        display.add_markers(
-            marker_coords=sphere_coord, marker_color="g", marker_size=300
-        )
-        # display.savefig("OP_seed_correlation.pdf")
-
-    # Regression
-    xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
-    xlsx_path = os.path.join(cwd, "atlases", xlsx_file)
-    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
-    X_ls, metrics_names = graphs_regressionCV.graph_metrics(results, Y, labels)
-    result_regression = graphs_regressionCV.regression_cv(X_ls, metrics_names)
-
-    # --Save--
+    # Connectomes computation : returns a list of connectomes
+    pre_connectomes, post_connectomes = func.compute_cov_measures(
+        covariance_measure, results_con
+    )
+    # Connectome processing (r to Z tranf, remove neg edges, normalize)
+    results_con["pre_connectomes"] = func.proc_connectomes(
+        pre_connectomes,arctanh=False, remove_negw=True, normalize=False
+    )
+    results_con["post_connectomes"] = func.proc_connectomes(
+        post_connectomes,arctanh=False, remove_negw=True, normalize=False
+    )
+    # weight substraction to compute change from pre to post
+    results_con["diff_weight_connectomes"] = func.weight_substraction_postpre(
+        results_con["post_connectomes"],
+        results_con["pre_connectomes"],
+    )
+    # Saving
     if save_base != None:
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
             os.mkdir(os.path.join(save_base, save_folder))
         save_to = os.path.join(save_base, save_folder)
 
-        func.save_results(data.subjects, save_to, conditions, results)
-        results = func.extract_features(
-            results
-        )  # apply trilower mask and vectorize connectomes
-        func.npsave_features(save_to, results)
+        with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:
+            pickle.dump(results_con, f)
 
-        with open(os.path.join(save_to, "dict_results.pkl"), "wb") as f:
-            pickle.dump(results, f)
-        with open(os.path.join(save_to, "dict_regression.pkl"), "wb") as f:
-            pickle.dump(result_regression, f)
-        print("Saved result dict!")
+    # Graphs metrics computation for pre and post layers : Return a dict of metrics for each subject pre.keys() = 'degree', 'betweenness', etc.
+    results_graph["pre_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
+        results_con["pre_connectomes"], data.subjects, atlas_labels
+    )
+    results_graph["post_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
+        results_con["post_connectomes"], data.subjects, atlas_labels
+    )
+    results_graph["change_feat"] = graphs_regressionCV.metrics_diff_postpre(
+         results_graph["post_metrics"], results_graph["pre_metrics"], data.subjects, exclude_keys = ['nodes', 'communities']
+    )
+    pre_X_weights = graphs_regressionCV.connectome2feature_matrices(
+        results_con["pre_connectomes"], data.subjects
+    )
+    post_X_weights = graphs_regressionCV.connectome2feature_matrices(
+        results_con["post_connectomes"], data.subjects
+    )
+    change_X_weights = post_X_weights - pre_X_weights
+    print("change X shape :", change_X_weights.shape)
+    Xmat_names = ["Degree", "Closeness", "Betweenness", "Clustering", "Edge_weights"]
+
+    # Prediction of behavioral variables from connectomes
+    xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
+    xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
+    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
+    results_graph['Y'] = Y
+
+    # Save main results_con and prep results_dir for regression results
+    with open(os.path.join(save_to, "dict_graphsMetrics.pkl"), "wb") as f:
+        pickle.dump(results_graph, f)
+
+    # CV prediciton for each connectome condition
+    results_pred['behavioral'] = Y
+
+    print("=====PRE-HYP CONNECTOMES====")
+    concat = copy.deepcopy(results_graph["pre_metrics"])
+    concat.update({'Edge_weights': pre_X_weights})
+    results_pred["pre"] = graphs_regressionCV.regression_cv( # Manually adding the weight connectomes to concat inside function, along other graph's metric dfs
+        concat,
+        Y,
+        target_columns,
+        exclude_keys = ['nodes', 'communities'],
+        rdm_seed=40,
+    )
+    print("=====POST-HYP CONNECTOMES====")
+    concat = copy.deepcopy(results_graph["post_metrics"])
+    concat.update({'Edge_weights': post_X_weights})
+    results_pred["post"] = graphs_regressionCV.regression_cv(
+        concat,
+        Y,
+        target_columns,
+        exclude_keys = ['nodes', 'communities'],
+        rdm_seed=40,
+    )
+    print("=====CHANGE-HYP CONNECTOMES====")
+    concat = copy.deepcopy(results_graph["change_feat"])
+    concat.update({'Edge_weights': change_X_weights}) # N x features matrix resulting from post - pre feature matrices
+    results_pred["change"] = graphs_regressionCV.regression_cv(
+        concat,
+        Y,
+        target_columns,
+        exclude_keys = ['nodes', 'communities'],
+        rdm_seed=40,
+    )
+    # Save reg results
+    with open(os.path.join(save_to, "dict_regression.pkl"), "wb") as f:
+        pickle.dump(results_pred, f)
+
+    print("Saved result dict!")
 
     # --Prints and plot--
     if verbose:
-        print([ts.shape for ts in results["pre_series"]])
-        print([ts.shape for ts in results["post_series"]])
+        print([ts.shape for ts in results_con["pre_series"]])
+        print([ts.shape for ts in results_con["post_series"]])
         print(atlas.shape)
         print(np.unique(atlas.get_fdata(), return_counts=True))
         for correlation_matrix in [
-            results["pre_mean_connectome"],
-            results["post_mean_connectome"],
-            results["zcontrast_mean_connectome"],
-        ]:  # [results['pre_mean_connetomes'], results['post_mean_connetomes']]:
+            results_con["pre_mean_connectome"],
+            results_con["post_mean_connectome"],
+            results_con["zcontrast_mean_connectome"],
+        ]:  # [results_con['pre_mean_connetomes'], results_con['post_mean_connetomes']]:
             np.fill_diagonal(correlation_matrix, 0)
             plotting.plot_matrix(
                 correlation_matrix,
@@ -213,37 +259,5 @@ def con_matrix(
 
         plotting.plot_roi(atlas, title=atlas_name)
 
-    return results
+    return results_con
 
-
-"""
-# plot connectivity matrix
-
-    matrix = np.load(os.path.join('data/derivatives/connectomes', os.listdir('data/derivatives/connectomes')[0]))
-    plotting.plot_matrix(squareform(matrix), vmin = -1, vmax = 1, labels=masker.labels_)
-    plt.savefig('results/plots/connectivity_matrix.svg', format='svg')
-    plt.clf()
-"""
-
-
-"""
-gb_signal = signal_clean(
-        np.array(results["pre_series"])
-        .mean(axis=1)
-        .reshape([np.array(results["pre_series"]).shape[0], 1]),
-        high_pass=0.1,
-        t_r=3,
-        standardize="zscore_sample",
-    )
-
-    results["pre_series"] = voxel_masker.fit_transform(pre_data, confounds=gb_signal)
-    gb_signal = signal_clean(
-        results["post_series"]
-        .mean(axis=1)
-        .reshape([results["post_series"].shape[0], 1]),
-        high_pass=0.1,
-        t_r=3,
-        standardize="zscore_sample",
-    )
-    results["post_series"] = voxel_masker.fit_transform(post_data, confounds=gb_signal)
-"""
