@@ -255,7 +255,6 @@ def regression_cv(graph_dict, Y, target_columns, exclude_keys = [], rdm_seed=40)
 
     mean_metrics = []
     out_dict = dict()
-    result_per_col = dict()
     random_seed = rdm_seed
     # Output information : dict_keys(['nodes', 'degree', 'closenessCent', 'betweennessCent', 'clustering', 'communities'])
     # ([X_con, X_degree, X_closeness, X_betweenness, X_clustering], ['Connectivity matrix', 'Degree', 'Closeness centrality', 'Betweenness centrality', 'Clustering'])
@@ -270,6 +269,7 @@ def regression_cv(graph_dict, Y, target_columns, exclude_keys = [], rdm_seed=40)
         # cv = KFold(n_splits=5, random_state=random_seed, shuffle=True)
         cv = ShuffleSplit(n_splits=10, test_size=0.20, random_state=random_seed)
 
+        result_per_col = dict() # dict to store results for each dependent var.
         for target_column in target_columns:
             print(f"--- {target_column} ---")
             y_preds = []

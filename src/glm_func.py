@@ -18,7 +18,7 @@ def check_normality(df, col, bins=20):
     counts, skew and kurtosis for column normality assessment.
 
     Parameters:
-    df (pd.DataFrame)): Name of Pandas dataframe.
+    df (pd.DataFrame): Name of Pandas dataframe.
     col (string): Name of the column to check; must be in df.columns.
     bins (int): Number of bins in histogram. Default set to 20.
 
@@ -31,7 +31,7 @@ def check_normality(df, col, bins=20):
         f"{col} 4 Std Dev: {std4} | obs. above this size: {std4_cnt} | Skew: {df[col].skew()} | Kurtosis: {df[col].kurtosis()}"
     )
     df[col].hist(figsize=(8, 4), bins=bins)
-    plt.show()
+    #plt.show()
 
     return
 

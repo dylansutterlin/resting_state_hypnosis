@@ -1,0 +1,790 @@
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+==========TEST MODIF MAIN : CORRELATION UPDATE LATEST METHOD==========
+INITIAL----
+---STARTING FILE ORDER MATCHING---
+---LOADING DATA---
+Loading atlas:  difumo64
+ATLAS :  
+<class 'nibabel.nifti1.Nifti1Image'>
+data shape (104, 123, 104, 64)
+affine:
+[[   2.    0.    0.  -96.]
+ [   0.    2.    0. -132.]
+ [   0.    0.    2.  -78.]
+ [   0.    0.    0.    1.]]
+metadata:
+<class 'nibabel.nifti1.Nifti1Header'> object, endian='<'
+sizeof_hdr      : 348
+data_type       : b''
+db_name         : b''
+extents         : 0
+session_error   : 0
+regular         : b''
+dim_info        : 0
+dim             : [  4 104 123 104  64   1   1   1]
+intent_p1       : 0.0
+intent_p2       : 0.0
+intent_p3       : 0.0
+intent_code     : none
+datatype        : float32
+bitpix          : 32
+slice_start     : 0
+pixdim          : [1. 2. 2. 2. 1. 1. 1. 1.]
+vox_offset      : 0.0
+scl_slope       : nan
+scl_inter       : nan
+slice_end       : 0
+slice_code      : unknown
+xyzt_units      : 0
+cal_max         : 0.0
+cal_min         : 0.0
+slice_duration  : 0.0
+toffset         : 0.0
+glmax           : 0
+glmin           : 0
+descrip         : b''
+aux_file        : b''
+qform_code      : unknown
+sform_code      : aligned
+quatern_b       : 0.0
+quatern_c       : 0.0
+quatern_d       : 0.0
+qoffset_x       : -96.0
+qoffset_y       : -132.0
+qoffset_z       : -78.0
+srow_x          : [  2.   0.   0. -96.]
+srow_y          : [   0.    2.    0. -132.]
+srow_z          : [  0.   0.   2. -78.]
+intent_name     : b''
+magic           : b'n+1'
+
+TYPE ATLAS <class 'nibabel.nifti1.Nifti1Image'>
+atlas done!
+Loading atlas:  difumo64
+Probabilistic atlas!
+[NiftiMapsMasker.fit] loading regions from None
+Resampling maps
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_01_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_02_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_03_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_05_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_06_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_07_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_08_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_09_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_11_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_12_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_15_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_16_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_17_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_20_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_22_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_26_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_27_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_28_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_29_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_32_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_33_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_35_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_36_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_37_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_38_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_40_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_41_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_42_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_43_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_46_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_47_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.fit] loading regions from None
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_01_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_02_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_03_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_05_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_06_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_07_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_08_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_09_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_11_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_12_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_15_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_16_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_17_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_20_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_22_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_26_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_27_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_28_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_29_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_32_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_33_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_35_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_36_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_37_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_38_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_40_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_41_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_42_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_43_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_46_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_47_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+change X shape : (31, 2016)
+=====PRE-HYP CONNECTOMES====
+================ 
+degree
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8098 and 0.6759 and Pearson R : -0.0835 (0.5469)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.8560 and 0.1166 and Pearson R : 0.0882 (0.4307)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9076 and 0.1464 and Pearson R : 0.2721 (0.3343)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7169 and 0.0420 and Pearson R : 0.3933 (0.2998)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8508 and 0.8226 and Pearson R : -0.1613 (0.6730)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.6635 and 0.2462 and Pearson R : 0.0322 (0.5241)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8202 and 0.5767 and Pearson R : -0.0671 (0.6776)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.7465 and 0.8462 and Pearson R : -0.2006 (0.5462)
+================ 
+closenessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8898 and 0.7634 and Pearson R : -0.0607 (0.4950)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.5311 and 0.0442 and Pearson R : 0.3435 (0.4899)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9740 and 0.5059 and Pearson R : -0.0483 (0.5394)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7417 and 0.1808 and Pearson R : 0.1051 (0.6246)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8644 and 0.8250 and Pearson R : -0.1831 (0.5615)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.0920 and 0.0192 and Pearson R : 0.3331 (0.4670)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8276 and 0.6025 and Pearson R : -0.0259 (0.6092)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.5839 and 0.7155 and Pearson R : 0.0821 (0.4949)
+================ 
+betweennessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8486 and 0.8104 and Pearson R : -0.0704 (0.6298)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.8146 and 0.2416 and Pearson R : 0.0303 (0.6260)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9726 and 0.3577 and Pearson R : 0.2177 (0.4718)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7774 and 0.1028 and Pearson R : 0.3575 (0.4180)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7704 and 0.7049 and Pearson R : -0.0099 (0.5701)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.4227 and 0.1342 and Pearson R : 0.0167 (0.3909)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.6479 and 0.5307 and Pearson R : -0.1646 (0.5817)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.3511 and 0.5155 and Pearson R : 0.0395 (0.6027)
+================ 
+clustering
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.6683 and 0.3879 and Pearson R : 0.1604 (0.5686)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.5047 and 0.0922 and Pearson R : 0.2166 (0.6121)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9872 and 0.5591 and Pearson R : -0.2238 (0.6360)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.9354 and 0.2613 and Pearson R : -0.0067 (0.6778)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7524 and 0.6327 and Pearson R : 0.0106 (0.6976)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.0068 and 0.0014 and Pearson R : 0.5781 (0.2213)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.2761 and 0.1130 and Pearson R : 0.2959 (0.5001)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.0080 and 0.0242 and Pearson R : 0.5908 (0.2038)
+================ 
+Edge_weights
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8048 and 0.4651 and Pearson R : 0.4062 (0.3787)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.8228 and 0.2252 and Pearson R : -0.0623 (0.6436)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9706 and 0.3261 and Pearson R : 0.2531 (0.5628)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8592 and 0.2112 and Pearson R : 0.1624 (0.6279)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7998 and 0.6835 and Pearson R : -0.3164 (0.4466)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.5247 and 0.1186 and Pearson R : 0.2144 (0.3237)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8788 and 0.6305 and Pearson R : -0.0462 (0.6269)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.7305 and 0.8164 and Pearson R : -0.3649 (0.2810)
+=====POST-HYP CONNECTOMES====
+================ 
+degree
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8710 and 0.3699 and Pearson R : 0.1739 (0.4582)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.9128 and 0.3175 and Pearson R : 0.0641 (0.5147)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9476 and 0.2476 and Pearson R : 0.0923 (0.5845)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8862 and 0.4309 and Pearson R : 0.0737 (0.5518)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7816 and 0.7403 and Pearson R : -0.1377 (0.5866)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.6303 and 0.1334 and Pearson R : 0.1982 (0.4886)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.6653 and 0.3967 and Pearson R : 0.0984 (0.5376)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.3631 and 0.4709 and Pearson R : 0.1314 (0.6339)
+================ 
+closenessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9226 and 0.8218 and Pearson R : 0.1629 (0.6003)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.6429 and 0.0840 and Pearson R : 0.0693 (0.6551)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9844 and 0.4165 and Pearson R : 0.2136 (0.5876)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8786 and 0.2092 and Pearson R : 0.1559 (0.4751)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8516 and 0.7894 and Pearson R : -0.1874 (0.5009)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.1718 and 0.0440 and Pearson R : 0.2250 (0.5837)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.7303 and 0.5195 and Pearson R : 0.2724 (0.4921)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.4057 and 0.5515 and Pearson R : 0.1245 (0.6498)
+================ 
+betweennessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.5221 and 0.2034 and Pearson R : 0.3216 (0.5057)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.4389 and 0.0430 and Pearson R : 0.3257 (0.4932)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9552 and 0.2923 and Pearson R : 0.0012 (0.6149)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.6467 and 0.0664 and Pearson R : 0.2059 (0.5220)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7584 and 0.6951 and Pearson R : 0.0554 (0.5394)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.5919 and 0.2188 and Pearson R : -0.0539 (0.6118)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.6433 and 0.4535 and Pearson R : 0.2059 (0.3212)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.0950 and 0.1498 and Pearson R : 0.4780 (0.2479)
+================ 
+clustering
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.3955 and 0.0406 and Pearson R : 0.5450 (0.2372)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.8792 and 0.1336 and Pearson R : 0.1410 (0.4805)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.8952 and 0.1776 and Pearson R : 0.0662 (0.6334)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.3981 and 0.0582 and Pearson R : 0.1279 (0.6005)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8566 and 0.8282 and Pearson R : -0.2871 (0.4926)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.5985 and 0.1520 and Pearson R : 0.0539 (0.4979)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8878 and 0.5937 and Pearson R : 0.1913 (0.3040)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.1412 and 0.2523 and Pearson R : 0.3995 (0.4254)
+================ 
+Edge_weights
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9396 and 0.8618 and Pearson R : 0.3252 (0.3698)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.7856 and 0.1792 and Pearson R : 0.1938 (0.5976)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9726 and 0.4263 and Pearson R : -0.1098 (0.5151)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.9186 and 0.3933 and Pearson R : -0.0124 (0.4599)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8338 and 0.7181 and Pearson R : -0.3238 (0.3889)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.4691 and 0.1030 and Pearson R : 0.1012 (0.4194)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8020 and 0.5179 and Pearson R : -0.0355 (0.5531)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.7329 and 0.7538 and Pearson R : -0.0281 (0.5481)
+=====CHANGE-HYP CONNECTOMES====
+================ 
+degree
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.6077 and 0.2018 and Pearson R : 0.3703 (0.4158)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.5799 and 0.1682 and Pearson R : 0.0469 (0.6685)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9374 and 0.5671 and Pearson R : -0.0781 (0.6781)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.6195 and 0.2619 and Pearson R : -0.0113 (0.6276)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7974 and 0.7858 and Pearson R : -0.1934 (0.6373)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.7632 and 0.2817 and Pearson R : 0.0991 (0.4997)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.7163 and 0.3243 and Pearson R : 0.2005 (0.5049)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.5271 and 0.7019 and Pearson R : -0.1689 (0.6389)
+================ 
+closenessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9524 and 0.9306 and Pearson R : 0.0914 (0.6719)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.1482 and 0.0226 and Pearson R : 0.3309 (0.4637)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9736 and 0.5555 and Pearson R : 0.1917 (0.6674)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.5373 and 0.0664 and Pearson R : 0.3211 (0.4975)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.5145 and 0.3861 and Pearson R : 0.1101 (0.5847)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.1154 and 0.0228 and Pearson R : 0.3967 (0.4284)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8180 and 0.5377 and Pearson R : 0.1899 (0.4797)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.1778 and 0.4415 and Pearson R : 0.0333 (0.6247)
+================ 
+betweennessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.6441 and 0.2909 and Pearson R : 0.3570 (0.4811)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.4281 and 0.0412 and Pearson R : 0.2096 (0.5438)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9690 and 0.3895 and Pearson R : 0.0409 (0.6544)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.3353 and 0.0340 and Pearson R : 0.2679 (0.5283)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.6989 and 0.6629 and Pearson R : -0.1284 (0.5496)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.2899 and 0.0934 and Pearson R : 0.1880 (0.5667)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.3611 and 0.1788 and Pearson R : 0.2560 (0.4075)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.5895 and 0.7211 and Pearson R : -0.2071 (0.4853)
+================ 
+clustering
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.0798 and 0.0072 and Pearson R : 0.6494 (0.1565)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.0186 and 0.0004 and Pearson R : 0.5325 (0.2554)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.7782 and 0.0578 and Pearson R : 0.2158 (0.3621)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.1066 and 0.0096 and Pearson R : 0.3665 (0.3576)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.3023 and 0.1600 and Pearson R : 0.1757 (0.5522)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.3043 and 0.0506 and Pearson R : 0.3648 (0.2914)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.4021 and 0.1606 and Pearson R : 0.2882 (0.2934)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.5671 and 0.7183 and Pearson R : -0.2538 (0.5812)
+================ 
+Edge_weights
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8946 and 0.8336 and Pearson R : 0.0320 (0.3467)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.6539 and 0.0738 and Pearson R : 0.1670 (0.6284)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9566 and 0.2064 and Pearson R : 0.1127 (0.3515)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8444 and 0.1428 and Pearson R : 0.1013 (0.4825)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.5797 and 0.4385 and Pearson R : -0.0888 (0.5693)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.2302 and 0.0686 and Pearson R : 0.1359 (0.5488)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8070 and 0.4955 and Pearson R : 0.4351 (0.3828)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.2210 and 0.3591 and Pearson R : 0.5169 (0.3060)
+Saved result dict!

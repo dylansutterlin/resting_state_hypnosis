@@ -76,9 +76,9 @@ def con_matrix(
     atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
         pwd_main, atlas_name, bilat=True
     )
-    print("ATLAS : ", atlas)
     print("TYPE ATLAS", type(atlas))
     print("atlas done!")
+    print("ATLAS : ", atlas)
     # basic voxel masker
     voxel_masker = MultiNiftiMasker(
         mask_strategy="whole-brain-template",
@@ -110,7 +110,16 @@ def con_matrix(
         masker.fit(post_data)
         results_con["post_series"] = [masker.transform(ts) for ts in post_data]
 
-        #with open(os.path.join(p, 'fitted_timeSeries.pkl'), 'wb') as f:
+    # Masker quality check --> insert masker report here
+    #[
+
+    #!!!!!!!!!!!!!!!!!!!
+    #]
+    all_cond_masker = masker.fit(pre_data + post_data)
+    all_cond_masker.report
+    masker.report
+
+       #with open(os.path.join(p, 'fitted_timeSeries.pkl'), 'wb') as f:
         #    pickle.dump(results_con, f)
 
     # --Seed masker--
@@ -118,7 +127,7 @@ def con_matrix(
         seed_masker = NiftiSpheresMasker(
             sphere_coord, radius=8, standardize="zscore_sample"
         )
-        results_con["seed_pre_series"] = [
+        results_con["seed_pre_series"] = [ # /!!!\ Adjust this section according to report tests made up
             seed_masker.fit_transform(ts) for ts in pre_data
         ]
         results_con["seed_post_series"] = [
@@ -161,7 +170,7 @@ def con_matrix(
     # Saving
     if save_base != None:
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
-            os.mkdir(os.path.join(save_base, save_folder))
+            os.mkdir(os.path.join(save_base, save_f/older))
         save_to = os.path.join(save_base, save_folder)
 
         with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:

@@ -264,13 +264,7 @@ def extract_features(results):
         ],
         axis=0,
     )
-    results["postX"] = np.stack(
-        [
-            results["post_connectomes"][i][..., tril_mask]
-            for i in range(0, len(results["post_connectomes"]))
-        ],
-        axis=0,
-    )
+    results["postX"] 
     results["contrastX"] = np.stack(
         [
             results["contrast_connectomes"][i][..., tril_mask]

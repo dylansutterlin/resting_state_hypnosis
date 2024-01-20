@@ -1,0 +1,914 @@
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/maskers/nifti_spheres_masker.py:91: UserWarning: The imgs you have fed into fit_transform() contains NaN values which will be converted to zeroes.
+  warnings.warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/_utils/niimg.py:61: UserWarning: Non-finite values detected. These values will be replaced with zeros.
+  warn(
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+/lustre03/project/6000441/p1226014/hypnosis_rest/ENV/lib/python3.10/site-packages/nilearn/connectome/connectivity_matrices.py:509: FutureWarning: The default strategy for standardize is currently 'zscore' which incorrectly uses population std to calculate sample zscores. The new strategy 'zscore_sample' corrects this behavior by using the sample std. In release 0.13, the default strategy will be replaced by the new strategy and the 'zscore' option will be removed. Please use 'zscore_sample' instead.
+  covariances_std = [
+==========TEST MODIF MAIN : CORRELATION UPDATE LATEST METHOD==========
+INITIAL----
+---STARTING FILE ORDER MATCHING---
+---LOADING DATA---
+Loading atlas:  difumo64
+ATLAS :  
+<class 'nibabel.nifti1.Nifti1Image'>
+data shape (104, 123, 104, 64)
+affine:
+[[   2.    0.    0.  -96.]
+ [   0.    2.    0. -132.]
+ [   0.    0.    2.  -78.]
+ [   0.    0.    0.    1.]]
+metadata:
+<class 'nibabel.nifti1.Nifti1Header'> object, endian='<'
+sizeof_hdr      : 348
+data_type       : b''
+db_name         : b''
+extents         : 0
+session_error   : 0
+regular         : b''
+dim_info        : 0
+dim             : [  4 104 123 104  64   1   1   1]
+intent_p1       : 0.0
+intent_p2       : 0.0
+intent_p3       : 0.0
+intent_code     : none
+datatype        : float32
+bitpix          : 32
+slice_start     : 0
+pixdim          : [1. 2. 2. 2. 1. 1. 1. 1.]
+vox_offset      : 0.0
+scl_slope       : nan
+scl_inter       : nan
+slice_end       : 0
+slice_code      : unknown
+xyzt_units      : 0
+cal_max         : 0.0
+cal_min         : 0.0
+slice_duration  : 0.0
+toffset         : 0.0
+glmax           : 0
+glmin           : 0
+descrip         : b''
+aux_file        : b''
+qform_code      : unknown
+sform_code      : aligned
+quatern_b       : 0.0
+quatern_c       : 0.0
+quatern_d       : 0.0
+qoffset_x       : -96.0
+qoffset_y       : -132.0
+qoffset_z       : -78.0
+srow_x          : [  2.   0.   0. -96.]
+srow_y          : [   0.    2.    0. -132.]
+srow_z          : [  0.   0.   2. -78.]
+intent_name     : b''
+magic           : b'n+1'
+
+TYPE ATLAS <class 'nibabel.nifti1.Nifti1Image'>
+atlas done!
+Loading atlas:  difumo64
+Probabilistic atlas!
+[NiftiMapsMasker.fit] loading regions from None
+Resampling maps
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_01_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_02_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_03_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_05_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_06_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_07_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_08_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_09_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_11_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_12_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_15_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_16_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_17_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_20_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_22_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_26_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_27_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_28_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_29_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_32_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_33_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_35_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_36_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_37_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_38_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_40_H1/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_41_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_42_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_43_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_46_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_47_H2/wcbf_0_srASL_4D_before_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.fit] loading regions from None
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_01_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_02_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_03_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_05_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_06_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_07_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_08_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_09_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_11_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_12_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_15_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_16_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_17_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_20_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_22_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_26_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_27_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_28_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_29_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_32_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_33_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_35_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_36_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_37_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_38_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_40_H1/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_41_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_42_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_43_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_46_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+[NiftiMapsMasker.transform_single_imgs] Loading data from /home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized/APM_47_H2/wcbf_0_srASL_4D_during_4D.nii
+[NiftiMapsMasker.transform_single_imgs] Extracting region signals
+[NiftiMapsMasker.transform_single_imgs] Cleaning extracted signals
+change X shape : (31, 2016)
+=====PRE-HYP CONNECTOMES====
+================ 
+degree
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9280 and 0.9184 and Pearson R : -0.2505 (0.5445)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.9672 and 0.5787 and Pearson R : -0.2992 (0.4951)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9730 and 0.2156 and Pearson R : 0.2045 (0.3459)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8826 and 0.1150 and Pearson R : 0.2552 (0.3612)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.6961 and 0.6429 and Pearson R : -0.2542 (0.4497)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.6685 and 0.2625 and Pearson R : -0.0439 (0.6020)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.6745 and 0.5751 and Pearson R : 0.2034 (0.3930)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.3979 and 0.5631 and Pearson R : -0.1747 (0.6135)
+================ 
+closenessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8602 and 0.8494 and Pearson R : -0.2564 (0.5178)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.9414 and 0.6997 and Pearson R : -0.2160 (0.5234)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9566 and 0.2462 and Pearson R : 0.0783 (0.6170)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8936 and 0.2527 and Pearson R : 0.1271 (0.5058)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8718 and 0.8960 and Pearson R : -0.3482 (0.4421)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.7477 and 0.2877 and Pearson R : -0.1227 (0.6071)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8184 and 0.7069 and Pearson R : 0.1886 (0.3391)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.2551 and 0.3329 and Pearson R : 0.1414 (0.5844)
+================ 
+betweennessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9502 and 0.9240 and Pearson R : -0.1041 (0.5799)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.9716 and 0.8066 and Pearson R : -0.4388 (0.3540)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9904 and 0.7337 and Pearson R : -0.2896 (0.4644)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.9860 and 0.9376 and Pearson R : -0.4609 (0.3554)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8918 and 0.8728 and Pearson R : -0.2473 (0.4788)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.3959 and 0.1000 and Pearson R : 0.1033 (0.5208)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.9354 and 0.7920 and Pearson R : -0.0008 (0.5748)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.8080 and 0.9266 and Pearson R : -0.3566 (0.4362)
+================ 
+clustering
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8662 and 0.5319 and Pearson R : 0.1548 (0.5881)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.6003 and 0.2356 and Pearson R : -0.1294 (0.5323)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9700 and 0.3053 and Pearson R : 0.0445 (0.5620)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.9506 and 0.5531 and Pearson R : 0.1223 (0.6071)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7654 and 0.7213 and Pearson R : -0.0939 (0.5247)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.6483 and 0.3329 and Pearson R : -0.0840 (0.4787)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8796 and 0.6737 and Pearson R : -0.1089 (0.5121)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.9400 and 0.9752 and Pearson R : -0.5323 (0.2839)
+================ 
+Edge_weights
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.7177 and 0.3575 and Pearson R : 0.3631 (0.4694)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.6141 and 0.0994 and Pearson R : 0.1696 (0.5502)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9708 and 0.4045 and Pearson R : 0.1655 (0.5858)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8994 and 0.2747 and Pearson R : 0.2250 (0.5478)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.6049 and 0.5589 and Pearson R : 0.0415 (0.5237)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.1438 and 0.0250 and Pearson R : 0.3851 (0.4131)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.9134 and 0.7027 and Pearson R : 0.0356 (0.5657)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.2460 and 0.4437 and Pearson R : 0.2446 (0.3482)
+=====POST-HYP CONNECTOMES====
+================ 
+degree
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.6823 and 0.4635 and Pearson R : 0.0915 (0.5517)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.0706 and 0.0228 and Pearson R : 0.3269 (0.3334)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9860 and 0.7095 and Pearson R : -0.2661 (0.4882)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.9298 and 0.5741 and Pearson R : 0.1041 (0.4993)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7658 and 0.6193 and Pearson R : -0.2081 (0.4296)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.4219 and 0.2022 and Pearson R : 0.0941 (0.4357)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.6887 and 0.3987 and Pearson R : 0.1831 (0.5101)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.3775 and 0.6223 and Pearson R : 0.0004 (0.4131)
+================ 
+closenessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.6019 and 0.3117 and Pearson R : 0.2742 (0.4400)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.5235 and 0.0582 and Pearson R : 0.2916 (0.3729)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9762 and 0.4861 and Pearson R : 0.0461 (0.4932)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8696 and 0.2603 and Pearson R : 0.1291 (0.4608)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.4817 and 0.3539 and Pearson R : 0.0676 (0.3939)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.5433 and 0.2174 and Pearson R : -0.0976 (0.5034)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.7465 and 0.4361 and Pearson R : 0.1438 (0.4838)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.6129 and 0.7964 and Pearson R : 0.0186 (0.4603)
+================ 
+betweennessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9498 and 0.9132 and Pearson R : -0.0652 (0.5892)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.8448 and 0.3059 and Pearson R : -0.1369 (0.5998)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9670 and 0.2178 and Pearson R : 0.1856 (0.4933)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7722 and 0.1744 and Pearson R : 0.1125 (0.4838)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.7718 and 0.6817 and Pearson R : -0.1318 (0.4392)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.4755 and 0.1224 and Pearson R : 0.0850 (0.4101)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.2553 and 0.1070 and Pearson R : 0.4221 (0.3396)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.6319 and 0.6823 and Pearson R : 0.0474 (0.4709)
+================ 
+clustering
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.6485 and 0.4411 and Pearson R : 0.1974 (0.5935)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.4169 and 0.1354 and Pearson R : 0.1337 (0.3562)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.8212 and 0.1612 and Pearson R : 0.0677 (0.4114)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.6893 and 0.2118 and Pearson R : 0.1222 (0.3664)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.4463 and 0.3587 and Pearson R : 0.0365 (0.4401)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.4711 and 0.1706 and Pearson R : -0.0034 (0.6019)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8926 and 0.7495 and Pearson R : 0.0965 (0.5118)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.6873 and 0.8384 and Pearson R : -0.0261 (0.4399)
+================ 
+Edge_weights
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.5913 and 0.1440 and Pearson R : 0.5790 (0.1702)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.8618 and 0.3157 and Pearson R : 0.0506 (0.5672)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.8416 and 0.0532 and Pearson R : 0.2808 (0.4553)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7375 and 0.1160 and Pearson R : 0.2172 (0.4725)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.8572 and 0.8002 and Pearson R : -0.3758 (0.4586)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.7325 and 0.3393 and Pearson R : 0.0301 (0.6775)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.9070 and 0.7676 and Pearson R : -0.2374 (0.4234)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.6591 and 0.8320 and Pearson R : -0.1578 (0.5071)
+=====CHANGE-HYP CONNECTOMES====
+================ 
+degree
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9086 and 0.8516 and Pearson R : 0.2829 (0.5061)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.6857 and 0.1232 and Pearson R : -0.0659 (0.4696)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9692 and 0.2841 and Pearson R : -0.0289 (0.4822)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.8134 and 0.3205 and Pearson R : -0.1650 (0.4204)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.3369 and 0.2066 and Pearson R : 0.2433 (0.5108)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.3355 and 0.0872 and Pearson R : -0.0026 (0.5996)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.7996 and 0.6859 and Pearson R : 0.2512 (0.4299)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.1810 and 0.3461 and Pearson R : 0.1318 (0.4530)
+================ 
+closenessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9290 and 0.9266 and Pearson R : -0.0407 (0.6460)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.8996 and 0.2603 and Pearson R : -0.1553 (0.4473)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9490 and 0.2360 and Pearson R : -0.0410 (0.4889)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7061 and 0.2144 and Pearson R : -0.1753 (0.3808)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.2068 and 0.1272 and Pearson R : 0.3426 (0.4449)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.7736 and 0.2767 and Pearson R : -0.1711 (0.6326)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.6289 and 0.4333 and Pearson R : 0.2600 (0.5329)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.2104 and 0.2567 and Pearson R : 0.3086 (0.5560)
+================ 
+betweennessCent
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.9060 and 0.8780 and Pearson R : 0.0206 (0.4464)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.9604 and 0.7367 and Pearson R : -0.2250 (0.5659)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9680 and 0.6759 and Pearson R : -0.0575 (0.5810)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.9300 and 0.7968 and Pearson R : -0.1699 (0.5368)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.4973 and 0.3777 and Pearson R : 0.0964 (0.5086)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.7738 and 0.1358 and Pearson R : 0.2176 (0.4121)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8738 and 0.7461 and Pearson R : -0.0661 (0.3980)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.6051 and 0.7463 and Pearson R : -0.1160 (0.5690)
+================ 
+clustering
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.8682 and 0.8364 and Pearson R : 0.1031 (0.5299)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.6151 and 0.1700 and Pearson R : -0.1425 (0.5486)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9456 and 0.3873 and Pearson R : 0.0387 (0.5283)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7914 and 0.2577 and Pearson R : 0.0439 (0.5532)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.2262 and 0.1884 and Pearson R : 0.2041 (0.6197)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.4829 and 0.1856 and Pearson R : -0.0293 (0.6385)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8586 and 0.6749 and Pearson R : 0.0283 (0.5830)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.4785 and 0.6319 and Pearson R : -0.2067 (0.4844)
+================ 
+Edge_weights
+================
+--- SHSS_score ---
+Permutation test for r2 and RMSE values: p=0.7383 and 0.5445 and Pearson R : 0.0047 (0.5641)
+--- raw_change_ANA ---
+Permutation test for r2 and RMSE values: p=0.3843 and 0.0284 and Pearson R : 0.4630 (0.3597)
+--- raw_change_HYPER ---
+Permutation test for r2 and RMSE values: p=0.9748 and 0.5399 and Pearson R : -0.2304 (0.5061)
+--- total_chge_pain_hypAna ---
+Permutation test for r2 and RMSE values: p=0.7407 and 0.2030 and Pearson R : -0.0511 (0.6021)
+--- Chge_hypnotic_depth ---
+Permutation test for r2 and RMSE values: p=0.9160 and 0.9488 and Pearson R : -0.3317 (0.4542)
+--- Mental_relax_absChange ---
+Permutation test for r2 and RMSE values: p=0.3005 and 0.0742 and Pearson R : 0.2256 (0.5391)
+--- Automaticity_post_ind ---
+Permutation test for r2 and RMSE values: p=0.8638 and 0.6659 and Pearson R : -0.1182 (0.5914)
+--- Abs_diff_automaticity ---
+Permutation test for r2 and RMSE values: p=0.7155 and 0.8096 and Pearson R : -0.2687 (0.5906)
+Saved result dict!
