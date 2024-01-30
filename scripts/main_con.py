@@ -33,6 +33,7 @@ def con_matrix(
     sphere_coord=None,
     connectivity_measure="correlation",
     plot_atlas=False,
+    n_sub = None,
     verbose=False,
 ):
     """_summary_

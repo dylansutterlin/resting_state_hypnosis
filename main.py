@@ -35,6 +35,7 @@ main.con_matrix(
         (-6, -26, 46),
     ],
     connectivity_measure="tangent",
+    n_sub = None,
     verbose=False,
 )
 
