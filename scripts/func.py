@@ -15,17 +15,31 @@ from sklearn.preprocessing import MinMaxScaler
 from nilearn.connectome import GroupSparseCovarianceCV
 
 
-def load_data(path, else_path, main_cwd):
+def load_data(path, conf_path, main_cwd, n_sub = None):
     """
     Load subject information into memory
 
-    """
-    print("---STARTING FILE ORDER MATCHING---")
-    sorted_subs = sorted([sub for sub in os.listdir(path) if "APM" in sub])
-    # TESTTT
-    #sorted_subs = sorted_subs[0:3]
+    Parameters
+    ----------
+    path : str
+        Path to fmri data organized in subfolders for each subject
+    conf_path : str
+        Path to support files like masks of data and confounds
+    main_cwd : str
+        Path to folder where main.py is located. Used to access support files like phenotype files and atlases
+    n_sub : int
+        Used to limit the number of subjects to be loaded
+        If None, all subjects will be loaded
+    Returns
+    -------
+    data : Bunch
 
-    print("---LOADING DATA---")
+    """
+
+    sorted_subs = sorted([sub for sub in os.listdir(path) if "APM" in sub])
+    if n_sub!= None:
+        sorted_subs = sorted_subs[:n_sub]
+
     data = Bunch(
         subjects=sorted_subs,
         func_pre=[
@@ -39,7 +53,7 @@ def load_data(path, else_path, main_cwd):
         pre_masks=[
             glob.glob(
                 os.path.join(
-                    else_path, sub, "*before*", "mskwmeanCBF_0_srASL_4D_before*"
+                    conf_path, sub, "*before*", "mskwmeanCBF_0_srASL_4D_before*"
                 )
             )[0]
             for sub in sorted_subs
@@ -47,7 +61,7 @@ def load_data(path, else_path, main_cwd):
         post_masks=[
             glob.glob(
                 os.path.join(
-                    else_path, sub, "*during*", "mskwmeanCBF_0_srASL_4D_during*"
+                    conf_path, sub, "*during*", "mskwmeanCBF_0_srASL_4D_during*"
                 )
             )[0]
             for sub in sorted_subs
@@ -55,14 +69,14 @@ def load_data(path, else_path, main_cwd):
         confounds_pre_hyp=[
             pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
             for file in [
-                glob.glob(os.path.join(else_path, sub, "*before*", "globalsg_0.txt"))[0]
+                glob.glob(os.path.join(conf_path, sub, "*before*", "globalsg_0.txt"))[0]
                 for sub in sorted_subs
             ]
         ],
         confounds_post_hyp=[
             pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
             for file in [
-                glob.glob(os.path.join(else_path, sub, "*during*", "globalsg_0.txt"))[0]
+                glob.glob(os.path.join(conf_path, sub, "*during*", "globalsg_0.txt"))[0]
                 for sub in sorted_subs
             ]
         ],
@@ -83,7 +97,27 @@ def load_data(path, else_path, main_cwd):
     return data
 
 
-def load_choose_atlas(main_cwd, atlas_name, bilat=True):
+def load_choose_atlas(main_cwd, atlas_name, mask_conf = False, bilat=True):
+    '''
+    Loads the chosen atlas into memory
+    Parameters
+    ----------
+    main_cwd : str
+        Pipeline directory where main.py is located
+    atlas_name : str
+        Atlas to be loaded. Choices are: "yeo_7", "yeo_17" and "difumo64". BASC is not tested
+    mask_conf : Bool.
+            *Not updated, could be used with DiaFuMo64. Set to 0 in meantime.
+    bilat : bool, optional
+        Used in for the yeo case where ROIs are unilateral. Always True, and changes to False in specific cases
+    
+    Returns
+    -------
+    atlas : nilearn.image.Nifti1Image (atlas file was nib loaded)
+    atlas_labels : list of labels for ROIs
+    atlas_type : str Choices are: "labels" or "maps". Is further used to choose maskers
+    mask_conf : pandas.DataFrame or int.'''
+
     if atlas_name == "yeo_7":
         atlas_file = datasets.fetch_atlas_yeo_2011()["thick_7"]
         atlas = nib.load(atlas_file)
@@ -115,7 +149,7 @@ def load_choose_atlas(main_cwd, atlas_name, bilat=True):
             )
         )
         atlas_labels = atlas_df["Difumo_names"]
-        confounds = atlas_df.iloc[:, -3:]  # GM WM CSF
+        mask_conf = atlas_df.iloc[:, -3:]  # GM WM CSF
         bilat = False
         atlas_type = "maps"
 
@@ -150,11 +184,9 @@ def load_choose_atlas(main_cwd, atlas_name, bilat=True):
         atlas_file = datasets.fetch_atlas_basc_multiscale_2015(
             version="sym", resolution=12
         )
-    if atlas_name != "difumo":
-        print("Loading atlas: ", atlas_name)
-    confounds = 0
+    mask_conf = 0
 
-    return atlas, atlas_labels, atlas_type, confounds
+    return atlas, atlas_labels, atlas_type, mask_conf
 
 
 def make_mask_bilat(bilateral_mask):

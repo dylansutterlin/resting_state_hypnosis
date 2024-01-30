@@ -14,22 +14,23 @@ from nilearn.plotting import plot_epi, plot_roi, plot_stat_map
 from scripts import func
 
 
-def choose_tune_masker(main_pwd,
-    use_atlas_type=False,
+def choose_atlas_masker(
+    atlas,
+    atlas_type,
     mask_img=None,
     tr=None,
     smoothing_fwhm=None,
     standardize=False,
     verbose=5,
     resampling_target='data',
-    atlas_type=None,
     confounds=None,
 ):
     """
     Choose and tune masker parameters
     Parameters
     ----------
-    use_atlas_type : str or bool
+    atlas : NiftiLabelsMasker or NiftiMapsMasker object
+    atlas_type : str or bool
         Choices : 'labels' and 'maps' for probabilistic atlases, by default False
     mask_img : str, optional
         Path to mask image, by default None
@@ -47,54 +48,37 @@ def choose_tune_masker(main_pwd,
         Atlas type, by default None
     confounds : str, optional
         Confounds, by default None
+
+    Returns
+    -------
+    masker : nilearn.maskers.NiftiMasker object. Not fitted
     """
 
-    if use_atlas_type != False:
-        if use_atlas_type == True:
-            print("No atlas chosen, using default yeo7 bilateral atlas !")
-            atlas_name = "yeo_7"
-
-            atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-                main_pwd, atlas_name, bilat=True
-            )
-        else:
-            atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-                main_pwd, use_atlas_type, bilat=True
-            )
-
-        if atlas_type == "maps":
-            masker = NiftiMapsMasker(
-                maps_img=atlas,
-                t_r=tr,
-                smoothing_fwhm=smoothing_fwhm,
-                standardize=standardize,
-                verbose=5,
-                resampling_target=resampling_target,
-            )
-            print("Probabilistic atlas!")
-
-        elif atlas_type == "labels":
-            # labels = atlas.labels
-            masker = MultiNiftiLabelsMasker(
-                labels_img=atlas,
-                labels=atlas_labels,
-                standardize=standardize,
-                resampling_target=resampling_target,
-            )
-            print(" Labeled masker!")
-
-        return masker
-    # ! Default options be aware !
-    elif atlas_type == None:
-        masker = MultiNiftiMasker(
-            mask_strategy="whole-brain-template",
-            high_pass=0.1,
-            t_r=3,
-            standardize=True,
-            smoothing_fwhm=6,
-            verbose=5,
+    if atlas_type == "maps":
+        masker = NiftiMapsMasker(
+            maps_img=atlas,
+            mask_img= mask_img,
+            t_r=tr,
+            smoothing_fwhm=smoothing_fwhm,
+            standardize=standardize,
+            verbose=verbose,
+            resampling_target=resampling_target,
         )
-        return masker
+        print("Probabilistic (maps) atlas selected!")
+    elif atlas_type == "labels":
+        # labels = atlas.labels
+        masker = MultiNiftiLabelsMasker(
+            labels_img=atlas,
+            labels=atlas_labels,
+            standardize=standardize,
+            resampling_target=resampling_target,
+        )
+        print("Label (not probabilistic) masker!")
+    else:
+        raise ValueError("Atlas type must be maps or labels in order to choose NiftiMasker!")
+    
+        
+    return masker
 
 
 def check_masker_fit(data, masker):

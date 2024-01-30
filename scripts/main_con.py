@@ -1,3 +1,4 @@
+import sys
 import argparse
 import pickle
 import os
@@ -40,18 +41,21 @@ def con_matrix(
 
     Parameters
     ----------
+
     data_dir : str
         Path to data, fMRI images (.hdr or .nii)
     conf_dir : str
         Path to each subject's folder containing regressors and confounds
         **This arg was added to account for data structure, e.i. fMRI imgages stored in diff folder than regressors and other data and
         for some permission reasons on the server, it wasn't possible to move the confound file, could be fixed in the futur!**
+    pwd_main : str
+        Directory where main.py is ran from. Used to access files likes phenotype and atlases files.
     save_base : str
-        Path to saving folder
+        Path to saving folder. If None, will be automatically generated in pwd_main
     save_folder : str
         Name of folder/atlas/condition to name the folder in which results will be saved, e.g. 'yeo_7'
-    path_to_atlas : _type_, optional
-        Path to atlas, by default None
+    atlas_name : str, optional
+        Atlas name to use. If None, yeo7 will be used. Other choices include
     atlas_type : str, optional
         Choices : 'labels' and 'maps' for probabilistic atlases, by default 'labels'
     connectivity_measure : str, optional
@@ -62,9 +66,8 @@ def con_matrix(
         Wether to print/plot outputs, by default False
     """
 
-    print("INITIAL----")
-    # --Data--
-    data = func.load_data(data_dir, conf_dir, pwd_main)
+    print("---LOADING DATA---")
+    data = func.load_data(data_dir, conf_dir, pwd_main, n_sub=n_sub)
     conditions = ["pre_hyp", "post_hyp", "contrast"]
     #pre_data, post_data = prep.resample_shape_affine(data)
     pre_data = data.func_pre
@@ -72,35 +75,32 @@ def con_matrix(
     results_con = dict(subjects=data.subjects, pre_series=list(), post_series=list())
     results_graph = dict(pre=dict(), post=dict(), change=dict())
     results_pred = dict(pre=dict(), post=dict(), change=dict())
+    
+    print('----ATLAS SELECTION---')
+    if atlas_name != None:
+        atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
+            pwd_main, atlas_name, bilat=True
+        ) # confounds is not used further
 
-    # --Atlas choices--
-    atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-        pwd_main, atlas_name, bilat=True
-    )
-    print("TYPE ATLAS", type(atlas))
-    print("atlas done!")
-    print("ATLAS : ", atlas)
-    # basic voxel masker
+    print('---MASKER SELECTION---')
     voxel_masker = MultiNiftiMasker(
         mask_strategy="whole-brain-template",
         standardize="zscore_sample",
         verbose=5,
     )
-
-    # --ROI masker parameters--
+    # Return NiftiMaker object yet to be fitted
     if atlas_name == None:
-        masker = prep.choose_tune_masker(
-            main_pwd=pwd_main, use_atlas_type=False, mask_img=False, standardize = None
-        )
+        masker = voxel_masker
     else:
-        masker = prep.choose_tune_masker(
-            main_pwd=pwd_main, use_atlas_type=atlas_name, mask_img=False
-        )
+        masker = prep.choose_atlas_masker(
+            atlas = atlas, atlas_type =atlas_type, mask_img=None, resampling_target= 'data'
+        ) 
 
-   # --Timeseries : Fit and apply mask--
-    #p = r'/data/rainville/dylanSutterlin/resting_hypnosis/results/difumo64_correlation_Ridge'
-    provide_data=False
-    if provide_data != False:
+    print('---TIMESERIES EXTRACTION---') 
+    # --Timeseries : Fit and apply mask--
+    p = os.path.join(pwd_main, 'debug','fitted_timeSeries.pkl')
+    input_timeseries=False
+    if input_timeseries != False:
         with open(os.path.join(p,'fitted_timeSeries.pkl'), 'rb') as f:
             load_results = pickle.load(f)
         results_con['pre_series'] = load_results['pre_series']
@@ -111,14 +111,26 @@ def con_matrix(
         masker.fit(post_data)
         results_con["post_series"] = [masker.transform(ts) for ts in post_data]
 
-    # Masker quality check --> insert masker report here
-    #[
+        print('---MAKING MASKER REPORTS---')
+        voxel_masker.fit(pre_data + post_data)
+        voxel_masker_report = voxel_masker.generate_report()
+        voxel_masker_report.save_as_html(os.path.join('debug/reports', 'voxel_masker_report.html'))
 
-    #!!!!!!!!!!!!!!!!!!!
-    #]
-    all_cond_masker = masker.fit(pre_data + post_data)
-    all_cond_masker.report
-    masker.report
+        nib.save(atlas, os.path.join(pwd_main, 'debug', 'atlas.nii.gz'))
+        nib.save(image.mean_img(pre_data + post_data), os.path.join(pwd_main, 'debug','all_cond_mean_img.nii.gz'))
+
+        with open(os.path.join(p, 'fitted_timeSeries.pkl'), 'wb') as f:
+            pickle.dump(results_con, f)
+        with open(os.path.join(p, 'pre_data.pkl'),) as f:
+            pickle.dump(pre_data, f)
+        with open(os.path.join(p, 'post_data.pkl'),) as f:
+            pickle.dump(post_data, f)
+        
+
+    
+        all_cond_masker = masker.fit(pre_data + post_data)
+        all_cond_masker.report
+        masker.report
 
        #with open(os.path.join(p, 'fitted_timeSeries.pkl'), 'wb') as f:
         #    pickle.dump(results_con, f)
@@ -126,7 +138,7 @@ def con_matrix(
     # --Seed masker--
     if sphere_coord != None:
         seed_masker = NiftiSpheresMasker(
-            sphere_coord, radius=8, standardize="zscore_sample"
+            sphere_coord, radius=15, standardize=False, verbose=5
         )
         results_con["seed_pre_series"] = [ # /!!!\ Adjust this section according to report tests made up
             seed_masker.fit_transform(ts) for ts in pre_data
@@ -150,7 +162,7 @@ def con_matrix(
 
     # -- Covariance Estimation--
     covariance_measure = ConnectivityMeasure(
-        kind=connectivity_measure, discard_diagonal=False,standardize = True
+        kind=connectivity_measure, discard_diagonal=False,standardize = False
     )
     # Connectomes computation : returns a list of connectomes
     pre_connectomes, post_connectomes = func.compute_cov_measures(
@@ -176,6 +188,12 @@ def con_matrix(
 
         with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:
             pickle.dump(results_con, f)
+
+    return results_con
+
+
+
+def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_folder=None):
 
     # Graphs metrics computation for pre and post layers : Return a dict of metrics for each subject pre.keys() = 'degree', 'betweenness', etc.
     results_graph["pre_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
