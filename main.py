@@ -1,14 +1,13 @@
 from scripts import main_con as main
 import os
 
-#p = r"/data/rainville//HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
-#conf_dir = (
-#    r"/data/rainville//HYPNOSIS_ASL_ANALYSIS")
-#/data/rainville2019_ASL_preproc/
-#pwd_repo = r"/data/rainville/dylanSutterlin/resting_hypnosis"
-p = r"/home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized"
-conf_dir = (r"/home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc")
-pwd_repo = r"/home/p1226014/projects/def-rainvilp/p1226014/hypnosis_rest"
+p = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
+conf_dir = (
+    r"/data/rainville/HYPNOSIS_ASL_ANALYSIS")
+pwd_repo = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_hypnosis"
+#p = r"/home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc/CBF_normalized"
+#conf_dir = (r"/home/p1226014/projects/def-rainvilp/p1226014/data/rainville2019_ASL_preproc")
+#pwd_repo = r"/home/p1226014/projects/def-rainvilp/p1226014/hypnosis_rest"
 
 # p = r"/data/rainville//HYPNOSIS_ASL_ANALYSIS/CBF_normalized/"
 # else_dir = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS"
