@@ -15,7 +15,7 @@ from sklearn.preprocessing import MinMaxScaler
 from nilearn.connectome import GroupSparseCovarianceCV
 
 
-def load_data(path, conf_path, main_cwd, n_sub = None):
+def load_data(path, main_cwd, conf_path = False, n_sub = None):
     """
     Load subject information into memory
 
@@ -23,10 +23,10 @@ def load_data(path, conf_path, main_cwd, n_sub = None):
     ----------
     path : str
         Path to fmri data organized in subfolders for each subject
-    conf_path : str
-        Path to support files like masks of data and confounds
     main_cwd : str
         Path to folder where main.py is located. Used to access support files like phenotype files and atlases
+    conf_path : str
+        Path to support files like masks of data and confounds
     n_sub : int
         Used to limit the number of subjects to be loaded
         If None, all subjects will be loaded
@@ -66,20 +66,6 @@ def load_data(path, conf_path, main_cwd, n_sub = None):
             )[0]
             for sub in sorted_subs
         ],
-        confounds_pre_hyp=[
-            pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
-            for file in [
-                glob.glob(os.path.join(conf_path, sub, "*before*", "globalsg_0.txt"))[0]
-                for sub in sorted_subs
-            ]
-        ],
-        confounds_post_hyp=[
-            pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
-            for file in [
-                glob.glob(os.path.join(conf_path, sub, "*during*", "globalsg_0.txt"))[0]
-                for sub in sorted_subs
-            ]
-        ],
         anat=[
             glob.glob(os.path.join(else_path, sub, "*MEMPRAGE", "wms*.nii"))[0]
             for sub in sorted_subs
@@ -93,7 +79,39 @@ def load_data(path, conf_path, main_cwd, n_sub = None):
             )
         ),
     )
+    
+    if conf_path:
+        data.confounds_pre_hyp = [
+            pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
+            for file in [
+                glob.glob(os.path.join(conf_path, sub, "*before*", "globalsg_0.txt"))[0]
+                for sub in sorted_subs
+            ]
+        ]
+        data.confounds_post_hyp = [
+            pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
+            for file in [
+                glob.glob(os.path.join(conf_path, sub, "*during*", "globalsg_0.txt"))[0]
+                for sub in sorted_subs
+            ]
+        ]
 
+        if conf_path:
+            data.confounds_pre_hyp = [
+                pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
+                for file in [
+                    glob.glob(os.path.join(conf_path, sub, "*before*", "globalsg_0.txt"))[0]
+                    for sub in sorted_subs
+                ]
+            ]
+            data.confounds_post_hyp = [
+                pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
+                for file in [
+                    glob.glob(os.path.join(conf_path, sub, "*during*", "globalsg_0.txt"))[0]
+                    for sub in sorted_subs
+                ]
+            ]
+            
     return data
 
 

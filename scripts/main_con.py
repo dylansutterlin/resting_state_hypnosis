@@ -26,8 +26,8 @@ from src import masker_preprocessing as prep
 
 def con_matrix(
     data_dir,
-    conf_dir,
     pwd_main,
+    conf_dir=False,
     save_base=None,
     save_folder=None,
     atlas_name=None,
@@ -44,26 +44,40 @@ def con_matrix(
 
     data_dir : str
         Path to data, fMRI images (.hdr or .nii)
+
+    pwd_main : str
+        Directory where main.py is ran from. Used to access files likes phenotype and atlases files.
+
     conf_dir : str
         Path to each subject's folder containing regressors and confounds
         **This arg was added to account for data structure, e.i. fMRI imgages stored in diff folder than regressors and other data and
         for some permission reasons on the server, it wasn't possible to move the confound file, could be fixed in the futur!**
-    pwd_main : str
-        Directory where main.py is ran from. Used to access files likes phenotype and atlases files.
+
     save_base : str
         Path to saving folder. If None, will be automatically generated in pwd_main
+
     save_folder : str
         Name of folder/atlas/condition to name the folder in which results will be saved, e.g. 'yeo_7'
+
     atlas_name : str, optional
         Atlas name to use. If None, yeo7 will be used. Other choices include
+
     atlas_type : str, optional
         Choices : 'labels' and 'maps' for probabilistic atlases, by default 'labels'
+
     connectivity_measure : str, optional
         Correlation estimation, by default 'correlation'
+
     plot_atlas : bool, optional
         by default False
+
     verbose : bool, optional
         Wether to print/plot outputs, by default False
+
+    Returns
+    -------
+    results_con : dict
+        Dictionary containing all connectivity results, including connectomes, connectome metrics, etc.
     """
 
     print("---LOADING DATA---")

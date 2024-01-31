@@ -52,11 +52,13 @@ p = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
 conf_dir = (
     r"/data/rainville/HYPNOSIS_ASL_ANALYSIS")
 pwd_main = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_hypnosis"
+p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
+conf_dir = False
 
 main.con_matrix(
     p,
-    conf_dir=conf_dir,
     pwd_main=pwd_main,
+    conf_dir=conf_dir,
     save_base= os.path.join(pwd_main, 'results'),
     save_folder="difumo64_tangent_neg0_SVR",
     atlas_name="difumo64",
