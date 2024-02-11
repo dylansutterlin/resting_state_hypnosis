@@ -1,7 +1,7 @@
 from scripts import main_con as main
 import os
 
-def trash():
+def main():
     
     r"""
     p = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
@@ -52,19 +52,20 @@ p = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
 conf_dir = (
     r"/data/rainville/HYPNOSIS_ASL_ANALYSIS")
 pwd_main = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_hypnosis"
+
 p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
 conf_dir = False
-
+pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
 main.con_matrix(
     p,
     pwd_main=pwd_main,
     conf_dir=conf_dir,
-    save_base= os.path.join(pwd_main, 'results'),
-    save_folder="difumo64_tangent_neg0_SVR",
+    save_base= os.path.join(pwd_main, 'debug'),
+    save_folder="difumo64_correlation",
     atlas_name="difumo64",
     sphere_coord = [(54, -28, 26)],
     connectivity_measure="correlation",
-    n_sub = 3,
+    n_sub = 1,
     verbose=True
     )
 
