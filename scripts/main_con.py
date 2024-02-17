@@ -22,8 +22,8 @@ from nilearn.signal import clean as signal_clean
 from src import glm_func, graphs_regressionCV
 from scripts import func
 from src import masker_preprocessing as prep
-
-
+import seaborn as sns
+import matplotlib.pyplot as plt
 def con_matrix(
     data_dir,
     pwd_main,
@@ -90,7 +90,7 @@ def con_matrix(
     #pre_data, post_data = prep.resample_shape_affine(data)
     pre_data = data.func_pre
     post_data = data.func_post
-    results_con = dict(subjects=data.subjects, pre_series=list(), post_series=list())
+    results_con = dict(subjects=data.subjects, conditions = ['baseline', 'hypnosis', 'change'], pre_series=list(), post_series=list())
     results_graph = dict(pre=dict(), post=dict(), change=dict())
     results_pred = dict(pre=dict(), post=dict(), change=dict())
     
@@ -193,7 +193,7 @@ def con_matrix(
     # -- Covariance Estimation--
     print(f'---CONNECTIVITY COMPUTATION with {connectivity_measure} estimation ---')
     connectivity_obj = ConnectivityMeasure(
-        kind=connectivity_measure, discard_diagonal=True,standardize = True
+        kind=connectivity_measure, discard_diagonal=False,standardize = True
     )
     # Connectomes computation : returns a list of connectomes
     pre_connectomes, post_connectomes = func.compute_cov_measures(
@@ -201,9 +201,11 @@ def con_matrix(
     ) 
     results_con['connectivity_obj'] = connectivity_obj # to perform inverse_transform on connectomes
     # Connectome processing (r to Z tranf, remove neg edges, normalize)
+    
     results_con["pre_connectomes"] = func.proc_connectomes(
-        pre_connectomes,arctanh=False, remove_negw=False, normalize=False
+        pre_connectomes,arctanh=False, absolute_weights= True, remove_negw=False, normalize=False
     )
+    
     results_con["post_connectomes"] = func.proc_connectomes(
         post_connectomes,arctanh=False, remove_negw=False, normalize=False
     )
@@ -217,12 +219,40 @@ def con_matrix(
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
             os.mkdir(os.path.join(save_base, save_folder))
         save_to = os.path.join(save_base, save_folder)
+        print(f'---SAVING RESULTS to {save_to}---')
 
         with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:
             pickle.dump(results_con, f)
-
+        with open(os.path.join(save_to, 'data.pkl'), 'wb') as f:
+            pickle.dump(data, f)
+        with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
+            pickle.dump(atlas_labels, f)
     
-    return results_con
+    print('---PREPARING PLOTS---')
+
+    # Plotting connectomes and weights distribution
+    for cond, matrix_list in zip(results_con['conditions'],[
+            results_con["pre_connectomes"]
+        ]): #results_con["post_mean_connectome"], results_con["zcontrast_mean_connectome"]
+        adj_matrix = np.mean(np.stack(matrix_list, axis=-1), axis=-1)
+        np.fill_diagonal(adj_matrix, np.nan)
+        sns.heatmap(adj_matrix, cmap="coolwarm", square=False)
+        fig = heatmap.get_figure()
+        fig.savefig(os.path.join(save_to, f'fig_heatMapCM-{cond}.png'))
+
+        # Weight distribution plot
+        bins = np.arange(np.sqrt(len(np.concatenate(adj_matrix))))
+        bins = (bins-np.min(bins))/np.ptp(bins)
+        fig, axes = plt.subplots(1,2, figsize=(15,5))
+        rawdist = sns.histplot(adj_matrix.flatten(), bins=bins, kde=False, ax=axes[0])
+        rawdist.set(xlabel='Edge correlations', ylabel='Density Frequency', title='Raw edge weights distribution')
+
+        log10dist = sns.histplot(np.log10(adj_matrix.flatten()), kde=False, ax=axes[1], stat='density')
+        log10dist.set(xlabel='Log10 edge correlations', title='Log10 edge weights distribution')
+        plt.savefig(os.path.join(save_to, f'fig_weightDist-{cond}.png'))
+
+
+    return data, results_con, atlas_labels
 
 
 
@@ -232,6 +262,7 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
     results_graph["pre_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
         results_con["pre_connectomes"], data.subjects, atlas_labels
     )
+    breakpoint()
     results_graph["post_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
         results_con["post_connectomes"], data.subjects, atlas_labels
     )

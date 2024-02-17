@@ -206,6 +206,12 @@ The tangent method was chosen for this study, as it is a mathematically well gro
   
 - The edges' values of the resulted contrast connectome are thus the difference in Z scores obtained from the element-wise Z score substraction post-pre.
 
+### 2.3.2 Methological choices regarding connectivity matrices computation
+
+* Binarizing the matrices based on threshold (e.g. 20% strongest weights)
+	- Neg. weights are included and binarized (?)
+* Absolute values of edges' weights (as in Centeno et al., 2022)
+	--> keep potential biological relevent information
 ## 2.4 Graph theory metrics
 
 - **Degree** : 'The weighted node degree is the sum of the edge weights for edges incident to that node'[(NetworkX docs)](https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.degree.html)
@@ -217,6 +223,7 @@ The tangent method was chosen for this study, as it is a mathematically well gro
 
 
 - **Clustering** : "The clustering coefficient assesses the tendency for any two neighbours of a vertex to be directly connected (or more strongly connected in the weighted case) to each other and can also be termed cliquishness (Hallquist and Hillary 2018; Watts and Strogatz 1998)" (Centeno et al, 2022)
+	Clustering suited for negative weights, implemented in NetworkX library, based on Generalization of Clustering Coefficients to Signed Correlation Networks by G. Costantini and M. Perugini, PloS one, 9(2), e88669 (2014).
 
 ## 2.5 Prediction of hypnosis-related variables
 

@@ -235,7 +235,7 @@ def compute_cov_measures(correlation_measure, results):
     return pre_connectomes, post_connectomes
 
 
-def proc_connectomes(ls_connectomes,arctanh=False, remove_negw=False, normalize=False):
+def proc_connectomes(ls_connectomes,arctanh=False,absolute_weights = False, remove_negw=False, normalize=False):
     """
     arctanh() is the r to Z transformation, then negative weights are removed and the matrix is normalized between 0-1
     """
@@ -248,6 +248,8 @@ def proc_connectomes(ls_connectomes,arctanh=False, remove_negw=False, normalize=
             array = np.arctanh(array)  # R to Z transf
         elif remove_negw: # Remove negative edges
             array[array < 0] = 0
+        elif absolute_weights: # See Centeno et al. 2022
+            array = np.abs(array)
         elif normalize:
             shape_save = array.shape
             array.reshape(-1)
@@ -337,7 +339,7 @@ def sym_matrix_to_vec(symmetric, discard_diagonal=True):
     if discard_diagonal:
         # No scaling, we directly return the values
         tril_mask = np.tril(np.ones(symmetric.shape[-2:]), k=-1).astype(bool)
-        return symmetric[..., tril_mask]
+        return symmetric[..., tril_mask]    
     scaling = np.ones(symmetric.shape[-2:])
     np.fill_diagonal(scaling, sqrt(2.0))
     tril_mask = np.tril(np.ones(symmetric.shape[-2:])).astype(bool)

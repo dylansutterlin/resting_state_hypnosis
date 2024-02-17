@@ -92,7 +92,8 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
         Gs[name] = G
     # Adding a strengh attribute to each node#
     for participant, graph in Gs.items():
-        degree = graph.degree(weight="weight")
+        #degree = graph.degree(weight="weight")
+        degree = nx.degree(graph, weight="weight")
         strengths = {node: val for (node, val) in degree}  # Tuple to dict
         nx.set_node_attributes(graph, strengths, "strength")
         norm_strengths = {
@@ -129,6 +130,11 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
         clust = nx.clustering(graph, weight="weight")
         nx.set_node_attributes(graph, clust, "clustering")
         metric_dict["clustering"].append(list(clust.values()))
+
+    # Efficiency for each node
+    #for graph in Gs.items():
+    #    for u, v in graph.edges():
+            
     # Communities
     for participant, graph in Gs.items():
         communities = nx.community.louvain_communities(
@@ -136,6 +142,7 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
         )  # Returns a list instead of a dict
         nx.set_node_attributes(graph, communities, "community")
         metric_dict["communities"].append(communities)
+
 
     # ---Feature matrices based on subjects' graphs---#
     participant_names = list(Gs.keys())
@@ -148,7 +155,8 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
             metric_dict[metric] = pd.DataFrame(
                 np.array(tmp_data), columns=labels, index=subjects
             )
-
+    breakpoint()
+    
     return metric_dict  # dict w/ keys = metrics and values = list of list vectors (one list per subject)
 
 
