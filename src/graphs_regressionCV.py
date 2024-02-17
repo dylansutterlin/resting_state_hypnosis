@@ -72,7 +72,7 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
     Y : dataframe, index = subject names and columns = target columns
     labels : list of strings from the atlas ROIs
     """
-    metric_dict = dict(
+    node_metric_dict = dict(
         nodes=labels,
         degree=[],
         closenessCent=[],
@@ -80,23 +80,23 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
         clustering=[],
         communities=[],
     )
-    # Initialize single-subject graphs from Adjacency matrix
+    # Initialize single-subject graphs from Adjacency matrix (As)
     As = [connectomes[i] for i in range(len(connectomes))]
-    rawGs = {nx.from_numpy_array(A, create_using=nx.Graph) for A in As}
+    rawGs = {nx.from_numpy_array(cm, create_using=nx.Graph) for cm in connectomes}
     rawGs = {
         nx.relabel_nodes(G, dict(zip(range(len(G.nodes())), labels))) for G in rawGs
-    }
+    } # assign labels to nodes for each dict in list
     # add keys (subjects names) to make it a dict instead od a set
     Gs = dict()
     for name, G in zip(subjects, rawGs):
         Gs[name] = G
-    # Adding a strengh attribute to each node
+    # Adding a strengh attribute to each node#
     for participant, graph in Gs.items():
         degree = graph.degree(weight="weight")
         strengths = {node: val for (node, val) in degree}  # Tuple to dict
         nx.set_node_attributes(graph, strengths, "strength")
         norm_strengths = {
-            node: val * 1 / (len(graph.nodes) - 1) for (node, val) in degree
+            node: val * 1 / (len(graph.nodes) - 1) for (noparticipantde, val) in degree
         }
         nx.set_node_attributes(graph, norm_strengths, "strengthnorm")
         metric_dict["degree"].append(list(dict(degree).values()))

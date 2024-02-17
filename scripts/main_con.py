@@ -36,6 +36,7 @@ def con_matrix(
     plot_atlas=False,
     n_sub = None,
     verbose=False,
+    remove_ROI = [43]
 ):
     """_summary_
 
@@ -73,6 +74,9 @@ def con_matrix(
 
     verbose : bool, optional
         Wether to print/plot outputs, by default False
+    
+    remove_ROI : list, optional
+        List of ROI to remove from the atlas, by default [43], to remove maps 43 (paracentral lobule superior) of DiFuMo64
 
     Returns
     -------
@@ -81,7 +85,7 @@ def con_matrix(
     """
 
     print("---LOADING DATA---")
-    data = func.load_data(data_dir, conf_dir, pwd_main, n_sub=n_sub)
+    data = func.load_data(data_dir,pwd_main, conf_dir, n_sub=n_sub)
     conditions = ["pre_hyp", "post_hyp", "contrast"]
     #pre_data, post_data = prep.resample_shape_affine(data)
     pre_data = data.func_pre
@@ -96,23 +100,46 @@ def con_matrix(
             pwd_main, atlas_name, bilat=True
         ) # confounds is not used further
 
+    # Remove ROI from maps atlas
+    if atlas_type == 'maps' and remove_ROI !=None:
+        cut_atlas = np.delete(atlas.get_fdata(), remove_ROI, axis = -1)
+        atlas = image.new_img_like(atlas, cut_atlas)  
+        atlas_labels = atlas_labels.drop(remove_ROI)
+        
     print('---MASKER SELECTION---')
     voxel_masker = MultiNiftiMasker(
         mask_strategy="whole-brain-template",
-        standardize="zscore_sample",
+        standardize="False",
         verbose=5,
     )
+    p_data = r'projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
+    voxel_masker = NiftiMasker(
+        mask_strategy="whole-brain-template",
+        standardize="zscore_sample",
+        high_variance_confounds = True,
+        verbose=5,
+    )
+    #voxel_masker.fit(pre_data + post_data)
+    pre_masked_img = []
+    post_masked_img = []
+    for i in range(len(pre_data)):
+        tmp_img = voxel_masker.fit_transform(pre_data[i])
+        pre_masked_img.append(voxel_masker.inverse_transform(tmp_img))
+    for i in range(len(post_data)):
+        tmp_img = voxel_masker.fit_transform(post_data[i])
+        post_masked_img.append(voxel_masker.inverse_transform(tmp_img))
+    
     # Return NiftiMaker object yet to be fitted
     if atlas_name == None:
         masker = voxel_masker
     else:
         masker = prep.choose_atlas_masker(
-            atlas = atlas, atlas_type =atlas_type, mask_img=None, resampling_target= 'data'
+            atlas = atlas, atlas_type =atlas_type, mask_img=voxel_masker.mask_img_, resampling_target= 'data', standardize='zscore_sample', verbose=5
         ) 
-
+    #voxel_masker.mask_img_
     print('---TIMESERIES EXTRACTION---') 
     # --Timeseries : Fit and apply mask--
-    p = os.path.join(pwd_main, 'debug','fitted_timeSeries.pkl')
+    p = os.path.join(pwd_main, 'debug')
     input_timeseries=False
     if input_timeseries != False:
         with open(os.path.join(p,'fitted_timeSeries.pkl'), 'rb') as f:
@@ -120,45 +147,32 @@ def con_matrix(
         results_con['pre_series'] = load_results['pre_series']
         results_con['post_series'] = load_results['post_series']
     else:
-        masker.fit(pre_data)
-        results_con["pre_series"] = [masker.transform(ts) for ts in pre_data]
-        masker.fit(post_data)
-        results_con["post_series"] = [masker.transform(ts) for ts in post_data]
-
-        print('---MAKING MASKER REPORTS---')
-        voxel_masker.fit(pre_data + post_data)
-        voxel_masker_report = voxel_masker.generate_report()
-        voxel_masker_report.save_as_html(os.path.join('debug/reports', 'voxel_masker_report.html'))
-
-        nib.save(atlas, os.path.join(pwd_main, 'debug', 'atlas.nii.gz'))
-        nib.save(image.mean_img(pre_data + post_data), os.path.join(pwd_main, 'debug','all_cond_mean_img.nii.gz'))
-
+        #masker.fit(post_masked_img[0])
+        results_con["pre_series"] = [masker.fit_transform(ts) for ts in pre_masked_img]
+        #test = [masker.fit_transform(ts) for ts in pre_data]
+        #breakpoint()
+        #masker.fit(post_masked_img[0])
+        results_con["post_series"] = [masker.fit_transform(ts) for ts in post_masked_img]
+        masker.generate_report(displayed_maps='all').save_as_html(os.path.join(pwd_main, 'debug','reports','masker_report.html'))
+        
+        results_con['labels'] = atlas_labels
         with open(os.path.join(p, 'fitted_timeSeries.pkl'), 'wb') as f:
             pickle.dump(results_con, f)
-        with open(os.path.join(p, 'pre_data.pkl'),) as f:
+        with open(os.path.join(p, 'pre_data.pkl'), 'wb') as f:
             pickle.dump(pre_data, f)
-        with open(os.path.join(p, 'post_data.pkl'),) as f:
+        with open(os.path.join(p, 'post_data.pkl'),'wb') as f:
             pickle.dump(post_data, f)
-        
-
     
-        all_cond_masker = masker.fit(pre_data + post_data)
-        all_cond_masker.report
-        masker.report
-
-       #with open(os.path.join(p, 'fitted_timeSeries.pkl'), 'wb') as f:
-        #    pickle.dump(results_con, f)
-
     # --Seed masker--
     if sphere_coord != None:
         seed_masker = NiftiSpheresMasker(
-            sphere_coord, radius=15, standardize=False, verbose=5
+            sphere_coord,mask_img=voxel_masker.mask_img_, radius=15, standardize=False, verbose=5
         )
         results_con["seed_pre_series"] = [ # /!!!\ Adjust this section according to report tests made up
-            seed_masker.fit_transform(ts) for ts in pre_data
+            seed_masker.fit_transform(ts) for ts in pre_masked_img
         ]
         results_con["seed_post_series"] = [
-            seed_masker.fit_transform(ts) for ts in post_data
+            seed_masker.fit_transform(ts) for ts in pre_masked_img
         ]
         # Compute seed-to-voxel correlation
         results_con["seed_to_pre_correlations"] = [
@@ -167,27 +181,31 @@ def con_matrix(
                 results_con["pre_series"], results_con["seed_pre_series"]
             )
         ]
+        results_con['seed_pre_masker'] = seed_masker
         results_con["seed_to_post_correlations"] = [
             (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
             for brain_time_series, seed_time_series in zip(
                 results_con["post_series"], results_con["seed_post_series"]
             )
         ]
+        results_con['seed_post_masker'] = seed_masker # to call inverse_transform on seed_correlation
 
     # -- Covariance Estimation--
-    covariance_measure = ConnectivityMeasure(
-        kind=connectivity_measure, discard_diagonal=False,standardize = False
+    print(f'---CONNECTIVITY COMPUTATION with {connectivity_measure} estimation ---')
+    connectivity_obj = ConnectivityMeasure(
+        kind=connectivity_measure, discard_diagonal=True,standardize = True
     )
     # Connectomes computation : returns a list of connectomes
     pre_connectomes, post_connectomes = func.compute_cov_measures(
-        covariance_measure, results_con
-    )
+        connectivity_obj, results_con
+    ) 
+    results_con['connectivity_obj'] = connectivity_obj # to perform inverse_transform on connectomes
     # Connectome processing (r to Z tranf, remove neg edges, normalize)
     results_con["pre_connectomes"] = func.proc_connectomes(
-        pre_connectomes,arctanh=False, remove_negw=True, normalize=False
+        pre_connectomes,arctanh=False, remove_negw=False, normalize=False
     )
     results_con["post_connectomes"] = func.proc_connectomes(
-        post_connectomes,arctanh=False, remove_negw=True, normalize=False
+        post_connectomes,arctanh=False, remove_negw=False, normalize=False
     )
     # weight substraction to compute change from pre to post
     results_con["diff_weight_connectomes"] = func.weight_substraction_postpre(
@@ -197,12 +215,13 @@ def con_matrix(
     # Saving
     if save_base != None:
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
-            os.mkdir(os.path.join(save_base, save_f/older))
+            os.mkdir(os.path.join(save_base, save_folder))
         save_to = os.path.join(save_base, save_folder)
 
         with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:
             pickle.dump(results_con, f)
 
+    
     return results_con
 
 
@@ -219,6 +238,7 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
     results_graph["change_feat"] = graphs_regressionCV.metrics_diff_postpre(
          results_graph["post_metrics"], results_graph["pre_metrics"], data.subjects, exclude_keys = ['nodes', 'communities']
     )
+    
     pre_X_weights = graphs_regressionCV.connectome2feature_matrices(
         results_con["pre_connectomes"], data.subjects
     )

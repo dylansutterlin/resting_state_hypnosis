@@ -50,26 +50,6 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None):
             glob.glob(os.path.join(path, sub, "*wcbf_0_srASL_4D_during_4D.nii"))[0]
             for sub in sorted_subs
         ],
-        pre_masks=[
-            glob.glob(
-                os.path.join(
-                    conf_path, sub, "*before*", "mskwmeanCBF_0_srASL_4D_before*"
-                )
-            )[0]
-            for sub in sorted_subs
-        ],
-        post_masks=[
-            glob.glob(
-                os.path.join(
-                    conf_path, sub, "*during*", "mskwmeanCBF_0_srASL_4D_during*"
-                )
-            )[0]
-            for sub in sorted_subs
-        ],
-        anat=[
-            glob.glob(os.path.join(else_path, sub, "*MEMPRAGE", "wms*.nii"))[0]
-            for sub in sorted_subs
-        ],
         phenotype=pd.DataFrame(
             pd.read_excel(
                 glob.glob(os.path.join(main_cwd, "atlases", "*variables*"))[0],
@@ -81,6 +61,10 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None):
     )
     
     if conf_path:
+        data.anat=[
+            glob.glob(os.path.join(conf_path, sub, "*MEMPRAGE", "wms*.nii"))[0]
+            for sub in sorted_subs
+        ]
         data.confounds_pre_hyp = [
             pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
             for file in [
@@ -95,22 +79,23 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None):
                 for sub in sorted_subs
             ]
         ]
-
-        if conf_path:
-            data.confounds_pre_hyp = [
-                pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
-                for file in [
-                    glob.glob(os.path.join(conf_path, sub, "*before*", "globalsg_0.txt"))[0]
-                    for sub in sorted_subs
-                ]
-            ]
-            data.confounds_post_hyp = [
-                pd.read_csv(file, sep="\s+", header=None, names=["1", "2", "3", "4"])
-                for file in [
-                    glob.glob(os.path.join(conf_path, sub, "*during*", "globalsg_0.txt"))[0]
-                    for sub in sorted_subs
-                ]
-            ]
+        data._pre_masks = [
+            glob.glob(
+                os.path.join(
+                    conf_path, sub, "*before*", "mskwmeanCBF_0_srASL_4D_before*"
+                )       
+            )[0]
+            for sub in sorted_subs
+        ]
+        data._post_masks = [
+            glob.glob(
+                os.path.join(
+                    conf_path, sub, "*during*", "mskwmeanCBF_0_srASL_4D_during*"
+                )
+            )[0]
+            for sub in sorted_subs
+        ]
+        
             
     return data
 
@@ -246,7 +231,7 @@ def compute_cov_measures(correlation_measure, results):
     """
     pre_connectomes = correlation_measure.fit_transform(results["pre_series"])
     post_connectomes = correlation_measure.fit_transform(results["post_series"])
-
+    
     return pre_connectomes, post_connectomes
 
 
