@@ -61,7 +61,7 @@ def load_process_y(xlsx_path, subjects):
     for namei in subjects_rewritten:
         row = filledY.loc[namei]
         Y.loc[namei] = row
-
+    
     return Y, columns_of_interest
 
 

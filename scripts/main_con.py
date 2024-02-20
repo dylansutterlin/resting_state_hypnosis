@@ -6,6 +6,7 @@ import copy
 import glob
 import numpy as np
 import nibabel as nib
+from scipy.stats import pearsonr
 from nilearn.maskers import (
     NiftiMapsMasker,
     NiftiLabelsMasker,
@@ -187,10 +188,12 @@ def con_matrix(
             )
         ]
         results_con['seed_post_masker'] = seed_masker # to call inverse_transform on seed_correlation
+
+    
         # pair ttest on post-pre seed signal
         from scipy.stats import ttest_rel 
         res_ttest_rel = []
-        
+
         #breakpoint()
         #for ts_post, ts_pre in zip(results_con["seed_post_series"], results_con["seed_pre_series"]):
         #    (ttest_rel(ts_post, ts_pre)[1])
@@ -251,13 +254,41 @@ def con_matrix(
         log10dist = sns.histplot(np.log10(adj_matrix.flatten()), kde=False, ax=axes[1], stat='density')
         log10dist.set(xlabel='Log10 edge correlations', title='Log10 edge weights distribution')
         plt.savefig(os.path.join(save_to, f'fig_weightDist-{cond}.png'))
-
+        plt.close()
+         
         #plt.plot(results_con['pre_series'][0][43], label=labels[43])
         #plt.title("POTime Series")
         #plt.xlabel("Scan number")
         #plt.ylabel("non-Normalized signal")
         #plt.legend()
         #plt.tight_layout()
+  
+    xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
+    xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
+    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
+
+    auto = list(np.array(Y['Abs_diff_automaticity'].iloc[0:3])) # list convert to np.object>float (somehow?)
+    print(auto)
+    mean_rCBF_diff = np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
+    corr_coeff, p_value = pearsonr(auto, mean_rCBF_diff)
+    print(np.array(auto).shape, np.array(mean_rCBF_diff).shape)
+    r_squared = np.corrcoef(np.array(auto), np.array(mean_rCBF_diff))[0, 1]**2
+    # Scatter plot of auto score vs mean rCBF diff
+    plt.scatter(auto, mean_rCBF_diff)
+    regression_params = np.polyfit(auto, mean_rCBF_diff, 1)
+    regression_line = np.polyval(regression_params, auto)
+
+    # Plot the regression line
+    plt.plot(auto, regression_line, color='red', linewidth=2, label='Regression Line')
+
+    plt.xlabel('Automaticity score')
+    plt.ylabel('Mean rCBF diff')
+    plt.title('Automaticity score vs Mean rCBF diff')
+    text = f'Correlation: {corr_coeff:.2f}\nP-value: {p_value:.4f}\nR-squared: {r_squared:.2f}'
+    plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
+    plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-correl.png'))
+    plt.close()
+
     return data, results_con, atlas_labels
 
 
