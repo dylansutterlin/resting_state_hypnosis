@@ -4,6 +4,7 @@ import os
 import glob as glob
 import pickle
 import pandas as pd
+import bct.algorithms as bct 
 from sklearn.model_selection import permutation_test_score
 from scipy.stats import pearsonr
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
@@ -64,7 +65,7 @@ def load_process_y(xlsx_path, subjects):
     return Y, columns_of_interest
 
 
-def compute_indiv_graphs_metrics(connectomes, subjects, labels):
+def compute_indiv_graphs_metrics(connectomes, subjects, labels): # random_graphs =True, n_permut = 50):
     """
     Compute graph metrics for each subject's graph
     and return a list of feature matrices
@@ -72,81 +73,67 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
     Y : dataframe, index = subject names and columns = target columns
     labels : list of strings from the atlas ROIs
     """
-    node_metric_dict = dict(
-        nodes=labels,
-        degree=[],
-        closenessCent=[],
-        betweennessCent=[],
-        clustering=[],
-        communities=[],
-    )
+    metric_dict = dict(
+        subjects=subjects,
+        nodes=labels
+        )
     # Initialize single-subject graphs from Adjacency matrix (As)
     As = [connectomes[i] for i in range(len(connectomes))]
     rawGs = {nx.from_numpy_array(cm, create_using=nx.Graph) for cm in connectomes}
     rawGs = {
         nx.relabel_nodes(G, dict(zip(range(len(G.nodes())), labels))) for G in rawGs
-    } # assign labels to nodes for each dict in list
+            } # assign labels to nodes for each dict in list
     # add keys (subjects names) to make it a dict instead od a set
-    Gs = dict()
-    for name, G in zip(subjects, rawGs):
-        Gs[name] = G
-    # Adding a strengh attribute to each node#
-    for participant, graph in Gs.items():
-        #degree = graph.degree(weight="weight")
-        degree = nx.degree(graph, weight="weight")
-        strengths = {node: val for (node, val) in degree}  # Tuple to dict
-        nx.set_node_attributes(graph, strengths, "strength")
-        norm_strengths = {
-            node: val * 1 / (len(graph.nodes) - 1) for (noparticipantde, val) in degree
-        }
-        nx.set_node_attributes(graph, norm_strengths, "strengthnorm")
-        metric_dict["degree"].append(list(dict(degree).values()))
-    # Degree centrality
-#    for participant, G in Gs.items():
- #       degree = nx.degree_centrality(G)
-  #      nx.set_node_attributes(G, degree, "degCentrality")
-   #     metric_dict["degreeCent"].append(list(degree.values()))  # Save metric in a dict
+    Gs = dict() # dict of graph/subjects
+    for sub, G in zip(subjects, rawGs):
+        Gs[sub] = G
 
-    # betweenness centrality
-    for participant, G in Gs.items():
+    # Adding a strengh, distance, centralities, clustering to each graph
+        # Most code comes from Centeno et al., 2022. suited for abs(weighted graphs)
+    for subject, graph in Gs.items():
+        # strenght = degree but for weighted graphs, remove weight attribute for binary graphs
+        strengths = {node: val for (node, val) in nx.degree(graph, weight="weight")}  # nx.degree return tuple; store as dict{node: val}
+        nx.set_node_attributes(graph, strengths, "strength")
+        breakpoint()
+        norm_strengths = {
+            node: val * 1 / (len(graph.nodes) - 1) for (node, val) in nx.degree(graph, weight="weight")
+        } # normalization for easier interpretation
         G_distance_dict = {
             (e1, e2): 1 / abs(weight) for e1, e2, weight in G.edges(data="weight")
         }  # convert weight to distance to compute betweenness centrality
-        nx.set_edge_attributes(G, G_distance_dict, "distance")
-        betweenness = nx.betweenness_centrality(G, weight="distance")
-        nx.set_node_attributes(G, betweenness, "betCentrality")
-        metric_dict["betweennessCent"].append(list(betweenness.values()))
-    # closeness centrality
-    for participant, G in Gs.items():
-        # G_distance_dict = {
-        #    (e1, e2): 1 / abs(weight) for e1, e2, weight in G.edges(data="weight")
-        # }
-        # nx.set_edge_attributes(G, G_distance_dict, "distance")
-        closeness = nx.closeness_centrality(G, distance="distance")
-        nx.set_node_attributes(G, closeness, "closecent")
-        metric_dict["closenessCent"].append(list(closeness.values()))
-    # clustering
-    for participant, graph in Gs.items():
-        clust = nx.clustering(graph, weight="weight")
-        nx.set_node_attributes(graph, clust, "clustering")
-        metric_dict["clustering"].append(list(clust.values()))
+        nx.set_node_attributes(graph, norm_strengths, "strengthnorm")
+        nx.set_edge_attributes(graph, G_distance_dict, "distance")
+        nx.set_node_attributes(graph, nx.eigenvector_centrality(graph, weight = 'weight'), 'eigenCent')
+        nx.set_node_attributes(graph, nx.betweenness_centrality(graph, weight="distance"), "betCentrality")
+        nx.set_node_attributes(graph, nx.closeness_centrality(graph, distance="distance"), "closecent")
+        nx.set_node_attributes(graph, nx.degree_centrality(G), "degCentrality")
+        nx.set_node_attributes(graph, nx.clustering(graph, weight="weight"), "clustering")
+        nx.set_node_attributes(graph, nx.community.louvain_communities(graph), "community")
+        localEff = bct.efficiency_wei(nx.to_numpy_array(graph, weight="weight")) # BCTpython, returns numpy array
+        nx.set_node_attributes(graph, localEff, "localEfficiency")
 
-    # Efficiency for each node
-    #for graph in Gs.items():
-    #    for u, v in graph.edges():
-            
-    # Communities
-    for participant, graph in Gs.items():
-        communities = nx.community.louvain_communities(
-            graph
-        )  # Returns a list instead of a dict
-        nx.set_node_attributes(graph, communities, "community")
-        metric_dict["communities"].append(communities)
+        Gs[subject] = graph #update graph to list of graphs
+
+
+        
+        # Save metrics in a dict for easier access  
+        breakpoint()  
+        metric_dict["norm_strenghts"].append(list(dict(norm_strengths).values()))
+        metric_dict["degreeCent"].append(list(degree.values()))  # Save metric in a dict
+        metric_dict["betweennessCent"].append(list(betweenness.values()))
+        metric_dict["closenessCent"].append(list(closeness.values()))
+        metric_dict["clustering"].append(list(clust.values()))
+        metric_dict["communities"].append(list(communities.values()))
+        metric_dict["strengths"].append(list(strengths.values()))
+        metric_dict["norm_strengths"].append(list(norm_strengths.values()))
+    
+
+    return Gs, metric_dict
 
 
     # ---Feature matrices based on subjects' graphs---#
-    participant_names = list(Gs.keys())
-    node_names = list(Gs[participant_names[0]].nodes())
+    subject_names = list(Gs.keys())
+    node_names = list(Gs[subject_names[0]].nodes())
 
     # Reorganize data structure from lists of vectors to pd (N x nodes array) for each dict key
     for metric in list(metric_dict.keys()):  # Excluding nodes and communities
@@ -155,7 +142,9 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels):
             metric_dict[metric] = pd.DataFrame(
                 np.array(tmp_data), columns=labels, index=subjects
             )
-    breakpoint()
+    breakpoint() # check data structure for each nodes ( clustering ?)
+    #maybe save as a df would be easier to compute 2samp t tests
+    breakpoint()#store the yeo7 id of ROI tocompute network metrics/subjects
     
     return metric_dict  # dict w/ keys = metrics and values = list of list vectors (one list per subject)
 
@@ -185,7 +174,7 @@ def connectome2feature_matrices(ls_connectomes, subjects):
     X_con = np.stack(
         [ls_connectomes[i][..., tril_mask] for i in range(0, len(ls_connectomes))],
         axis=0,
-    )  # store the original con matrix based on the flatten participants' features (shape : N x features)
+    )  # store the original con matrix based on the flatten subjects' features (shape : N x features)
 
     return pd.DataFrame(X_con, index=subjects)
 

@@ -86,11 +86,11 @@ def con_matrix(
 
     print("---LOADING DATA---")
     data = func.load_data(data_dir,pwd_main, conf_dir, n_sub=n_sub)
-    conditions = ["pre_hyp", "post_hyp", "contrast"]
+    conditions = ['baseline', 'hypnosis', 'change']
     #pre_data, post_data = prep.resample_shape_affine(data)
     pre_data = data.func_pre
     post_data = data.func_post
-    results_con = dict(subjects=data.subjects, conditions = ['baseline', 'hypnosis', 'change'], pre_series=list(), post_series=list())
+    results_con = dict(subjects=data.subjects, conditions = conditions, pre_series=list(), post_series=list())
     results_graph = dict(pre=dict(), post=dict(), change=dict())
     results_pred = dict(pre=dict(), post=dict(), change=dict())
     
@@ -149,8 +149,6 @@ def con_matrix(
     else:
         #masker.fit(post_masked_img[0])
         results_con["pre_series"] = [masker.fit_transform(ts) for ts in pre_masked_img]
-        #test = [masker.fit_transform(ts) for ts in pre_data]
-        #breakpoint()
         #masker.fit(post_masked_img[0])
         results_con["post_series"] = [masker.fit_transform(ts) for ts in post_masked_img]
         masker.generate_report(displayed_maps='all').save_as_html(os.path.join(pwd_main, 'debug','reports','masker_report.html'))
@@ -172,7 +170,7 @@ def con_matrix(
             seed_masker.fit_transform(ts) for ts in pre_masked_img
         ]
         results_con["seed_post_series"] = [
-            seed_masker.fit_transform(ts) for ts in pre_masked_img
+            seed_masker.fit_transform(ts) for ts in post_masked_img
         ]
         # Compute seed-to-voxel correlation
         results_con["seed_to_pre_correlations"] = [
@@ -189,7 +187,13 @@ def con_matrix(
             )
         ]
         results_con['seed_post_masker'] = seed_masker # to call inverse_transform on seed_correlation
-
+        # pair ttest on post-pre seed signal
+        from scipy.stats import ttest_rel 
+        res_ttest_rel = []
+        
+        #breakpoint()
+        #for ts_post, ts_pre in zip(results_con["seed_post_series"], results_con["seed_pre_series"]):
+        #    (ttest_rel(ts_post, ts_pre)[1])
     # -- Covariance Estimation--
     print(f'---CONNECTIVITY COMPUTATION with {connectivity_measure} estimation ---')
     connectivity_obj = ConnectivityMeasure(
@@ -200,14 +204,13 @@ def con_matrix(
         connectivity_obj, results_con
     ) 
     results_con['connectivity_obj'] = connectivity_obj # to perform inverse_transform on connectomes
+
     # Connectome processing (r to Z tranf, remove neg edges, normalize)
-    
     results_con["pre_connectomes"] = func.proc_connectomes(
-        pre_connectomes,arctanh=False, absolute_weights= True, remove_negw=False, normalize=False
+        pre_connectomes,arctanh=True, absolute_weights= True, remove_negw=False, normalize=False
     )
-    
     results_con["post_connectomes"] = func.proc_connectomes(
-        post_connectomes,arctanh=False, remove_negw=False, normalize=False
+        post_connectomes,arctanh=True, absolute_weights= True, remove_negw=False, normalize=False
     )
     # weight substraction to compute change from pre to post
     results_con["diff_weight_connectomes"] = func.weight_substraction_postpre(
@@ -228,17 +231,15 @@ def con_matrix(
         with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
             pickle.dump(atlas_labels, f)
     
-    print('---PREPARING PLOTS---')
-
+    print('---PREPARING AND SAVING PLOTS---')
     # Plotting connectomes and weights distribution
     for cond, matrix_list in zip(results_con['conditions'],[
             results_con["pre_connectomes"]
         ]): #results_con["post_mean_connectome"], results_con["zcontrast_mean_connectome"]
         adj_matrix = np.mean(np.stack(matrix_list, axis=-1), axis=-1)
         np.fill_diagonal(adj_matrix, np.nan)
-        sns.heatmap(adj_matrix, cmap="coolwarm", square=False)
-        fig = heatmap.get_figure()
-        fig.savefig(os.path.join(save_to, f'fig_heatMapCM-{cond}.png'))
+        fig = sns.heatmap(adj_matrix, cmap="coolwarm", square=False)
+        fig.get_figure().savefig(os.path.join(save_to, f'fig_heatMapCM-{cond}.png'))
 
         # Weight distribution plot
         bins = np.arange(np.sqrt(len(np.concatenate(adj_matrix))))
@@ -251,7 +252,12 @@ def con_matrix(
         log10dist.set(xlabel='Log10 edge correlations', title='Log10 edge weights distribution')
         plt.savefig(os.path.join(save_to, f'fig_weightDist-{cond}.png'))
 
-
+        #plt.plot(results_con['pre_series'][0][43], label=labels[43])
+        #plt.title("POTime Series")
+        #plt.xlabel("Scan number")
+        #plt.ylabel("non-Normalized signal")
+        #plt.legend()
+        #plt.tight_layout()
     return data, results_con, atlas_labels
 
 
@@ -262,7 +268,6 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
     results_graph["pre_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
         results_con["pre_connectomes"], data.subjects, atlas_labels
     )
-    breakpoint()
     results_graph["post_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
         results_con["post_connectomes"], data.subjects, atlas_labels
     )

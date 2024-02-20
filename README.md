@@ -220,7 +220,12 @@ The tangent method was chosen for this study, as it is a mathematically well gro
    <img src="images\METHclossness_Centeno_al2022.jpg" height="400px;" alt=""/>
 
    _Image from 'hands‑on tutorial on network and topological neuroscience' by Centeno et al, 2022_
-
+	- Consideration for centrality measures 
+		"An alternative is to take the absolute value of the
+correlation coefficient, in which case a strong negative correlation will be given
+an equal weighting to a strong positive correlation. The decision of which trans-
+formation to use depends on how we choose to interpret the polarity of the
+edge weights." Ch. 5, p.141, Fornito et al., 2016
 
 - **Clustering** : "The clustering coefficient assesses the tendency for any two neighbours of a vertex to be directly connected (or more strongly connected in the weighted case) to each other and can also be termed cliquishness (Hallquist and Hillary 2018; Watts and Strogatz 1998)" (Centeno et al, 2022)
 	Clustering suited for negative weights, implemented in NetworkX library, based on Generalization of Clustering Coefficients to Signed Correlation Networks by G. Costantini and M. Perugini, PloS one, 9(2), e88669 (2014).

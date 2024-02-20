@@ -2,6 +2,7 @@ apturl==0.5.2
 asttokens==2.4.0
 backcall==0.2.0
 bcrypt==3.2.0
+bctpy==0.6.1
 blinker==1.4
 Brlapi==0.8.3
 cachetools==5.0.0
@@ -98,7 +99,7 @@ PyNaCl==1.5.0
 pyOpenSSL==21.0.0
 pyparsing==3.1.1
 pyRFC3339==1.1
-python-apt==2.4.0+ubuntu2
+python-apt==2.4.0+ubuntu3
 python-dateutil==2.8.2
 python-debian==0.1.43+ubuntu1.1
 pytz==2023.3.post1

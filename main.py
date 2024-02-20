@@ -57,7 +57,7 @@ pwd_main = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_
 p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
 conf_dir = False
 pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
-'''
+
 m.con_matrix(
     p,
     pwd_main=pwd_main,
@@ -70,7 +70,7 @@ m.con_matrix(
     n_sub = 1,
     verbose=True
     )
-'''
+
 import pickle
 import numpy as np
 import seaborn as sns
