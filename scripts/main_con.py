@@ -225,7 +225,7 @@ def con_matrix(
             os.mkdir(os.path.join(save_to, 'reports'))
         voxel_masker.generate_report().save_as_html(os.path.join(save_to, 'reports', 'voxelMasker_report.html'))
         masker.generate_report(displayed_maps='all').save_as_html(os.path.join(save_to,'reports','mapsMasker_report.html'))
-        
+
         with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:
             pickle.dump(results_con, f)
         with open(os.path.join(save_to, 'data.pkl'), 'wb') as f:
@@ -261,14 +261,15 @@ def con_matrix(
         #plt.ylabel("non-Normalized signal")
         #plt.legend()
         #plt.tight_layout()
-
+    breakpoint() # !!
     xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
     xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
-    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects,remove_subjects = remove_subjects)
+    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
 
-    auto = list(np.array(Y['Abs_diff_automaticity'].iloc[0:3])) # list convert to np.object>float (somehow?)
+    auto = list(np.array(Y['Abs_diff_automaticity'])) # list convert to np.object>float (somehow?)
     print(auto)
     mean_rCBF_diff = tvalues #np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
+    breakpoint() #!!
     corr_coeff, p_value = pearsonr(auto, mean_rCBF_diff)
     print(np.array(auto).shape, np.array(mean_rCBF_diff).shape)
     r_squared = np.corrcoef(np.array(auto), np.array(mean_rCBF_diff))[0, 1]**2

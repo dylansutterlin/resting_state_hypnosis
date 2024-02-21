@@ -70,7 +70,7 @@ m.con_matrix(
     n_sub = None,
     verbose=True,
     remove_ROI_maps = [8,14,43], # based on masker report, outside brain or no interest
-    remove_subjects = ['APM_06_H2', 'APM_11_H1', 'APM_22_H2'] # based on rainville et al., 2019 and .xlsx file
+    remove_subjects = ['APM_07_H1', 'APM_11_H1', 'APM_22_H2'] # based on rainville et al., 2019 and .xlsx file
     )
 import matplotlib.pyplot as plt
 from src import graphs_regressionCV
