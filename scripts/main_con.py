@@ -114,8 +114,8 @@ def con_matrix(
     #p_data = r'projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
     voxel_masker = NiftiMasker(
         mask_strategy="whole-brain-template",
-        standardize="zscore_sample",
-        high_variance_confounds = True,
+        standardize = False,
+        high_variance_confounds = False,
         verbose=5,
     )
     #voxel_masker.fit(pre_data + post_data)
@@ -261,15 +261,15 @@ def con_matrix(
         #plt.ylabel("non-Normalized signal")
         #plt.legend()
         #plt.tight_layout()
-    breakpoint() # !!
+
     xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
     xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
     Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
 
     auto = list(np.array(Y['Abs_diff_automaticity'])) # list convert to np.object>float (somehow?)
     print(auto)
-    mean_rCBF_diff = tvalues #np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
-    breakpoint() #!!
+    mean_rCBF_diff = np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
+
     corr_coeff, p_value = pearsonr(auto, mean_rCBF_diff)
     print(np.array(auto).shape, np.array(mean_rCBF_diff).shape)
     r_squared = np.corrcoef(np.array(auto), np.array(mean_rCBF_diff))[0, 1]**2
@@ -288,7 +288,28 @@ def con_matrix(
     plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
     plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-correl.png'))
     plt.close()
+    # ---- test with t test values
+    mean_rCBF_diff = tvalues #np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
+    corr_coeff, p_value = pearsonr(auto, mean_rCBF_diff)
+    print(np.array(auto).shape, np.array(mean_rCBF_diff).shape)
+    r_squared = np.corrcoef(np.array(auto), np.array(mean_rCBF_diff))[0, 1]**2
+    # Scatter plot of auto score vs mean rCBF diff
+    plt.scatter(auto, mean_rCBF_diff)
+    regression_params = np.polyfit(auto, mean_rCBF_diff, 1)
+    regression_line = np.polyval(regression_params, auto)
+
+    # Plot the regression line
+    plt.plot(auto, regression_line, color='red', linewidth=2, label='Regression Line')
+
+    plt.xlabel('Automaticity score')
+    plt.ylabel('Mean rCBF diff')
+    plt.title('Automaticity score vs Mean rCBF diff')
+    text = f'Correlation: {corr_coeff:.2f}\nP-value: {p_value:.4f}\nR-squared: {r_squared:.2f}'
+    plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
+    plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-Tcorrel.png'))
+    plt.close()
     print('---DONE with connectivity matrices and plots---')
+
 
     return data, results_con, atlas_labels
 
