@@ -63,7 +63,8 @@ def load_process_y(xlsx_path, subjects, remove_subjects=None):
         Y.loc[namei] = row
         
     if remove_subjects != None : 
-        for sub in remove_subjects:
+        remove_subjects_re = ["APM" + s.split("_")[1] for s in remove_subjects]
+        for sub in remove_subjects_re:
             Y.drop(sub, axis=0, inplace=True)
 
     return Y, columns_of_interest
