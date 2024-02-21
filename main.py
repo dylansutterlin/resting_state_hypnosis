@@ -54,17 +54,10 @@ conf_dir = (
     r"/data/rainville/HYPNOSIS_ASL_ANALYSIS")
 pwd_main = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_hypnosis"
 
-<<<<<<< HEAD
 #p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
 #conf_dir = False
 #pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
 
-=======
-p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
-conf_dir = False
-pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
-'''
->>>>>>> refs/remotes/origin/main
 m.con_matrix(
     p,
     pwd_main=pwd_main,
@@ -74,20 +67,15 @@ m.con_matrix(
     atlas_name="difumo64",
     sphere_coord = [(54, -28, 26)],
     connectivity_measure="correlation",
-<<<<<<< HEAD
-    n_sub = None,
-=======
     n_sub = 2,
->>>>>>> refs/remotes/origin/main
-    verbose=True
+    verbose=True,
+    remove_ROI_maps = [8,14,43], # based on masker report, outside brain or no interest
+    remove_subjects = ['APM_06_H2', 'APM_11_H1', 'APM_22_H2'] # based on rainville et al., 2019 and .xlsx file
     )
-'''
-import pickle
-import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 from src import graphs_regressionCV
 from scipy.stats import pearsonr
+import pickle
 with open(os.path.join(pwd_main, 'debug', 'difumo64_correlation', 'dict_connectomes.pkl'), 'rb') as f:
     results_con = pickle.load(f)
 with open(os.path.join(pwd_main, 'debug', 'difumo64_correlation', 'data.pkl'), 'rb') as f:

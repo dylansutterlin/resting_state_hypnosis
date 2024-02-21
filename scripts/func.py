@@ -15,7 +15,7 @@ from sklearn.preprocessing import MinMaxScaler
 from nilearn.connectome import GroupSparseCovarianceCV
 
 
-def load_data(path, main_cwd, conf_path = False, n_sub = None):
+def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects = None):
     """
     Load subject information into memory
 
@@ -30,6 +30,9 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None):
     n_sub : int
         Used to limit the number of subjects to be loaded
         If None, all subjects will be loaded
+    remove_subjects : list
+        List of subjects to be removed from the dataset. 
+
     Returns
     -------
     data : Bunch
@@ -39,6 +42,9 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None):
     sorted_subs = sorted([sub for sub in os.listdir(path) if "APM" in sub])
     if n_sub!= None:
         sorted_subs = sorted_subs[:n_sub]
+    if remove_subjects != None:
+        print('---Removing subjects : {} from further analysis---'.format(remove_subjects))
+        sorted_subs = [sub for sub in sorted_subs if sub not in remove_subjects]
 
     data = Bunch(
         subjects=sorted_subs,
@@ -243,22 +249,25 @@ def proc_connectomes(ls_connectomes,arctanh=False,absolute_weights = False, remo
     for array in ls_connectomes:
 
         scaler = MinMaxScaler(feature_range=(array.min(), array.max()))
-
+        np.fill_diagonal(array, 0)
+        
         if arctanh:
             array = np.arctanh(array)  # R to Z transf
-        elif remove_negw: # Remove negative edges
+            
+        if remove_negw: # Remove negative edges
             array[array < 0] = 0
-        elif absolute_weights: # See Centeno et al. 2022
-            array = np.abs(array)
-        elif normalize:
+        if  absolute_weights: # See Centeno et al. 2022
+    
+            array = np.absolute(array)
+            
+        if normalize:
             shape_save = array.shape
             array.reshape(-1)
-            print(array.shape)
             normalized_array = scaler.fit_transform(array)
             array = normalized_array.reshape(shape_save)
-        np.fill_diagonal(array, 0)
+        
         proc_ls.append(array)
-
+       
     return proc_ls
 
 
