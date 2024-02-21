@@ -189,7 +189,7 @@ def con_matrix(
         ]
         results_con['seed_post_masker'] = seed_masker # to call inverse_transform on seed_correlation
 
-    
+
         # pair ttest on post-pre seed signal
         from scipy.stats import ttest_rel 
         res_ttest_rel = []
@@ -205,7 +205,7 @@ def con_matrix(
     # Connectomes computation : returns a list of connectomes
     pre_connectomes, post_connectomes = func.compute_cov_measures(
         connectivity_obj, results_con
-    ) 
+    )
     results_con['connectivity_obj'] = connectivity_obj # to perform inverse_transform on connectomes
 
     # Connectome processing (r to Z tranf, remove neg edges, normalize)
@@ -233,12 +233,11 @@ def con_matrix(
             pickle.dump(data, f)
         with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
             pickle.dump(atlas_labels, f)
-    
+
     print('---PREPARING AND SAVING PLOTS---')
     # Plotting connectomes and weights distribution
     for cond, matrix_list in zip(results_con['conditions'],[
-            results_con["pre_connectomes"]
-        ]): #results_con["post_mean_connectome"], results_con["zcontrast_mean_connectome"]
+            results_con["pre_connectomes"],results_con['post_connectomes'], results_con["diff_weight_connectomes"]]): #results_con["post_mean_connectome"], results_con["zcontrast_mean_connectome"]
         adj_matrix = np.mean(np.stack(matrix_list, axis=-1), axis=-1)
         np.fill_diagonal(adj_matrix, np.nan)
         fig = sns.heatmap(adj_matrix, cmap="coolwarm", square=False)
@@ -255,14 +254,14 @@ def con_matrix(
         log10dist.set(xlabel='Log10 edge correlations', title='Log10 edge weights distribution')
         plt.savefig(os.path.join(save_to, f'fig_weightDist-{cond}.png'))
         plt.close()
-         
+
         #plt.plot(results_con['pre_series'][0][43], label=labels[43])
         #plt.title("POTime Series")
         #plt.xlabel("Scan number")
         #plt.ylabel("non-Normalized signal")
         #plt.legend()
         #plt.tight_layout()
-  
+
     xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
     xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
     Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
@@ -288,6 +287,7 @@ def con_matrix(
     plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
     plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-correl.png'))
     plt.close()
+    print('---DONE with connectivity matrices and plots---')
 
     return data, results_con, atlas_labels
 
