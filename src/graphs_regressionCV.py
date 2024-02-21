@@ -17,7 +17,7 @@ from sklearn.linear_model import RidgeCV
 from statsmodels.stats.multitest import fdrcorrection
 
 
-def load_process_y(xlsx_path, subjects):
+def load_process_y(xlsx_path, subjects, remove_subjects=None):
     # dependant variables
 
     rawY = pd.read_excel(xlsx_path, sheet_name=0, index_col=1, header=2).iloc[
@@ -61,7 +61,11 @@ def load_process_y(xlsx_path, subjects):
     for namei in subjects_rewritten:
         row = filledY.loc[namei]
         Y.loc[namei] = row
-    
+        
+    if remove_subjects != None : 
+        for sub in remove_subjects:
+            Y.drop(sub, axis=0, inplace=True)
+
     return Y, columns_of_interest
 
 
