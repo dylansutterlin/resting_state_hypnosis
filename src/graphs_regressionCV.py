@@ -58,7 +58,7 @@ def load_process_y(xlsx_path, subjects):
 
     # reorder to match subjects order
     Y = pd.DataFrame(columns=filledY.columns)
-    for namei in subjects_rewritten:
+    for namei in subjects_rewritten: 
         row = filledY.loc[namei]
         Y.loc[namei] = row
 
@@ -129,6 +129,48 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels): # random_graphs
     
 
     return Gs, metric_dict
+
+
+    import numpy as np
+#
+def hqs_algorithm(e, v, edash, N, return_correlation=False):
+    # Step 2: Calculate m
+    m = max(2, int(np.floor((edash**2 - e**2) / v)))
+
+    # Step 3: Calculate μ
+    μ = np.sqrt(e / m)
+
+    # Step 4: Calculate σ^2
+    σ2 = -(μ**2) + np.sqrt(μ**4 + v / m)
+
+    # Step 5: Generate random samples from Gaussian distribution
+    X = np.random.normal(μ, np.sqrt(σ2), size=(N, m))
+
+    # Step 7: Compute covariance matrix
+    C = np.dot(X, X.T)
+
+    # Step 8: Transform covariance matrix to correlation matrix
+    a = np.diag(1 / np.sqrt(np.diag(C)))
+    correlation_matrix = np.dot(np.dot(a, C), a)
+
+    if return_correlation:
+        return correlation_matrix
+    else:
+        return C
+
+    # Example usage
+    e = 2.0
+    v = 0.5
+    edash = 3.0
+    N = 4
+
+    resulting_covariance_matrix = hqs_algorithm(e, v, edash, N)
+    print("Covariance Matrix:")
+    print(resulting_covariance_matrix)
+
+    resulting_correlation_matrix = hqs_algorithm(e, v, edash, N, return_correlation=True)
+    print("\nCorrelation Matrix:")
+    print(resulting_correlation_matrix)
 
 
     # ---Feature matrices based on subjects' graphs---#
