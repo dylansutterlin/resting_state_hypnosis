@@ -1,3 +1,6 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 def plot_connectome(
     adjacency_matrix,
     node_coords_left,
@@ -228,3 +231,63 @@ def plot_bilat_nodes(
         plot_matrices(gl.covariance_, gl.precision_, tresh, labels)
 
         plotting.show()
+
+
+def dist_mean_edges(cond, matrix_list, save_to ):
+    ''' Function to save distribution plots of mean connectomes edges weights
+
+    Parameters
+    ----------
+    cond : str
+        Condition name used to save file name
+    matrix_list : list
+        List of connectomes
+    save_to : str
+        Path to save the plots
+
+    '''
+    
+    print('---Saving edges weights distribution')
+    adj_matrix = np.mean(np.stack(matrix_list, axis=-1), axis=-1)
+    np.fill_diagonal(adj_matrix, np.nan)
+    fig = sns.heatmap(adj_matrix, cmap="coolwarm", square=False)
+    fig.get_figure().savefig(os.path.join(save_to, f'fig_heatMapCM-{cond}.png'))
+    plt.close()
+
+    # Weight distribution plot
+    bins = np.arange(np.sqrt(len(np.concatenate(adj_matrix))))
+    bins = (bins-np.min(bins))/np.ptp(bins)
+    fig, axes = plt.subplots(1,2, figsize=(15,5))
+    rawdist = sns.histplot(adj_matrix.flatten(), bins=bins, kde=False, ax=axes[0])
+    rawdist.set(xlabel='Edge correlations', ylabel='Density Frequency', title='Raw edge weights distribution')
+
+    log10dist = sns.histplot(np.log10(adj_matrix.flatten()), kde=False, ax=axes[1], stat='density')
+    log10dist.set(xlabel='Log10 edge correlations', title='Log10 edge weights distribution')
+    plt.savefig(os.path.join(save_to, f'fig_weightDist-{cond}.png'))
+    plt.close()
+
+    #plt.plot(results_con['pre_series'][0][43], label=labels[43])
+        #plt.title("POTime Series")
+        #plt.xlabel("Scan number")
+        #plt.ylabel("non-Normalized signal")
+        #plt.legend()
+        #plt.tight_layout()
+    
+def visu_correl(vd, vi, save_to, vd_name, vi_name, title):
+    corr_coeff, p_value = pearsonr(vd, vi)
+    r_squared = np.corrcoef(np.array(vd), np.array(vi))[0, 1]**2
+    # Scatter plot of vd score vs mean rCBF diff
+    plt.scatter(vd, vi)
+    regression_params = np.polyfit(vd, vi, 1)
+    regression_line = np.polyval(regression_params, vd)
+
+    # Plot the regression line
+    plt.plot(vd, regression_line, color='red', linewidth=2, label='Regression Line')
+
+    plt.xlabel(f'{vd_name} score')
+    plt.ylabel(f'{vi_name}')
+    plt.title(title)
+    text = f'Correlation: {corr_coeff:.2f}\nP-value: {p_value:.4f}\nR-squared: {r_squared:.2f}'
+    plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
+    plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-correl.png'))
+    plt.close()

@@ -14,6 +14,54 @@ from sklearn.covariance import GraphicalLassoCV
 from sklearn.preprocessing import MinMaxScaler
 from nilearn.connectome import GroupSparseCovarianceCV
 
+def load_process_y(xlsx_path, subjects):
+    '''Load behavioral variables from xlsx file and process them for further analysis
+    '''
+    # dependant variables
+    rawY = pd.read_excel(xlsx_path, sheet_name=0, index_col=1, header=2).iloc[
+        2:, [4, 17, 18, 19, 38, 48, 65, 67]
+    ]
+    columns_of_interest = [
+        "SHSS_score",
+        "raw_change_ANA",
+        "raw_change_HYPER",
+        "total_chge_pain_hypAna",
+        "Chge_hypnotic_depth",
+        "Mental_relax_absChange",
+        "Automaticity_post_ind",
+        "Abs_diff_automaticity",
+    ]
+    rawY.columns = columns_of_interest
+    cleanY = rawY.iloc[:-6, :]  # remove sub04, sub34 and last 6 rows
+    cutY = cleanY.drop(["APM04*", "APM34*"])
+
+    filledY = cutY.fillna(cutY.astype(float).mean()).astype(float)
+    filledY["SHSS_groups"] = pd.cut(
+        filledY["SHSS_score"], bins=[0, 4, 8, 12], labels=["0", "1", "2"]
+    )  # encode 3 groups for SHSS scores
+
+    # bin_edges = np.linspace(min(data_column), max(data_column), 4) # 4 bins
+    filledY["auto_groups"] = pd.cut(
+        filledY["Abs_diff_automaticity"],
+        bins=np.linspace(
+            min(filledY["Abs_diff_automaticity"]) - 1e-10,
+            max(filledY["Abs_diff_automaticity"]) + 1e-10,
+            4,
+        ),
+        labels=["0", "1", "2"],
+    )
+
+    # rename 'APM_XX_HH' to 'APMXX' format, for compatibility with Y.rows
+    subjects_rewritten = ["APM" + s.split("_")[1] for s in subjects]
+
+    # reorder to match subjects order
+    Y = pd.DataFrame(columns=filledY.columns)
+    for namei in subjects_rewritten: 
+        row = filledY.loc[namei]
+        Y.loc[namei] = row
+
+    return Y, columns_of_interest
+
 
 def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects = None):
     """
@@ -38,7 +86,7 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects =
     data : Bunch
 
     """
-
+    
     sorted_subs = sorted([sub for sub in os.listdir(path) if "APM" in sub])
     if n_sub!= None:
         sorted_subs = sorted_subs[:n_sub]
@@ -56,15 +104,9 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects =
             glob.glob(os.path.join(path, sub, "*wcbf_0_srASL_4D_during_4D.nii"))[0]
             for sub in sorted_subs
         ],
-        phenotype=pd.DataFrame(
-            pd.read_excel(
-                glob.glob(os.path.join(main_cwd, "atlases", "*variables*"))[0],
-                sheet_name=0,
-                index_col=1,
-                header=2,
-            )
-        ),
-    )
+        phenotype= load_process_y(glob.glob(os.path.join(main_cwd, "atlases", "*variables*"))[0])
+        
+        )
     
     if conf_path:
         data.anat=[
@@ -106,7 +148,7 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects =
     return data
 
 
-def load_choose_atlas(main_cwd, atlas_name, mask_conf = False, bilat=True):
+def load_choose_atlas(main_cwd, atlas_name, remove_ROI_maps = False, mask_conf = False, bilat=True):
     '''
     Loads the chosen atlas into memory
     Parameters
@@ -119,6 +161,8 @@ def load_choose_atlas(main_cwd, atlas_name, mask_conf = False, bilat=True):
             *Not updated, could be used with DiaFuMo64. Set to 0 in meantime.
     bilat : bool, optional
         Used in for the yeo case where ROIs are unilateral. Always True, and changes to False in specific cases
+    remove_ROI_maps : bool, optional
+        List of indices of maps to be removed from the atlas. The default is False.
     
     Returns
     -------
@@ -161,7 +205,9 @@ def load_choose_atlas(main_cwd, atlas_name, mask_conf = False, bilat=True):
         mask_conf = atlas_df.iloc[:, -3:]  # GM WM CSF
         bilat = False
         atlas_type = "maps"
-
+    else:
+        raise ValueError("Atlas name not recognized")
+    
     if bilat == True:
         atlas = make_mask_bilat(atlas)
         if atlas_name == "yeo_7":
@@ -194,6 +240,15 @@ def load_choose_atlas(main_cwd, atlas_name, mask_conf = False, bilat=True):
             version="sym", resolution=12
         )
     mask_conf = 0
+
+    # Remove slices (maps) from atlas, based on list of slices indices to remove (remove_ROI_maps)
+    if atlas_type == 'maps' and remove_ROI_maps !=False:
+
+        print(f'---[func.load_choose_atlas] REMOVING MAPS (ROIs) : {remove_ROI_maps} FROM {atlas_name}---')
+        print('---Atlas labels have been adjusted accordingly---')
+        cut_atlas = np.delete(atlas.get_fdata(), remove_ROI_maps, axis = -1)
+        atlas = image.new_img_like(atlas, cut_atlas)  
+        atlas_labels = atlas_labels.drop(remove_ROI_maps) 
 
     return atlas, atlas_labels, atlas_type, mask_conf
 
@@ -472,3 +527,34 @@ def out(
         plot_bilat_nodes(correlation_matrix, atlas, title=title, mask_bilat=True)
         plotting.plot_roi(atlas, title=title)
     """
+
+def export_txt_NBS(save_to, atlas, atlas_labels, pre_connectomes, post_connectomes, subjects):
+    ''' Function that saves to .txt files each subject' connectome, atlas ROI coords, and nodes labels.
+        This is used to run Network Based Statistics (see Brain Conn Toolbox).
+    '''
+
+    from nilearn.plotting import find_probabilistic_atlas_cut_coords
+    coords = plotting.find_probabilistic_atlas_cut_coords(atlas)
+    np.savetxt(os.path.join(save_to, "coords.txt"), coords, fmt="%.4f")
+    
+    with open(os.path.join(save_to,'labels_name.txt'), 'w') as f:
+        for item in list(atlas_labels):
+            f.write("%s\n" % item.replace(' ', '_'))
+
+    # save pre connectomes
+    if os.path.exists(os.path.join(save_to, 'matrices')) == False:
+        os.mkdir(os.path.join(save_to, 'matrices'))
+        save_to = os.path.join(save_to, 'matrices')
+
+    for i, sub in enumerate(subjects):
+        np.savetxt(
+            os.path.join(save_to, f"a{sub}-pre_connectome.txt"),
+            pre_connectomes[i],
+            fmt="%.4f",
+        )
+    for i, subject in enumerate(subjects):
+        np.savetxt(
+            os.path.join(save_to, f"b{subject}-post_connectome.txt"),
+            post_connectomes[i],
+            fmt="%.4f",
+        )

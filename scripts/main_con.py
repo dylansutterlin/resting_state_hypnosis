@@ -21,10 +21,10 @@ from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
 from src import glm_func, graphs_regressionCV
-from scripts import func
+from scripts import func, plot_func
 from src import masker_preprocessing as prep
-import seaborn as sns
-import matplotlib.pyplot as plt
+
+from scipy.stats import ttest_rel 
 def con_matrix(
     data_dir,
     pwd_main,
@@ -101,14 +101,9 @@ def con_matrix(
     print('----ATLAS SELECTION---')
     if atlas_name != None:
         atlas, atlas_labels, atlas_type, confounds = func.load_choose_atlas(
-            pwd_main, atlas_name, bilat=True
+            pwd_main, atlas_name, remove_ROI_maps = remove_ROI_maps, bilat=True
         ) # confounds is not used further
 
-    # Remove ROI from maps atlas
-    if atlas_type == 'maps' and remove_ROI_maps !=None:
-        cut_atlas = np.delete(atlas.get_fdata(), remove_ROI_maps, axis = -1)
-        atlas = image.new_img_like(atlas, cut_atlas)  
-        atlas_labels = atlas_labels.drop(remove_ROI_maps)
         
     print('---WHOLE BRAIN MASKING ON TIMESERIES---')
     #p_data = r'projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
@@ -149,6 +144,7 @@ def con_matrix(
         results_con["pre_series"] = [masker.fit_transform(ts) for ts in pre_masked_img]
         results_con["post_series"] = [masker.fit_transform(ts) for ts in post_masked_img]
         results_con['labels'] = atlas_labels
+        results_con['atlas'] = atlas
         
     print('---SEED BASED TIMESERIES EXTRACTION---')
     if sphere_coord != None:
@@ -176,10 +172,7 @@ def con_matrix(
             )
         ]
         results_con['seed_post_masker'] = seed_masker # to call inverse_transform on seed_correlation
-
-
-        # pair ttest on post-pre seed signal
-        from scipy.stats import ttest_rel 
+        # Changes post-pre t test on mean timseries
         res_ttest_rel = []
         tvalues = []
         for t0, t1 in zip(results_con['seed_pre_series'], results_con["seed_post_series"]):
@@ -188,9 +181,7 @@ def con_matrix(
             res_ttest_rel.append((t_statistic, p_value, degrees_of_freedom))
             tvalues.append(t_statistic)
         results_con['ttest_rel'] = res_ttest_rel
-        #breakpoint()
-        #for ts_post, ts_pre in zip(results_con["seed_post_series"], results_con["seed_pre_series"]):
-        #    (ttest_rel(ts_post, ts_pre)[1])
+
     # -- Covariance Estimation--
     print(f'---CONNECTIVITY COMPUTATION with {connectivity_measure} estimation ---')
     connectivity_obj = ConnectivityMeasure(
@@ -233,81 +224,28 @@ def con_matrix(
         with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
             pickle.dump(atlas_labels, f)
 
+        # Convert connectivity matrices to txt files and save them
+        # Used for comptabilities with Matlab BCT > NBS toolboxes
+        if os.path.exists(os.path.join(save_to,'NBS_txtData')) is False:
+            os.mkdir(os.path.join(save_to,'NBS_txtData'))
+        func.export_txt_NBS(os.path.join(save_to,'NBS_txtData'), atlas, atlas_labels, results_con['pre_connectomes'],results_con["post_connectomes"] ,data.subjects)
+    
     print('---PREPARING AND SAVING PLOTS---')
     # Plotting connectomes and weights distribution
     for cond, matrix_list in zip(results_con['conditions'],[
-            results_con["pre_connectomes"],results_con['post_connectomes'], results_con["diff_weight_connectomes"]]): #results_con["post_mean_connectome"], results_con["zcontrast_mean_connectome"]
-        adj_matrix = np.mean(np.stack(matrix_list, axis=-1), axis=-1)
-        np.fill_diagonal(adj_matrix, np.nan)
-        fig = sns.heatmap(adj_matrix, cmap="coolwarm", square=False)
-        fig.get_figure().savefig(os.path.join(save_to, f'fig_heatMapCM-{cond}.png'))
-        plt.close()
-
-        # Weight distribution plot
-        bins = np.arange(np.sqrt(len(np.concatenate(adj_matrix))))
-        bins = (bins-np.min(bins))/np.ptp(bins)
-        fig, axes = plt.subplots(1,2, figsize=(15,5))
-        rawdist = sns.histplot(adj_matrix.flatten(), bins=bins, kde=False, ax=axes[0])
-        rawdist.set(xlabel='Edge correlations', ylabel='Density Frequency', title='Raw edge weights distribution')
-
-        log10dist = sns.histplot(np.log10(adj_matrix.flatten()), kde=False, ax=axes[1], stat='density')
-        log10dist.set(xlabel='Log10 edge correlations', title='Log10 edge weights distribution')
-        plt.savefig(os.path.join(save_to, f'fig_weightDist-{cond}.png'))
-        plt.close()
-
-        #plt.plot(results_con['pre_series'][0][43], label=labels[43])
-        #plt.title("POTime Series")
-        #plt.xlabel("Scan number")
-        #plt.ylabel("non-Normalized signal")
-        #plt.legend()
-        #plt.tight_layout()
-
-    xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
-    xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
-    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
-
-    auto = list(np.array(Y['Abs_diff_automaticity'])) # list convert to np.object>float (somehow?)
-    print(auto)
+            results_con["pre_connectomes"],results_con['post_connectomes'], results_con["diff_weight_connectomes"]]): 
+        plot_func.dist_mean_edges(cond, matrix_list, save_to)
+        
+    # Replication of Rainville et al., 2019 automaticity ~ rCBF in parietal Operculum(supramarg. gyrus in difumo64)
+    Y = data.phenotype
+    vd = 'Abs_diff_automaticity'
+    auto = list(np.array(Y[vd])) # list convert to np.object>float (somehow?)
     mean_rCBF_diff = np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
 
-    corr_coeff, p_value = pearsonr(auto, mean_rCBF_diff)
-    print(np.array(auto).shape, np.array(mean_rCBF_diff).shape)
-    r_squared = np.corrcoef(np.array(auto), np.array(mean_rCBF_diff))[0, 1]**2
-    # Scatter plot of auto score vs mean rCBF diff
-    plt.scatter(auto, mean_rCBF_diff)
-    regression_params = np.polyfit(auto, mean_rCBF_diff, 1)
-    regression_line = np.polyval(regression_params, auto)
-
-    # Plot the regression line
-    plt.plot(auto, regression_line, color='red', linewidth=2, label='Regression Line')
-
-    plt.xlabel('Automaticity score')
-    plt.ylabel('Mean rCBF diff')
-    plt.title('Automaticity score vs Mean rCBF diff')
-    text = f'Correlation: {corr_coeff:.2f}\nP-value: {p_value:.4f}\nR-squared: {r_squared:.2f}'
-    plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
-    plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-correl.png'))
-    plt.close()
-    # ---- test with t test values
-    mean_rCBF_diff = tvalues #np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
-    corr_coeff, p_value = pearsonr(auto, mean_rCBF_diff)
-    print(np.array(auto).shape, np.array(mean_rCBF_diff).shape)
-    r_squared = np.corrcoef(np.array(auto), np.array(mean_rCBF_diff))[0, 1]**2
-    # Scatter plot of auto score vs mean rCBF diff
-    plt.scatter(auto, mean_rCBF_diff)
-    regression_params = np.polyfit(auto, mean_rCBF_diff, 1)
-    regression_line = np.polyval(regression_params, auto)
-
-    # Plot the regression line
-    plt.plot(auto, regression_line, color='red', linewidth=2, label='Regression Line')
-
-    plt.xlabel('Automaticity score')
-    plt.ylabel('Mean rCBF diff')
-    plt.title('Automaticity score vs Mean rCBF diff')
-    text = f'Correlation: {corr_coeff:.2f}\nP-value: {p_value:.4f}\nR-squared: {r_squared:.2f}'
-    plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
-    plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-Tcorrel.png'))
-    plt.close()
+    plot_func.visu_correl(auto, mean_rCBF_diff, save_to, vd_name = vd, vi_name = 'rCBF change in PO', title = 'Automaticity score vs Mean rCBF diff')
+    # pair ttest on post-pre seed signal
+    if sphere_coord != None:
+        plot_func.visu_correl(auto, tvalues, save_to, vd_name = vd, vi_name = 'T test change in PO', title = 'Automaticity score vs mean ttest')
     print('---DONE with connectivity matrices and plots---')
 
 

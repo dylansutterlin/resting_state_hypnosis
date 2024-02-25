@@ -17,54 +17,6 @@ from sklearn.linear_model import RidgeCV
 from statsmodels.stats.multitest import fdrcorrection
 
 
-def load_process_y(xlsx_path, subjects):
-    # dependant variables
-
-    rawY = pd.read_excel(xlsx_path, sheet_name=0, index_col=1, header=2).iloc[
-        2:, [4, 17, 18, 19, 38, 48, 65, 67]
-    ]
-    columns_of_interest = [
-        "SHSS_score",
-        "raw_change_ANA",
-        "raw_change_HYPER",
-        "total_chge_pain_hypAna",
-        "Chge_hypnotic_depth",
-        "Mental_relax_absChange",
-        "Automaticity_post_ind",
-        "Abs_diff_automaticity",
-    ]
-    rawY.columns = columns_of_interest
-    cleanY = rawY.iloc[:-6, :]  # remove sub04, sub34 and last 6 rows
-    cutY = cleanY.drop(["APM04*", "APM34*"])
-
-    filledY = cutY.fillna(cutY.astype(float).mean()).astype(float)
-    filledY["SHSS_groups"] = pd.cut(
-        filledY["SHSS_score"], bins=[0, 4, 8, 12], labels=["0", "1", "2"]
-    )  # encode 3 groups for SHSS scores
-
-    # bin_edges = np.linspace(min(data_column), max(data_column), 4) # 4 bins
-    filledY["auto_groups"] = pd.cut(
-        filledY["Abs_diff_automaticity"],
-        bins=np.linspace(
-            min(filledY["Abs_diff_automaticity"]) - 1e-10,
-            max(filledY["Abs_diff_automaticity"]) + 1e-10,
-            4,
-        ),
-        labels=["0", "1", "2"],
-    )
-
-    # rename 'APM_XX_HH' to 'APMXX' format, for compatibility with Y.rows
-    subjects_rewritten = ["APM" + s.split("_")[1] for s in subjects]
-
-    # reorder to match subjects order
-    Y = pd.DataFrame(columns=filledY.columns)
-    for namei in subjects_rewritten: 
-        row = filledY.loc[namei]
-        Y.loc[namei] = row
-
-    return Y, columns_of_interest
-
-
 def compute_indiv_graphs_metrics(connectomes, subjects, labels): # random_graphs =True, n_permut = 50):
     """
     Compute graph metrics for each subject's graph
