@@ -266,6 +266,10 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
          results_graph["post_metrics"], results_graph["pre_metrics"], data.subjects, exclude_keys = ['nodes', 'communities']
     )
     
+    # Permutation test on graph metrics
+    rand_graphs = dict()
+    
+       
     pre_X_weights = graphs_regressionCV.connectome2feature_matrices(
         results_con["pre_connectomes"], data.subjects
     )

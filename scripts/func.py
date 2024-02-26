@@ -541,10 +541,23 @@ def export_txt_NBS(save_to, atlas, atlas_labels, pre_connectomes, post_connectom
         for item in list(atlas_labels):
             f.write("%s\n" % item.replace(' ', '_'))
 
+    # Design matrix for repeated measures (1 col per sub for grouping + 1/-1 column for conditions )
+    dm = np.ones((len(subjects)*2,1)) 
+    for i in range(len(subjects)):
+        vecpre = np.zeros(len(pre_connectomes)) # two vector with ones at the subjects idx (i)
+        vecpre[i] = 1
+        vecpost = np.zeros(len(post_connectomes))
+        vecpost[i] = 1
+        coli = np.hstack((vecpre, vecpost)).T
+        dm = np.c_[dm, coli]   # contrast vector where 1 for pre connectomes, and -1 post
+    cond = np.hstack((np.ones(len(pre_connectomes)), np.ones(len(post_connectomes))*-1)) 
+    dm = np.c_[dm, cond]
+    np.savetxt(os.path.join(save_to, "designMatrix_ttest.txt"), dm, fmt="%.4f")
+
     # save pre connectomes
     if os.path.exists(os.path.join(save_to, 'matrices')) == False:
         os.mkdir(os.path.join(save_to, 'matrices'))
-        save_to = os.path.join(save_to, 'matrices')
+    save_to = os.path.join(save_to, 'matrices')
 
     for i, sub in enumerate(subjects):
         np.savetxt(
@@ -558,3 +571,4 @@ def export_txt_NBS(save_to, atlas, atlas_labels, pre_connectomes, post_connectom
             post_connectomes[i],
             fmt="%.4f",
         )
+   
