@@ -20,7 +20,8 @@ from nilearn import datasets, plotting, image
 from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
-from src import glm_func, graphs_regressionCV
+from src import glm_func
+from src import graphs_regressionCV as graphsCV
 from scripts import func, plot_func
 from src import masker_preprocessing as prep
 
@@ -84,8 +85,8 @@ def con_matrix(
         List of subjects to remove from the data, by default False. Passed in func.load_data()
     Returns
     -------
-    results_con : dict
-        Dictionary containing all connectivity results, including connectomes, connectome metrics, etc.
+    fcdict : dict
+        Dictionary containing all functionnal connectivity results, including timeseries, connectomes, connectome metrics, etc.
     """
 
     print("---LOADING DATA---")
@@ -94,7 +95,7 @@ def con_matrix(
     #pre_data, post_data = prep.resample_shape_affine(data)
     pre_data = data.func_pre
     post_data = data.func_post
-    results_con = dict(subjects=data.subjects, conditions = conditions, pre_series=list(), post_series=list())
+    fcdict = dict(subjects=data.subjects, conditions = conditions, pre_series=list(), post_series=list())
     results_graph = dict(pre=dict(), post=dict(), change=dict())
     results_pred = dict(pre=dict(), post=dict(), change=dict())
     
@@ -138,49 +139,49 @@ def con_matrix(
     if input_timeseries != False:
         with open(os.path.join(p,'fitted_timeSeries.pkl'), 'rb') as f:
             load_results = pickle.load(f)
-        results_con['pre_series'] = load_results['pre_series']
-        results_con['post_series'] = load_results['post_series']
+        fcdict['pre_series'] = load_results['pre_series']
+        fcdict['post_series'] = load_results['post_series']
     else:
-        results_con["pre_series"] = [masker.fit_transform(ts) for ts in pre_masked_img]
-        results_con["post_series"] = [masker.fit_transform(ts) for ts in post_masked_img]
-        results_con['labels'] = atlas_labels
-        results_con['atlas'] = atlas
+        fcdict["pre_series"] = [masker.fit_transform(ts) for ts in pre_masked_img]
+        fcdict["post_series"] = [masker.fit_transform(ts) for ts in post_masked_img]
+        fcdict['labels'] = atlas_labels
+        fcdict['atlas'] = atlas
         
     print('---SEED BASED TIMESERIES EXTRACTION---')
     if sphere_coord != None:
         seed_masker = NiftiSpheresMasker(
             sphere_coord,mask_img=voxel_masker.mask_img_, radius=15, standardize=False, verbose=5
         )
-        results_con["seed_pre_series"] = [ # /!!!\ Adjust this section according to report tests made up
+        fcdict["seed_pre_series"] = [ # /!!!\ Adjust this section according to report tests made up
             seed_masker.fit_transform(ts) for ts in pre_masked_img
         ]
-        results_con["seed_post_series"] = [
+        fcdict["seed_post_series"] = [
             seed_masker.fit_transform(ts) for ts in post_masked_img
         ]
         # Compute seed-to-voxel correlation
-        results_con["seed_to_pre_correlations"] = [
+        fcdict["seed_to_pre_correlations"] = [
             (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
             for brain_time_series, seed_time_series in zip(
-                results_con["pre_series"], results_con["seed_pre_series"]
+                fcdict["pre_series"], fcdict["seed_pre_series"]
             )
         ]
-        results_con['seed_pre_masker'] = seed_masker
-        results_con["seed_to_post_correlations"] = [
+        fcdict['seed_pre_masker'] = seed_masker
+        fcdict["seed_to_post_correlations"] = [
             (np.dot(brain_time_series.T, seed_time_series) / seed_time_series.shape[0])
             for brain_time_series, seed_time_series in zip(
-                results_con["post_series"], results_con["seed_post_series"]
+                fcdict["post_series"], fcdict["seed_post_series"]
             )
         ]
-        results_con['seed_post_masker'] = seed_masker # to call inverse_transform on seed_correlation
+        fcdict['seed_post_masker'] = seed_masker # to call inverse_transform on seed_correlation
         # Changes post-pre t test on mean timseries
         res_ttest_rel = []
         tvalues = []
-        for t0, t1 in zip(results_con['seed_pre_series'], results_con["seed_post_series"]):
+        for t0, t1 in zip(fcdict['seed_pre_series'], fcdict["seed_post_series"]):
             ttest_result = ttest_rel(t0, t1)
             t_statistic, p_value, degrees_of_freedom = ttest_result.statistic[0], ttest_result.pvalue[0], ttest_result.df[0]
             res_ttest_rel.append((t_statistic, p_value, degrees_of_freedom))
             tvalues.append(t_statistic)
-        results_con['ttest_rel'] = res_ttest_rel
+        fcdict['ttest_rel'] = res_ttest_rel
 
     # -- Covariance Estimation--
     print(f'---CONNECTIVITY COMPUTATION with {connectivity_measure} estimation ---')
@@ -189,21 +190,21 @@ def con_matrix(
     )
     # Connectomes computation : returns a list of connectomes
     pre_connectomes, post_connectomes = func.compute_cov_measures(
-        connectivity_obj, results_con
+        connectivity_obj, fcdict
     )
-    results_con['connectivity_obj'] = connectivity_obj # to perform inverse_transform on connectomes
+    fcdict['connectivity_obj'] = connectivity_obj # to perform inverse_transform on connectomes
     # Connectome processing (r to Z tranf, remove neg edges, normalize)
    
-    results_con["pre_connectomes"] = func.proc_connectomes(
+    fcdict["pre_connectomes"] = func.proc_connectomes(
         pre_connectomes,arctanh=True, absolute_weights= True, remove_negw=False, normalize=False
     )
-    results_con["post_connectomes"] = func.proc_connectomes(
+    fcdict["post_connectomes"] = func.proc_connectomes(
         post_connectomes,arctanh=True, absolute_weights= True, remove_negw=False, normalize=False
     )
     # weight substraction to compute change from pre to post
-    results_con["diff_weight_connectomes"] = func.weight_substraction_postpre(
-        results_con["post_connectomes"],
-        results_con["pre_connectomes"],
+    fcdict["diff_weight_connectomes"] = func.weight_substraction_postpre(
+        fcdict["post_connectomes"],
+        fcdict["pre_connectomes"],
     )
     # Saving
     if save_base != None:
@@ -218,7 +219,7 @@ def con_matrix(
         masker.generate_report(displayed_maps='all').save_as_html(os.path.join(save_to,'reports','mapsMasker_report.html'))
 
         with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:
-            pickle.dump(results_con, f)
+            pickle.dump(fcdict, f)
         with open(os.path.join(save_to, 'data.pkl'), 'wb') as f:
             pickle.dump(data, f)
         with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
@@ -228,19 +229,19 @@ def con_matrix(
         # Used for comptabilities with Matlab BCT > NBS toolboxes
         if os.path.exists(os.path.join(save_to,'NBS_txtData')) is False:
             os.mkdir(os.path.join(save_to,'NBS_txtData'))
-        func.export_txt_NBS(os.path.join(save_to,'NBS_txtData'), atlas, atlas_labels, results_con['pre_connectomes'],results_con["post_connectomes"] ,data.subjects)
+        func.export_txt_NBS(os.path.join(save_to,'NBS_txtData'), atlas, atlas_labels, fcdict['pre_connectomes'],fcdict["post_connectomes"], fcdict["diff_weight_connectomes"], data.subjects)
     
     print('---PREPARING AND SAVING PLOTS---')
     # Plotting connectomes and weights distribution
-    for cond, matrix_list in zip(results_con['conditions'],[
-            results_con["pre_connectomes"],results_con['post_connectomes'], results_con["diff_weight_connectomes"]]): 
+    for cond, matrix_list in zip(fcdict['conditions'],[
+            fcdict["pre_connectomes"],fcdict['post_connectomes'], fcdict["diff_weight_connectomes"]]): 
         plot_func.dist_mean_edges(cond, matrix_list, save_to)
         
     # Replication of Rainville et al., 2019 automaticity ~ rCBF in parietal Operculum(supramarg. gyrus in difumo64)
     Y = data.phenotype
     vd = 'Abs_diff_automaticity'
     auto = list(np.array(Y[vd])) # list convert to np.object>float (somehow?)
-    mean_rCBF_diff = np.array([np.mean(post-pre) for post, pre in zip(results_con['seed_post_series'], results_con['seed_pre_series'])])
+    mean_rCBF_diff = np.array([np.mean(post-pre) for post, pre in zip(fcdict['seed_post_series'], fcdict['seed_pre_series'])])
 
     plot_func.visu_correl(auto, mean_rCBF_diff, save_to, vd_name = vd, vi_name = 'rCBF change in PO', title = 'Automaticity score vs Mean rCBF diff')
     # pair ttest on post-pre seed signal
@@ -249,32 +250,62 @@ def con_matrix(
     print('---DONE with connectivity matrices and plots---')
 
 
-    return data, results_con, atlas_labels
+    return data, fcdict, atlas_labels
 
 
 
-def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_folder=None):
+def connectome_analyses(data, fcdict, atlas_labels, save_base=None, save_folder=None, n_iter = 10 ):
 
     # Graphs metrics computation for pre and post layers : Return a dict of metrics for each subject pre.keys() = 'degree', 'betweenness', etc.
-    results_graph["pre_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
-        results_con["pre_connectomes"], data.subjects, atlas_labels
+    pre_graphs, _ = graphsCV.compute_graphs_metrics(
+        fcdict["pre_connectomes"], data.subjects, atlas_labels
     )
-    results_graph["post_metrics"] = graphs_regressionCV.compute_indiv_graphs_metrics(
-        results_con["post_connectomes"], data.subjects, atlas_labels
+    post_graphs, _ = graphsCV.compute_graphs_metrics(
+        fcdict["post_connectomes"], data.subjects, atlas_labels
     )
-    results_graph["change_feat"] = graphs_regressionCV.metrics_diff_postpre(
+    results_graph["change_feat"] = graphsCV.metrics_diff_postpre(
          results_graph["post_metrics"], results_graph["pre_metrics"], data.subjects, exclude_keys = ['nodes', 'communities']
     )
-    
-    # Permutation test on graph metrics
-    rand_graphs = dict()
-    
+
+    graphs = dict()
+    permNames = [f"perm_{i}" for i in range(n_iter)]
+    # Randomize connectomes : returns dict of subs with permuted connectomes (lists)
+    graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_iter=n_iter)
+    graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_iter=n_iter)
+    tmp_randPre = dict()
+    tmp_randPost = dict()
+    # Compute graph from list of permuted connectomes (list) for very sub (keys)
+    for sub in data.subjects:
+        tmp_randPre[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_pre'], permNames, atlas_labels, out_type='list')
+        tmp_randPost[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_post'], permNames, atlas_labels, out_type='list')
+    graphs['randcon_pregraph'] = tmp_randPre
+    graphs['randcon_postgraph'] = tmp_randPost
+
+    # Randomize graphs : returns dict of subs with permuted graphs (lists)
+    graphs['randGraph_pre'] = graphsCV.rand_graphs(pre_graphs, data.subjects, n_iter=n_iter, graph=True)
+    graphs['randGraph_post'] = graphsCV.rand_graphs(post_graphs, data.subjects, n_iter=n_iter, graph=True)
+
+
+    # Compute change post-pre for each connectome metric and permutation graphs
+    pre_randCon_graphs = dict()
+    post_randCon_graphs = dict()
+    # Extracts list of perm graphs for each sub
+    for i, sub in enumerate(data.subjects): # compute a list of 
+        pre_randCon_graphs[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_pre'], permNames, atlas_labels, out_type='list') # permNames is the list of subjects
+    for i, sub in enumerate(data.subjects):
+        post_randCon_graphs[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_post'], permNames, atlas_labels, out_type='list')
+
+    # Compute change post-pre for each connectome metric and permutation graphs
+    graphs['change_randCon'] = graphsCV.metrics_diff_postpre(subjects, graphs['randCon_pre'], graphs['randCon_post']) 
        
-    pre_X_weights = graphs_regressionCV.connectome2feature_matrices(
-        results_con["pre_connectomes"], data.subjects
+    
+
+
+    pre_X_weights = graphsCV.connectome2feature_matrices(
+        fcdict["pre_connectomes"], data.subjects
     )
-    post_X_weights = graphs_regressionCV.connectome2feature_matrices(
-        results_con["post_connectomes"], data.subjects
+    post_X_weights = graphsCV.connectome2feature_matrices(
+        fcdict["post_connectomes"], data.subjects
     )
     change_X_weights = post_X_weights - pre_X_weights
     print("change X shape :", change_X_weights.shape)
@@ -283,10 +314,10 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
     # Prediction of behavioral variables from connectomes
     xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
     xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
-    Y, target_columns = graphs_regressionCV.load_process_y(xlsx_path, data.subjects)
+    Y, target_columns = graphsCV.load_process_y(xlsx_path, data.subjects)
     results_graph['Y'] = Y
 
-    # Save main results_con and prep results_dir for regression results
+    # Save main fcdict and prep results_dir for regression results
     with open(os.path.join(save_to, "dict_graphsMetrics.pkl"), "wb") as f:
         pickle.dump(results_graph, f)
 
@@ -296,7 +327,7 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
     print("=====PRE-HYP CONNECTOMES====")
     concat = copy.deepcopy(results_graph["pre_metrics"])
     concat.update({'Edge_weights': pre_X_weights})
-    results_pred["pre"] = graphs_regressionCV.regression_cv( # Manually adding the weight connectomes to concat inside function, along other graph's metric dfs
+    results_pred["pre"] = graphsCV.regression_cv( # Manually adding the weight connectomes to concat inside function, along other graph's metric dfs
         concat,
         Y,
         target_columns,
@@ -306,7 +337,7 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
     print("=====POST-HYP CONNECTOMES====")
     concat = copy.deepcopy(results_graph["post_metrics"])
     concat.update({'Edge_weights': post_X_weights})
-    results_pred["post"] = graphs_regressionCV.regression_cv(
+    results_pred["post"] = graphsCV.regression_cv(
         concat,
         Y,
         target_columns,
@@ -316,7 +347,7 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
     print("=====CHANGE-HYP CONNECTOMES====")
     concat = copy.deepcopy(results_graph["change_feat"])
     concat.update({'Edge_weights': change_X_weights}) # N x features matrix resulting from post - pre feature matrices
-    results_pred["change"] = graphs_regressionCV.regression_cv(
+    results_pred["change"] = graphsCV.regression_cv(
         concat,
         Y,
         target_columns,
@@ -331,15 +362,15 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
 
     # --Prints and plot--
     if verbose:
-        print([ts.shape for ts in results_con["pre_series"]])
-        print([ts.shape for ts in results_con["post_series"]])
+        print([ts.shape for ts in fcdict["pre_series"]])
+        print([ts.shape for ts in fcdict["post_series"]])
         print(atlas.shape)
         print(np.unique(atlas.get_fdata(), return_counts=True))
         for correlation_matrix in [
-            results_con["pre_mean_connectome"],
-            results_con["post_mean_connectome"],
-            results_con["zcontrast_mean_connectome"],
-        ]:  # [results_con['pre_mean_connetomes'], results_con['post_mean_connetomes']]:
+            fcdict["pre_mean_connectome"],
+            fcdict["post_mean_connectome"],
+            fcdict["zcontrast_mean_connectome"],
+        ]:  # [fcdict['pre_mean_connetomes'], fcdict['post_mean_connetomes']]:
             np.fill_diagonal(correlation_matrix, 0)
             plotting.plot_matrix(
                 correlation_matrix,
@@ -352,5 +383,5 @@ def connectome_analyses(data, results_con, atlas_labels, save_base=None, save_fo
 
         plotting.plot_roi(atlas, title=atlas_name)
 
-    return results_con
+    return fcdict
 

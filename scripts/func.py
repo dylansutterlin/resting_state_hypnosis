@@ -528,7 +528,7 @@ def out(
         plotting.plot_roi(atlas, title=title)
     """
 
-def export_txt_NBS(save_to, atlas, atlas_labels, pre_connectomes, post_connectomes, subjects):
+def export_txt_NBS(save_to, atlas, atlas_labels, pre_connectomes, post_connectomes, diff_connectomes, subjects):
     ''' Function that saves to .txt files each subject' connectome, atlas ROI coords, and nodes labels.
         This is used to run Network Based Statistics (see Brain Conn Toolbox).
     '''
@@ -542,16 +542,16 @@ def export_txt_NBS(save_to, atlas, atlas_labels, pre_connectomes, post_connectom
             f.write("%s\n" % item.replace(' ', '_'))
 
     # Design matrix for repeated measures (1 col per sub for grouping + 1/-1 column for conditions )
-    dm = np.ones((len(subjects)*2,1)) 
+    # contrast vector where 1 for pre connectomes, and -1 post
+    dm = np.hstack((np.ones(len(pre_connectomes)), np.ones(len(post_connectomes))*-1)) # conditions 1/-1 
     for i in range(len(subjects)):
         vecpre = np.zeros(len(pre_connectomes)) # two vector with ones at the subjects idx (i)
         vecpre[i] = 1
         vecpost = np.zeros(len(post_connectomes))
         vecpost[i] = 1
         coli = np.hstack((vecpre, vecpost)).T
-        dm = np.c_[dm, coli]   # contrast vector where 1 for pre connectomes, and -1 post
-    cond = np.hstack((np.ones(len(pre_connectomes)), np.ones(len(post_connectomes))*-1)) 
-    dm = np.c_[dm, cond]
+        dm = np.c_[dm, coli]   
+    #dm = np.c_[dm, cond]
     np.savetxt(os.path.join(save_to, "designMatrix_ttest.txt"), dm, fmt="%.4f")
 
     # save pre connectomes
@@ -560,15 +560,34 @@ def export_txt_NBS(save_to, atlas, atlas_labels, pre_connectomes, post_connectom
     save_to = os.path.join(save_to, 'matrices')
 
     for i, sub in enumerate(subjects):
+        # add ones to diagonal
+        premat = pre_connectomes[i]
+        np.fill_diagonal(premat,1)
         np.savetxt(
             os.path.join(save_to, f"a{sub}-pre_connectome.txt"),
-            pre_connectomes[i],
+            premat,
             fmt="%.4f",
         )
     for i, subject in enumerate(subjects):
+        postmat = post_connectomes[i].copy()
+        np.fill_diagonal(post_connectomes[i],1)
         np.savetxt(
             os.path.join(save_to, f"b{subject}-post_connectome.txt"),
-            post_connectomes[i],
+            postmat,
             fmt="%.4f",
         )
-   
+
+    # difference connectomes for one sample t-test
+    dm = np.ones((len(subjects)*2,1)) 
+    if os.path.exists(os.path.join(save_to, 'diffmatrices')) == False:
+        os.mkdir(os.path.join(save_to, 'diffmatrices'))
+    save_to = os.path.join(save_to, 'diffmatrices')
+        
+    for i, sub in enumerate(subjects):
+        diffmat = diff_connectomes[i]
+        #np.fill_diagonal(diffmat,0)
+        np.savetxt(
+            os.path.join(save_to, f"diffcon-{sub}.txt"),
+            diffmat,
+            fmt="%.4f",
+        )

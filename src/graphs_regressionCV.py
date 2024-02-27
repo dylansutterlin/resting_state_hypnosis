@@ -17,13 +17,21 @@ from sklearn.linear_model import RidgeCV
 from statsmodels.stats.multitest import fdrcorrection
 
 
-def compute_indiv_graphs_metrics(connectomes, subjects, labels): # random_graphs =True, n_permut = 50):
+def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # random_graphs =True, n_permut = 50):
     """
     Compute graph metrics for each subject's graph
-    and return a list of feature matrices
-    results : dict
-    Y : dataframe, index = subject names and columns = target columns
+    and return a dict of networkX graphs, or a list of graphs if out_type = 'list'
+
+    Parameters
+    ----------
+    connectomes : list of connectomes (adjacency matrices) for each subject
+    subjects : list of strings, subjects names. If permut, input e.g. names = [f'perm{i} for i in range(n_permut)]
     labels : list of strings from the atlas ROIs
+    out_type : str, 'dict' or 'list', default = 'dict'
+        Put 'list' for easier manipulation of perm graphs metrics
+
+    results : dict or list and dict of metrics containing list of vectors for each 'subject'
+
     """
     metric_dict = dict(
         subjects=subjects,
@@ -39,6 +47,7 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels): # random_graphs
     Gs = dict() # dict of graph/subjects
     for sub, G in zip(subjects, rawGs):
         Gs[sub] = G
+    ls_Gs = [] # list of graphs
 
     # Adding a strengh, distance, centralities, clustering to each graph
         # Most code comes from Centeno et al., 2022. suited for abs(weighted graphs)
@@ -65,11 +74,9 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels): # random_graphs
         nx.set_node_attributes(graph, localEff, "localEfficiency")
 
         Gs[subject] = graph #update graph to list of graphs
-
-
-        
+        ls_Gs.append(graph) 
         # Save metrics in a dict for easier access  
-        breakpoint()  
+          
         metric_dict["norm_strenghts"].append(list(dict(norm_strengths).values()))
         metric_dict["degreeCent"].append(list(degree.values()))  # Save metric in a dict
         metric_dict["betweennessCent"].append(list(betweenness.values()))
@@ -79,13 +86,42 @@ def compute_indiv_graphs_metrics(connectomes, subjects, labels): # random_graphs
         metric_dict["strengths"].append(list(strengths.values()))
         metric_dict["norm_strengths"].append(list(norm_strengths.values()))
     
-
+    if out_type == 'list' : # Use case for permutation, where keys (subnames) are not needed
+        return ls_Gs, metric_dict
+    
     return Gs, metric_dict
 
+def rand_conmat(ls_connectomes, subjects, n_permut = 50):
+    """
+    Randomize connectomes for each subject and returns a dict of every subjects containing list of Perm connectomes
 
-    import numpy as np
+    Parameters
+    ----------
+    ls_connectomes : list of connectomes (adjacency matrices) for each subject
+    subjects : list of strings, subjects names
+    n_permut : int, number of permutation for each subject
+
+    return : dict of subjects containing list of Perm connectomes
+    """
+    perm_matrices = dict()
+    perm_matrices[sub] = [ls_connectomes[i]]
+    for i, sub in enumerate(subjects):
+        perms = []
+        seeds = np.random.randint(0, 1000000, n_permut)
+        for j in range(n_permut):
+
+            e = 
+            v = 
+            edash = 
+            N = 
+            rand_conmat = hsqs_algorithm(ls_connectomes[i], seeds[j])
+            perms.append(rand_conmat)
+        
+        perm_matrices[sub] = perms
+
+    return perm_matrices
 #
-def hqs_algorithm(e, v, edash, N, return_correlation=False):
+def hqs_algorithm(e, v, edash, N, seed, return_correlation=False):
     # Step 2: Calculate m
     m = max(2, int(np.floor((edash**2 - e**2) / v)))
 
@@ -142,7 +178,27 @@ def hqs_algorithm(e, v, edash, N, return_correlation=False):
     
     return metric_dict  # dict w/ keys = metrics and values = list of list vectors (one list per subject)
 
+def rand_graphs(dict_graphs, subjects, n_permut)
+    '''
+    Randomize graphs for each subject and returns a dict of every subjects containing list of NetworkX graphs
+    '''
 
+    perm_graphs = dict()
+    for i, sub in enumerate(subjects):
+        perms = []
+        seeds = np.random.randint(0, 1000000, n_permut)
+    
+    return perm_graphs
+
+
+def metrics_diff_postpre(subjects, post_dict, pre_dict):
+
+    for sub in subjects:
+        pre_perms = pre_dict[sub]
+        post_perms = post_dict[sub]
+        for 
+        for metric in list(post_dict.keys()):
+            post_dict[metric][sub] = post_dict[metric][sub] - pre_dict[metric][sub]
 def metrics_diff_postpre(post_dict, pre_dict, subjects, exclude_keys = []):
 
     assert post_dict.keys() == pre_dict.keys()
