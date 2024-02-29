@@ -62,6 +62,7 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # ra
         G_distance_dict = {
             (e1, e2): 1 / abs(weight) for e1, e2, weight in G.edges(data="weight")
         }  # convert weight to distance to compute betweenness centrality
+        #nx.set_edge_attributes(graph, G_distance_dict, "d")
         nx.set_node_attributes(graph, norm_strengths, "strengthnorm")
         nx.set_edge_attributes(graph, G_distance_dict, "distance")
         nx.set_node_attributes(graph, nx.eigenvector_centrality(graph, weight = 'weight'), 'eigenCent')
@@ -77,21 +78,22 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # ra
         ls_Gs.append(graph) 
         # Save metrics in a dict for easier access  
           
-        metric_dict["norm_strenghts"].append(list(dict(norm_strengths).values()))
-        metric_dict["degreeCent"].append(list(degree.values()))  # Save metric in a dict
-        metric_dict["betweennessCent"].append(list(betweenness.values()))
-        metric_dict["closenessCent"].append(list(closeness.values()))
-        metric_dict["clustering"].append(list(clust.values()))
-        metric_dict["communities"].append(list(communities.values()))
-        metric_dict["strengths"].append(list(strengths.values()))
-        metric_dict["norm_strengths"].append(list(norm_strengths.values()))
-    
-    if out_type == 'list' : # Use case for permutation, where keys (subnames) are not needed
-        return ls_Gs, metric_dict
-    
-    return Gs, metric_dict
+        #metric_dict["strengthnorm"].append(list(dict(norm_strengths).values()))
+        #metric_dict["degreeCent"] = list(degree.values()) # Save metric in a dict
+        #metric_dict["betweennessCent"].append(list(betweenness.values()))
+        #metric_dict["closenessCent"].append(list(closeness.values()))
+        #metric_dict["clustering"].append(list(clust.values()))
+        #metric_dict["communities"].append(list(communities.values()))
+        #metric_dict["strengths"].append(list(strengths.values()))
+        #metric_dict["norm_strengths"].append(list(norm_strengths.values()))
 
-def rand_conmat(ls_connectomes, subjects, n_permut = 50):
+        metric_list = ['weight', 'strength', 'strengthnorm', 'distance', 'eigenCent', 'betCentrality', 'closecent', 'degCentrality', 'clustering', 'community', 'localEfficiency']
+    if out_type == 'list' : # Use case for permutation, where keys (subnames) are not needed
+        return ls_Gs, metric_list, metric_dict
+    
+    return Gs, metric_list, metric_dict
+
+def rand_conmat(ls_connectomes, subjects, n_permut = 1000, algo= 'hqs'):
     """
     Randomize connectomes for each subject and returns a dict of every subjects containing list of Perm connectomes
 
@@ -101,43 +103,61 @@ def rand_conmat(ls_connectomes, subjects, n_permut = 50):
     subjects : list of strings, subjects names
     n_permut : int, number of permutation for each subject
 
+    * Code vaild only for symetric matrices. Else, compute mean (e) of upper and lower triangle
     return : dict of subjects containing list of Perm connectomes
     """
     perm_matrices = dict()
-    perm_matrices[sub] = [ls_connectomes[i]]
     for i, sub in enumerate(subjects):
         perms = []
+        mat = ls_connectomes[i] 
         seeds = np.random.randint(0, 1000000, n_permut)
+
         for j in range(n_permut):
 
-            e = 
-            v = 
-            edash = 
-            N = 
-            rand_conmat = hsqs_algorithm(ls_connectomes[i], seeds[j])
+            N = mat.shape[0]
+            e = np.mean(mat[np.tril_indices(N, k=-1)]) # mean of off-diag
+            cov = np.sum((mat[np.triu_indices(N, k=1)] - e) ** 2) / (N * (N - 1))
+            var = np.mean(np.diag(mat))
+            rand_conmat = hqs_algorithm(e, cov, var, N, seeds[j], return_correlation=True)
             perms.append(rand_conmat)
-        
+        print(N, e, cov, var, rand_conmat.min(), rand_conmat.max())
         perm_matrices[sub] = perms
 
     return perm_matrices
 #
-def hqs_algorithm(e, v, edash, N, seed, return_correlation=False):
-    # Step 2: Calculate m
-    m = max(2, int(np.floor((edash**2 - e**2) / v)))
+def hqs_algorithm(e, cov, var, N, seed, return_correlation=False):
+    """
+    HQS algorithm to compute the covariance matrix and correlation matrix of a graph
+    See Zaleski et al., 2012 in Neuroimage for description and validation of the algo.
+    Parameters
+    ----------
+    e : float, 
+        Mean of off-diagonal elements of the matrix
+    cov : float, 
+        Variance of off-diagonal elements (covariance) of the matrix
+    var : float, 
+        Mean of diagonal elements of the matrix (variance)
+    N : int, 
+        Dimension of the matrix
+    seed : float, 
+        Seed for the random number generator
+    return_correlation : bool, default = False
+        If True, return the correlation matrix instead of the covariance matrix
+    """
 
+    np.random.seed(seed)
+
+    # Step 2: Calculate m = m ← max(2, ⌊(ē2 − e2)/v⌋)
+    m = max(2, int(np.floor((var**2 - e**2) / cov)))
     # Step 3: Calculate μ
-    μ = np.sqrt(e / m)
-
+    mu = np.sqrt(e / m)
     # Step 4: Calculate σ^2
-    σ2 = -(μ**2) + np.sqrt(μ**4 + v / m)
-
-    # Step 5: Generate random samples from Gaussian distribution
-    X = np.random.normal(μ, np.sqrt(σ2), size=(N, m))
-
+    sigm = -(mu**2) + np.sqrt(mu**4 + cov / m)
+    # Step 5-6: Generate random samples from Gaussian distribution
+    X = np.random.normal(mu, np.sqrt(sigm), size=(N, m))
     # Step 7: Compute covariance matrix
     C = np.dot(X, X.T)
-
-    # Step 8: Transform covariance matrix to correlation matrix
+    # Step 8: Transform covariance matrix to correlation matrix using aCa where a :
     a = np.diag(1 / np.sqrt(np.diag(C)))
     correlation_matrix = np.dot(np.dot(a, C), a)
 
@@ -146,12 +166,7 @@ def hqs_algorithm(e, v, edash, N, seed, return_correlation=False):
     else:
         return C
 
-    # Example usage
-    e = 2.0
-    v = 0.5
-    edash = 3.0
-    N = 4
-
+ 
     resulting_covariance_matrix = hqs_algorithm(e, v, edash, N)
     print("Covariance Matrix:")
     print(resulting_covariance_matrix)
@@ -178,7 +193,7 @@ def hqs_algorithm(e, v, edash, N, seed, return_correlation=False):
     
     return metric_dict  # dict w/ keys = metrics and values = list of list vectors (one list per subject)
 
-def rand_graphs(dict_graphs, subjects, n_permut)
+def rand_graphs(dict_graphs, subjects, n_permut):
     '''
     Randomize graphs for each subject and returns a dict of every subjects containing list of NetworkX graphs
     '''
@@ -191,14 +206,16 @@ def rand_graphs(dict_graphs, subjects, n_permut)
     return perm_graphs
 
 
-def metrics_diff_postpre(subjects, post_dict, pre_dict):
+def metrics_diff_postpre(subjects, post_graphs, pre_graphs):
 
-    for sub in subjects:
-        pre_perms = pre_dict[sub]
-        post_perms = post_dict[sub]
-        for 
+    for i, sub in enumerate(subjects):
+
+        
+        
         for metric in list(post_dict.keys()):
             post_dict[metric][sub] = post_dict[metric][sub] - pre_dict[metric][sub]
+
+
 def metrics_diff_postpre(post_dict, pre_dict, subjects, exclude_keys = []):
 
     assert post_dict.keys() == pre_dict.keys()

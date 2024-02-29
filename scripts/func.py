@@ -3,6 +3,8 @@ import glob as glob
 import pandas as pd
 import numpy as np
 import nibabel as nib
+import matplotlib.cm as cm
+from scipy import stats
 from sklearn.utils import Bunch
 from nilearn import plotting
 from nilearn.image import new_img_like, load_img

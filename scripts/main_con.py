@@ -196,10 +196,10 @@ def con_matrix(
     # Connectome processing (r to Z tranf, remove neg edges, normalize)
    
     fcdict["pre_connectomes"] = func.proc_connectomes(
-        pre_connectomes,arctanh=True, absolute_weights= True, remove_negw=False, normalize=False
+        pre_connectomes,arctanh=False, absolute_weights= False, remove_negw=False, normalize=False
     )
     fcdict["post_connectomes"] = func.proc_connectomes(
-        post_connectomes,arctanh=True, absolute_weights= True, remove_negw=False, normalize=False
+        post_connectomes,arctanh=False, absolute_weights= False, remove_negw=False, normalize=False
     )
     # weight substraction to compute change from pre to post
     fcdict["diff_weight_connectomes"] = func.weight_substraction_postpre(
@@ -256,44 +256,50 @@ def con_matrix(
 
 def connectome_analyses(data, fcdict, atlas_labels, save_base=None, save_folder=None, n_iter = 10 ):
 
-    # Graphs metrics computation for pre and post layers : Return a dict of metrics for each subject pre.keys() = 'degree', 'betweenness', etc.
-    pre_graphs, _ = graphsCV.compute_graphs_metrics(
-        fcdict["pre_connectomes"], data.subjects, atlas_labels
-    )
-    post_graphs, _ = graphsCV.compute_graphs_metrics(
-        fcdict["post_connectomes"], data.subjects, atlas_labels
-    )
-    results_graph["change_feat"] = graphsCV.metrics_diff_postpre(
-         results_graph["post_metrics"], results_graph["pre_metrics"], data.subjects, exclude_keys = ['nodes', 'communities']
-    )
 
     graphs = dict()
+    # Graphs metrics computation for pre and post layers : Return a dict of graphs. where keys=subjs and values=nxGraphs
+    graphs['pre_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
+        fcdict["pre_connectomes"], data.subjects, atlas_labels, out_type='list'
+    )
+    graphs['post_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
+        fcdict["post_connectomes"], data.subjects, atlas_labels, out_type='list'
+    )
+    # Return a dict of matrices (Nodes x metrics) for each subject (keys)
+    #graphs["metric_change"] = graphsCV.metrics_diff_postpre(
+    #     data.subjects, graphs['post_graphs'], graphs['pre_graphs'], exclude_keys = ['nodes', 'communities']
+    #)
+    
     permNames = [f"perm_{i}" for i in range(n_iter)]
     # Randomize connectomes : returns dict of subs with permuted connectomes (lists)
-    graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_iter=n_iter)
-    graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_iter=n_iter)
+    graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_permut=n_iter, algo='hqs')
+    graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_permut=n_iter)
+
+
+    return graphs 
+'''
+
+    # Compute graph from list of permuted connectomes (list) for very sub (keys)
     tmp_randPre = dict()
     tmp_randPost = dict()
-    # Compute graph from list of permuted connectomes (list) for very sub (keys)
     for sub in data.subjects:
         tmp_randPre[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_pre'], permNames, atlas_labels, out_type='list')
         tmp_randPost[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_post'], permNames, atlas_labels, out_type='list')
-    graphs['randcon_pregraph'] = tmp_randPre
-    graphs['randcon_postgraph'] = tmp_randPost
+    graphs['pre_hqs_graph'] = tmp_randPre
+    graphs['post_hqs_graph'] = tmp_randPost
 
-    # Randomize graphs : returns dict of subs with permuted graphs (lists)
-    graphs['randGraph_pre'] = graphsCV.rand_graphs(pre_graphs, data.subjects, n_iter=n_iter, graph=True)
-    graphs['randGraph_post'] = graphsCV.rand_graphs(post_graphs, data.subjects, n_iter=n_iter, graph=True)
-
+    # Randomize graphs : returns dict of subs with permuted graphs (lists) : Not implemented !
+    #graphs['randGraph_pre'] = graphsCV.rand_graphs(pre_graphs, data.subjects, n_iter=n_iter, graph=True)
+    #graphs['randGraph_post'] = graphsCV.rand_graphs(post_graphs, data.subjects, n_iter=n_iter, graph=True)
 
     # Compute change post-pre for each connectome metric and permutation graphs
-    pre_randCon_graphs = dict()
-    post_randCon_graphs = dict()
+    
+    change_hqs_graphs = dict()
     # Extracts list of perm graphs for each sub
     for i, sub in enumerate(data.subjects): # compute a list of 
-        pre_randCon_graphs[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_pre'], permNames, atlas_labels, out_type='list') # permNames is the list of subjects
-    for i, sub in enumerate(data.subjects):
-        post_randCon_graphs[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_post'], permNames, atlas_labels, out_type='list')
+        change_hqs_graphs[sub] = graphsCV.metrics_diff_postpre(
+            graphs['post_hqs_graph'][i], graphs['pre_hqs_graph'][i], metrics = 'nodes')
+            
 
     # Compute change post-pre for each connectome metric and permutation graphs
     graphs['change_randCon'] = graphsCV.metrics_diff_postpre(subjects, graphs['randCon_pre'], graphs['randCon_post']) 
@@ -385,3 +391,4 @@ def connectome_analyses(data, fcdict, atlas_labels, save_base=None, save_folder=
 
     return fcdict
 
+'''

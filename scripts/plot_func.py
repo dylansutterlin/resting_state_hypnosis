@@ -1,6 +1,9 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+import matplotlib.cm as cm
+from scipy import stats
+import numpy as np
+import os
 def plot_connectome(
     adjacency_matrix,
     node_coords_left,
