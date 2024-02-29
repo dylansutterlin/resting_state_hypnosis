@@ -106,7 +106,7 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects =
             glob.glob(os.path.join(path, sub, "*wcbf_0_srASL_4D_during_4D.nii"))[0]
             for sub in sorted_subs
         ],
-        phenotype= load_process_y(glob.glob(os.path.join(main_cwd, "atlases", "*variables*"))[0])
+        phenotype= load_process_y(glob.glob(os.path.join(main_cwd, "atlases", "*variables*"))[0],sorted_subs)
         
         )
     

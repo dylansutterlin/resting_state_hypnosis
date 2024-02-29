@@ -4,7 +4,7 @@ import os
 import glob as glob
 import pickle
 import pandas as pd
-import bct.algorithms as bct 
+#import bct.algorithms as bct 
 from sklearn.model_selection import permutation_test_score
 from scipy.stats import pearsonr
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error

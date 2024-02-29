@@ -20,6 +20,7 @@ from nilearn import datasets, plotting, image
 from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
+sys.path.append(os.path.split(os.getcwd())[0]) # add '../' to path, i.e. the main path
 from src import glm_func
 from src import graphs_regressionCV as graphsCV
 from scripts import func, plot_func
