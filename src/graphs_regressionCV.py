@@ -4,7 +4,7 @@ import os
 import glob as glob
 import pickle
 import pandas as pd
-#import bct.algorithms as bct 
+import bct.algorithms as bct 
 from sklearn.model_selection import permutation_test_score
 from scipy.stats import pearsonr
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
@@ -65,6 +65,7 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # ra
         #nx.set_edge_attributes(graph, G_distance_dict, "d")
         nx.set_node_attributes(graph, norm_strengths, "strengthnorm")
         nx.set_edge_attributes(graph, G_distance_dict, "distance")
+        #nx.set_node_attributes(graph, nx.degree(graph, weight="weight"), 'degree')
         nx.set_node_attributes(graph, nx.eigenvector_centrality(graph, weight = 'weight'), 'eigenCent')
         nx.set_node_attributes(graph, nx.betweenness_centrality(graph, weight="distance"), "betCentrality")
         nx.set_node_attributes(graph, nx.closeness_centrality(graph, distance="distance"), "closecent")
@@ -76,22 +77,41 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # ra
 
         Gs[subject] = graph #update graph to list of graphs
         ls_Gs.append(graph) 
-        # Save metrics in a dict for easier access  
-          
-        #metric_dict["strengthnorm"].append(list(dict(norm_strengths).values()))
-        #metric_dict["degreeCent"] = list(degree.values()) # Save metric in a dict
-        #metric_dict["betweennessCent"].append(list(betweenness.values()))
-        #metric_dict["closenessCent"].append(list(closeness.values()))
-        #metric_dict["clustering"].append(list(clust.values()))
-        #metric_dict["communities"].append(list(communities.values()))
-        #metric_dict["strengths"].append(list(strengths.values()))
-        #metric_dict["norm_strengths"].append(list(norm_strengths.values()))
-
+      
         metric_list = ['weight', 'strength', 'strengthnorm', 'distance', 'eigenCent', 'betCentrality', 'closecent', 'degCentrality', 'clustering', 'community', 'localEfficiency']
     if out_type == 'list' : # Use case for permutation, where keys (subnames) are not needed
         return ls_Gs, metric_list, metric_dict
     
     return Gs, metric_list, metric_dict
+
+def node_attributes2df(Gs_dict, node_metrics):
+    '''
+    Return a list of dataframes for each subject, each dataframe contains the node attributes for each node
+    
+    Parameters
+    ----------
+    Gs_dict : dict of subjects containing list of graphs
+    node_metrics : list of node attributes to be included in each dataframe
+    
+    return : list of dataframes, list of subjects/keys names
+    '''
+
+    ls_df = []
+    keys_ls = []
+    for sub, G in Gs_dict.items(): # sub is key, G is value (graph), otherwise a tuple
+        nan_array = np.full((len(G.nodes), len(node_metrics)), np.nan)
+        df = pd.DataFrame(nan_array, index=G.nodes, columns=node_metrics)
+
+        for node in G.nodes:
+            attributes = G.nodes[node] #dict for node i{'metric1' : int., 'm2':int.}
+
+            for metric in node_metrics: # for node i, fix columns with metric
+                df.loc[node, metric] = attributes[metric]
+
+        ls_df.append(df)
+        keys_ls.append(sub)
+
+    return ls_df, keys_ls
 
 def rand_conmat(ls_connectomes, subjects, n_permut = 1000, algo= 'hqs'):
     """
@@ -120,7 +140,7 @@ def rand_conmat(ls_connectomes, subjects, n_permut = 1000, algo= 'hqs'):
             var = np.mean(np.diag(mat))
             rand_conmat = hqs_algorithm(e, cov, var, N, seeds[j], return_correlation=True)
             perms.append(rand_conmat)
-        print(N, e, cov, var, rand_conmat.min(), rand_conmat.max())
+        #print(N, e, cov, var, rand_conmat.min(), rand_conmat.max())
         perm_matrices[sub] = perms
 
     return perm_matrices
@@ -206,28 +226,17 @@ def rand_graphs(dict_graphs, subjects, n_permut):
     return perm_graphs
 
 
-def metrics_diff_postpre(subjects, post_graphs, pre_graphs):
+def node_metric_diff(post_df, pre_df, subjects):
 
+    change_dfs = []
     for i, sub in enumerate(subjects):
+        assert list(post_df[i].columns) == list(pre_df[i].columns)
 
-        
-        
-        for metric in list(post_dict.keys()):
-            post_dict[metric][sub] = post_dict[metric][sub] - pre_dict[metric][sub]
+        temp_df = post_df[i].copy(deep=True)
+        temp_df = post_df[i] - pre_df[i]
+        change_dfs.append(temp_df)
 
-
-def metrics_diff_postpre(post_dict, pre_dict, subjects, exclude_keys = []):
-
-    assert post_dict.keys() == pre_dict.keys()
-    change_dict = {}
-
-    for metric in list(post_dict.keys()):
-        if metric not in exclude_keys:
-            postpre_diff = post_dict[metric] - pre_dict[metric]
-            df = pd.DataFrame(postpre_diff, columns=post_dict["nodes"], index=subjects)
-            change_dict[metric] = df
-
-    return change_dict
+    return change_dfs
 
 
 def connectome2feature_matrices(ls_connectomes, subjects):

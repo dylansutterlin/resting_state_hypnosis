@@ -20,7 +20,7 @@ from nilearn import datasets, plotting, image
 from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
-sys.path.append(os.path.split(os.getcwd())[0]) # add '../' to path, i.e. the main path
+#sys.path.append(os.path.split(os.getcwd())[0]) # add '../' to path, i.e. the main path
 from src import glm_func
 from src import graphs_regressionCV as graphsCV
 from scripts import func, plot_func
@@ -106,7 +106,7 @@ def con_matrix(
             pwd_main, atlas_name, remove_ROI_maps = remove_ROI_maps, bilat=True
         ) # confounds is not used further
 
-        
+    
     print('---WHOLE BRAIN MASKING ON TIMESERIES---')
     #p_data = r'projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
     voxel_masker = NiftiMasker(
@@ -211,7 +211,8 @@ def con_matrix(
     if save_base != None:
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
             os.mkdir(os.path.join(save_base, save_folder))
-        save_to = os.path.join(save_base, save_folder)
+        save_to = os.path.join(save_base, save_folder)  
+        save_to_plot = os.path.join(save_base, save_folder, 'plots')
         print(f'---SAVING RESULTS to {save_to}---')
 
         if os.path.exists(os.path.join(save_to, 'reports')) is False:
@@ -236,7 +237,7 @@ def con_matrix(
     # Plotting connectomes and weights distribution
     for cond, matrix_list in zip(fcdict['conditions'],[
             fcdict["pre_connectomes"],fcdict['post_connectomes'], fcdict["diff_weight_connectomes"]]): 
-        plot_func.dist_mean_edges(cond, matrix_list, save_to)
+        plot_func.dist_mean_edges(cond, matrix_list, save_to_plot)
         
     # Replication of Rainville et al., 2019 automaticity ~ rCBF in parietal Operculum(supramarg. gyrus in difumo64)
     Y = data.phenotype
@@ -244,10 +245,10 @@ def con_matrix(
     auto = list(np.array(Y[vd])) # list convert to np.object>float (somehow?)
     mean_rCBF_diff = np.array([np.mean(post-pre) for post, pre in zip(fcdict['seed_post_series'], fcdict['seed_pre_series'])])
 
-    plot_func.visu_correl(auto, mean_rCBF_diff, save_to, vd_name = vd, vi_name = 'rCBF change in PO', title = 'Automaticity score vs Mean rCBF diff')
+    plot_func.visu_correl(auto, mean_rCBF_diff, save_to_plot, vd_name = vd, vi_name = 'rCBF change in PO', title = 'Automaticity score vs Mean rCBF diff')
     # pair ttest on post-pre seed signal
     if sphere_coord != None:
-        plot_func.visu_correl(auto, tvalues, save_to, vd_name = vd, vi_name = 'T test change in PO', title = 'Automaticity score vs mean ttest')
+        plot_func.visu_correl(auto, tvalues, save_to_plot, vd_name = vd, vi_name = 'T test change in PO', title = 'Automaticity score vs mean ttest')
     print('---DONE with connectivity matrices and plots---')
 
 
@@ -255,9 +256,11 @@ def con_matrix(
 
 
 
-def connectome_analyses(data, fcdict, atlas_labels, save_base=None, save_folder=None, n_iter = 10 ):
+def connectome_analyses(data, fcdict, atlas_labels, save_to =None, n_iter = 10 ):
 
-
+    subjects = data.subjects
+    save_to_plots = os.path.join(save_to, 'plots')
+    node_metrics = ['strength','strengthnorm', 'eigenCent', 'betCentrality', 'degCentrality', 'clustering', 'localEfficiency']
     graphs = dict()
     # Graphs metrics computation for pre and post layers : Return a dict of graphs. where keys=subjs and values=nxGraphs
     graphs['pre_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
@@ -266,17 +269,45 @@ def connectome_analyses(data, fcdict, atlas_labels, save_base=None, save_folder=
     graphs['post_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
         fcdict["post_connectomes"], data.subjects, atlas_labels, out_type='list'
     )
-    # Return a dict of matrices (Nodes x metrics) for each subject (keys)
-    #graphs["metric_change"] = graphsCV.metrics_diff_postpre(
-    #     data.subjects, graphs['post_graphs'], graphs['pre_graphs'], exclude_keys = ['nodes', 'communities']
-    #)
-    
+    # Compute df with Nodes as rows, and metrics as columns. /subs
+    dfs_pre_metrics, keys_id = graphsCV.node_attributes2df(graphs['pre_graphs'], node_metrics)
+    dfs_post_metrics, keys_id = graphsCV.node_attributes2df(graphs['post_graphs'], node_metrics)
+    # Compute change post-pre :returns list of dfs (Nodes x metrics df)
+    graphs['change_nodes'] = graphsCV.node_metric_diff(dfs_post_metrics, dfs_pre_metrics, keys_id)
+
+    print('---RANDOMIZATION OF CONNECTOMES---')
     permNames = [f"perm_{i}" for i in range(n_iter)]
     # Randomize connectomes : returns dict of subs with permuted connectomes (lists)
     graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_permut=n_iter, algo='hqs')
     graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_permut=n_iter)
+    print('---checking rand matrices distribution---')
+    all_pre = []                
+    for sub in subjects:
+        all_pre += list(graphs['randCon_pre'][sub])
+    plot_func.dist_mean_edges('All_rand_pre', all_pre, save_to_plots)
+    all_post = []
+    for sub in subjects:
+        all_post += list(graphs['randCon_post'][sub])
+    plot_func.dist_mean_edges('All_rand_post', all_post, save_to_plots )
 
+    print('---COMPUTING RANDOMIZED GRAPHS---')
+    # compute graphs, extracts df of nodes x metrics, and change of each subject (keys of dict)
+    graphs['randCon_nodeChange_dfs'] = dict()         
+    for sub in subjects: # In a loop, cause compute_graphs() is usually for a list of subjects
+        subi_rand_pre, _, _ = graphs_regressionCV.compute_graphs_metrics(graphs['randCon_pre'][sub], permNames, atlas_labels, out_type='dict')
+        #rand_pre_graphs[sub] = subi_rand_pre  # But here the list is for one sub (list of rand mat)
+        subi_rand_post,_,_ = graphs_regressionCV.compute_graphs_metrics(graphs['randCon_post'][sub], permNames, atlas_labels, out_type='dict')
+        #rand_post_graphs[sub] = subi_rand_post
+        # Graph to dataframe/n_permut
+        rand_pre_dfs, ids = graphs_regressionCV.node_attributes2df(subi_rand_pre, node_metrics)
+        rand_post_dfs, ids = graphs_regressionCV.node_attributes2df(subi_rand_post, node_metrics)
 
+        # Compute diff directly on each permuted graphs_dfs/sub
+        graphs['randCon_nodeChange_dfs'][sub] = graphs_regressionCV.node_metric_diff(rand_post_dfs,rand_pre_dfs, node_metrics)
+
+    print('---CHANGE P VALUES---')
+    graphs['change_nodes']
+    
     return graphs 
 '''
 
