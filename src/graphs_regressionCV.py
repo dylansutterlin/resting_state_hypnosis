@@ -14,7 +14,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Ridge, Lasso, LinearRegression
 from sklearn.linear_model import RidgeCV
-from statsmodels.stats.multitest import fdrcorrection
+#from statsmodels.stats.multitest import fdrcorrection
+from statsmodels.stats.multitest import multipletests
 
 
 def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # random_graphs =True, n_permut = 50):
@@ -229,7 +230,7 @@ def rand_graphs(dict_graphs, subjects, n_permut):
 def node_metric_diff(post_df, pre_df, subjects):
 
     change_dfs = []
-    for i, sub in enumerate(subjects):
+    for i, sub in range(len(subjects)):
         assert list(post_df[i].columns) == list(pre_df[i].columns)
 
         temp_df = post_df[i].copy(deep=True)
@@ -237,6 +238,40 @@ def node_metric_diff(post_df, pre_df, subjects):
         change_dfs.append(temp_df)
 
     return change_dfs
+
+def bootstrap_pvals_df(df_metric_ls, dict_dfs_permut, subjects, mult_comp = 'fdr_bh'):
+    '''
+    Compute cell-wise p_values of each cell (node x metric/i,j) compared to
+    i,jth disrtibution of permuted dataframes (node x metric x permuts)
+    '''
+    pval_dfs_ls = []
+    for i, sub in enumerate(subjects):
+        df_metric = df_metric_ls[i]
+        rand_dist_3d = np.stack(dict_dfs_permut[sub], axis=2) # stack list of 2d rand dfs on 3d dim
+        assert df_metric.shape == rand_dist.shape[0:2]
+        #mean_val = np.mean(rand_dist, axis=2)
+        #td_val = np.std(rand_dist, axis=2)
+
+        p_df = np.zeros_like(df_metric, dtype=float)
+        for i in range(df_metric.shape[0]):
+            # Compute p-values for each cell compare to dist along 3d dim of permut
+            for j in range(df_metric.shape[1]):
+                cell_value = df_metric.iloc[i, j]
+                p_df[i, j] = np.mean(np.abs(rand_dist_3d[i, j, :]) >= np.abs(cell_value)) # Two-tailed test
+
+        p_values_df = pd.DataFrame(p_df, index=df_metric.index, columns=df_metric.columns)
+        
+        if mult_comp == 'fdr_bh':
+            for column in p_values_df.columns:
+                p_values = p_values_df[column]
+                _, corrected_p_values, _, _ = multipletests(p_values, method='fdr_bh')
+                p_values_df[column] = corrected_p_values
+        pval_dfs_ls.append(p_values_df)
+
+    if mult_comp == 'fdr_bn':
+        print('FDR correction applied to change metric p-values')
+        
+    return pval_dfs_ls
 
 
 def connectome2feature_matrices(ls_connectomes, subjects):

@@ -264,10 +264,10 @@ def connectome_analyses(data, fcdict, atlas_labels, save_to =None, n_iter = 10 )
     graphs = dict()
     # Graphs metrics computation for pre and post layers : Return a dict of graphs. where keys=subjs and values=nxGraphs
     graphs['pre_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
-        fcdict["pre_connectomes"], data.subjects, atlas_labels, out_type='list'
+        fcdict["pre_connectomes"], data.subjects, atlas_labels, out_type='dict'
     )
     graphs['post_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
-        fcdict["post_connectomes"], data.subjects, atlas_labels, out_type='list'
+        fcdict["post_connectomes"], data.subjects, atlas_labels, out_type='dict'
     )
     # Compute df with Nodes as rows, and metrics as columns. /subs
     dfs_pre_metrics, keys_id = graphsCV.node_attributes2df(graphs['pre_graphs'], node_metrics)
@@ -283,7 +283,7 @@ def connectome_analyses(data, fcdict, atlas_labels, save_to =None, n_iter = 10 )
     print('---checking rand matrices distribution---')
     all_pre = []                
     for sub in subjects:
-        all_pre += list(graphs['randCon_pre'][sub])
+        all_pre += list(graphs['randCon_pre'][sub]) # list of all permuted connectomes to mean
     plot_func.dist_mean_edges('All_rand_pre', all_pre, save_to_plots)
     all_post = []
     for sub in subjects:
@@ -294,19 +294,22 @@ def connectome_analyses(data, fcdict, atlas_labels, save_to =None, n_iter = 10 )
     # compute graphs, extracts df of nodes x metrics, and change of each subject (keys of dict)
     graphs['randCon_nodeChange_dfs'] = dict()         
     for sub in subjects: # In a loop, cause compute_graphs() is usually for a list of subjects
-        subi_rand_pre, _, _ = graphs_regressionCV.compute_graphs_metrics(graphs['randCon_pre'][sub], permNames, atlas_labels, out_type='dict')
+        subi_rand_pre, _, _ = graphsCV.compute_graphs_metrics(graphs['randCon_pre'][sub], permNames, atlas_labels, out_type='dict')
         #rand_pre_graphs[sub] = subi_rand_pre  # But here the list is for one sub (list of rand mat)
-        subi_rand_post,_,_ = graphs_regressionCV.compute_graphs_metrics(graphs['randCon_post'][sub], permNames, atlas_labels, out_type='dict')
+        subi_rand_post,_,_ = graphsCV.compute_graphs_metrics(graphs['randCon_post'][sub], permNames, atlas_labels, out_type='dict')
         #rand_post_graphs[sub] = subi_rand_post
         # Graph to dataframe/n_permut
-        rand_pre_dfs, ids = graphs_regressionCV.node_attributes2df(subi_rand_pre, node_metrics)
-        rand_post_dfs, ids = graphs_regressionCV.node_attributes2df(subi_rand_post, node_metrics)
+        rand_pre_dfs, ids = graphsCV.node_attributes2df(subi_rand_pre, node_metrics)
+        rand_post_dfs, ids = graphsCV.node_attributes2df(subi_rand_post, node_metrics)
 
         # Compute diff directly on each permuted graphs_dfs/sub
-        graphs['randCon_nodeChange_dfs'][sub] = graphs_regressionCV.node_metric_diff(rand_post_dfs,rand_pre_dfs, node_metrics)
+        graphs['randCon_nodeChange_dfs'][sub] = graphsCV.node_metric_diff(rand_post_dfs,rand_pre_dfs, permNames)
 
     print('---CHANGE P VALUES---')
-    graphs['change_nodes']
+    # Return a df (node x metrics) of pvalues for each subjects
+    graphs['pval_ls_nodes'] = graphsCV.bootstrap_pvals_df(graphs['change_nodes'], graphs['randCon_nodeChange_dfs'], subjects, mult_comp = 'fdr_bh')
+
+   
     
     return graphs 
 '''
