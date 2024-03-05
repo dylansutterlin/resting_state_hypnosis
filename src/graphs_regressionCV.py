@@ -117,6 +117,40 @@ def node_attributes2df(Gs_dict, node_metrics):
 
     return ls_df, keys_ls
 
+def edge_attributes2df(Gs_dict, edge_metric = 'weight', subjects = False):
+    ''' 
+    Takes dict of networkX graphs, extracts its specified edge values.
+    Returns a sub x pairs of nodes dataframe, with values being, e.g. weights
+    
+    Parameters
+    ----------
+    Gs_dict : dict
+        Keys are subjects, or e.g. permutations, and items() are networkX graphs
+    edge_metric : str.
+        Name to pass to G.edges().data('str'). Default = 'weight'
+        https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.edges.html
+    subjects list
+        list of sub to put as row names in output dfs. else, dict keys are used.
+    
+    return : pd.DataFrameS
+    '''
+    if subjects is False:
+        subjects = Gs_dict.keys()
+    assert len(subjects) == Gs_dict.keys(), 'Subjects names and Gs_dict items do not match'
+
+    tuple_ls = [G.edges().data(edge_metric) for G in Gs_dict.values()] # (node 1, node 2, value)
+    edges_dfs = [] # to append sub i x pairs of single row dfs
+    for i, sub in enumerate(subjects):
+        l_nodes = []
+        l_edges = []
+        for u, v, edge in tuple_ls[i]:
+            l_nodes.append(u+'-'+v) # pair of nodes
+            l_edges.append(edge) # edge value
+        edges_dfs.append(pd.DataFrame([np.array(l_edges)], columns = l_nodes, index = [sub]))    
+    
+    return pd.concat(edges_dfs, axis=0)
+
+
 def rand_conmat(ls_connectomes, subjects, n_permut = 1000, algo= 'hqs'):
     """
     Randomize connectomes for each subject and returns a dict of every subjects containing list of Perm connectomes

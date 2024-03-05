@@ -153,7 +153,7 @@ def con_matrix(
         seed_masker = NiftiSpheresMasker(
             sphere_coord,mask_img=voxel_masker.mask_img_, radius=15, standardize=False, verbose=5
         )
-        fcdict["seed_pre_series"] = [ # /!!!\ Adjust this section according to report tests made up
+        fcdict["seed_pre_series"] = [ 
             seed_masker.fit_transform(ts) for ts in pre_masked_img
         ]
         fcdict["seed_post_series"] = [
@@ -255,18 +255,21 @@ def con_matrix(
         plot_func.visu_correl(auto, tvalues, save_to_plot, vd_name = vd, vi_name = 'T test change in PO', title = 'Automaticity score vs mean ttest')
     print('---DONE with connectivity matrices and plots---')
 
+    data.atlas_labels = atlas_labels
+    data.save_to = save_to
 
-    return data, fcdict, atlas_labels
+    return data, fcdict
 
 
 
-def connectome_analyses(data, fcdict, atlas_labels, save_to =None, n_iter = 10 ):
+def connectome_analyses(data, fcdict, bootstrap = 10 ):
 
     subjects = data.subjects
+    atlas_labels = data.atlas_labels
+    save_to = data.save_to
     save_to_plots = os.path.join(save_to, 'plots')
     node_metrics = ['strength','strengthnorm', 'eigenCent', 'betCentrality', 'degCentrality', 'clustering', 'localEfficiency']
     graphs = dict()
-    cv_results = dict()
 
     print('---COMPUTING GRAPHS METRICS and CHANGE POST-PRE---')
     # Graphs metrics computation for pre and post layers : Return a dict of graphs. where keys=subjs and values=nxGraphs
@@ -280,13 +283,13 @@ def connectome_analyses(data, fcdict, atlas_labels, save_to =None, n_iter = 10 )
     graphs['pre_nodes_metrics'], keys_id = graphsCV.node_attributes2df(graphs['pre_graphs'], node_metrics)
     graphs['post_nodes_metrics'], keys_id = graphsCV.node_attributes2df(graphs['post_graphs'], node_metrics)
     # Compute change post-pre :returns list of dfs (Nodes x metrics df)
-    graphs['change_nodes'] = graphsCV.node_metric_diff(dfs_post_metrics, dfs_pre_metrics, keys_id)
+    graphs['change_nodes'] = graphsCV.node_metric_diff(graphs['post_nodes_metrics'], graphs['pre_nodes_metrics'], subjects)
 
     print('---RANDOMIZATION OF CONNECTOMES---')
-    permNames = [f"perm_{i}" for i in range(n_iter)]
+    permNames = [f"perm_{i}" for i in range(bootstrap)]
     # Randomize connectomes : returns dict of subs with permuted connectomes (lists)
-    graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_permut=n_iter, algo='hqs')
-    graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_permut=n_iter)
+    graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_permut=bootstrap, algo='hqs')
+    graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_permut=bootstrap)
     print('---checking rand matrices distribution---')
     all_pre = []                
     for sub in subjects:
@@ -315,16 +318,14 @@ def connectome_analyses(data, fcdict, atlas_labels, save_to =None, n_iter = 10 )
     print('---CHANGE P VALUES---')
     # Return a df (node x metrics) of pvalues for each subjects
     graphs['pval_ls_nodes'] = graphsCV.bootstrap_pvals_df(graphs['change_nodes'], graphs['randCon_nodeChange_dfs'], subjects, mult_comp = 'fdr_bh')
-
-   
     
     return graphs 
 
-def prediction_analyses(data, fcdict, save_to, verbose = False):
+
+def prediction_analyses(data, graphs, verbose = False):
     # Models to test
     # - Yi ~ Strenghts, Clustering, EigenCentrality, LocalEfficiency
     # Yi ~ PO multivariate node metrics
-
     # Prediction of behavioral variables from connectomes
     Y = data.phenotype
     target_col = [
@@ -339,7 +340,7 @@ def prediction_analyses(data, fcdict, save_to, verbose = False):
     cv_results = dict(pre= dict(), post=dict(), change=dict())
     cv_results['phenotype'] = Y
     single_ROI_reg = ['Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior',' Cingulate cortex posterior'] # PO, 
-    
+    save_to = data.save_to
 
     print(r'---CROSS-VAL REGRESSION [Yi ~ Node] METRICS---')
     n_permut = 5000
@@ -355,16 +356,13 @@ def prediction_analyses(data, fcdict, save_to, verbose = False):
         feat_mat = pd.DataFrame(np.array([sub_mat[node_metric] for sub_mat in graphs['post_nodes_metrics']]), columns = atlas_labels, index = subjects)
         cv_results['post'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col)
 
-    # Edge based prediction
-    for sub, graph in zip(data.subjects, fcdict['diff_weight_connectomes']):
-        tup_sub = [tup for tup in graph.edges.data('weight')]
-    
-        cv_results['change'][sub] = graphsCV.regression_cv(graph, Y, target_col)
+    # Edge based prediction for post and change
+    edge_feat_mat = graphsCV.edge_attributes2df(cv_results['post'], edge_metric = 'weight')
+    cv_results['post']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col)
 
-    r1_r2_w_tup = [tup for tup in edges().data('weight')]
-        edge_feat_mat = pd.DataFrame()
-    edges_changeW = fcdict["diff_weight_connectomes"]
-    
+    edge_feat_mat = graphsCV.edge_attributes2df(cv_results['change'], edge_metric = 'weight')
+    cv_results['change']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col)
+
     # ROI specific multivariate (multi-node metric) prediction
     for roi in single_ROI_reg: # compute N sub x M metrics df for prediction of Yi
         roi_feat_mat = pd.DataFrame(np.array([sub_mat.loc[roi,:] for sub_mat in graphs['change_nodes']]), columns = pred_node_metrics, index = subjects) 
@@ -376,6 +374,9 @@ def prediction_analyses(data, fcdict, save_to, verbose = False):
 
     print("Saved CV result as dict!")
 
+    return cv_results
+
+'''
     # --Prints and plot--
     if verbose:
         print([ts.shape for ts in fcdict["pre_series"]])
@@ -399,5 +400,4 @@ def prediction_analyses(data, fcdict, save_to, verbose = False):
 
         #plotting.plot_roi(atlas, title=atlas_name)
 
-    return fcdict, 
-
+'''
