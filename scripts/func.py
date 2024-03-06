@@ -62,7 +62,7 @@ def load_process_y(xlsx_path, subjects):
         row = filledY.loc[namei]
         Y.loc[namei] = row
 
-    return Y, columns_of_interest
+    return Y
 
 
 def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects = None):

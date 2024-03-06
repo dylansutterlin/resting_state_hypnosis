@@ -277,7 +277,7 @@ def dist_mean_edges(cond, matrix_list, save_to ):
         #plt.tight_layout()
     
 def visu_correl(vd, vi, save_to, vd_name, vi_name, title):
-    corr_coeff, p_value = pearsonr(vd, vi)
+    corr_coeff, p_value = stats.pearsonr(vd, vi)
     r_squared = np.corrcoef(np.array(vd), np.array(vi))[0, 1]**2
     # Scatter plot of vd score vs mean rCBF diff
     plt.scatter(vd, vi)

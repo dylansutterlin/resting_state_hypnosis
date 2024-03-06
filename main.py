@@ -2,7 +2,7 @@ from scripts import main_con as m
 import os
 
 def main():
-    
+
     r"""
     p = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
     conf_dir = (
@@ -63,7 +63,7 @@ m.con_matrix(
     pwd_main=pwd_main,
     conf_dir=conf_dir,
     save_base= os.path.join(pwd_main, 'debug'),
-    save_folder="difumo64_correlation",
+    save_folder="difumo64_correl_negw",
     atlas_name="difumo64",
     sphere_coord = [(54, -28, 26)],
     connectivity_measure="correlation",
