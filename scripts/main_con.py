@@ -346,7 +346,8 @@ def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = '
     cv_results['phenotype'] = Y
     single_ROI_reg = ['Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior',' Cingulate cortex posterior'] # PO, 
     save_to = data.save_to
-
+    atlas_labels = data.atlas_labels
+    
     print(r'---CROSS-VAL REGRESSION [Yi ~ Node] METRICS---')
     
     

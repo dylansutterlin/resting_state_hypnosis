@@ -11,7 +11,7 @@ p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
 conf_dir = False
 pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
 
-data, fcdict, atlas_labels, save_to = m.con_matrix(
+data, fcdict = m.con_matrix(
     p,
     pwd_main=pwd_main,
     conf_dir=conf_dir,
