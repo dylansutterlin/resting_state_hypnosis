@@ -2,14 +2,14 @@ from scripts import main_con as m
 import os
 
 
-#p = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
-#conf_dir = (
-#    r"/data/rainville/HYPNOSIS_ASL_ANALYSIS")
-#pwd_main = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_hypnosis"
+p = r"/data/rainville/HYPNOSIS_ASL_ANALYSIS/CBF_normalized"
+conf_dir = (
+    r"/data/rainville/HYPNOSIS_ASL_ANALYSIS")
+pwd_main = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_hypnosis"
 
-p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
-conf_dir = False
-pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
+#p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
+#conf_dir = False
+#pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
 
 data, fcdict = m.con_matrix(
     p,
