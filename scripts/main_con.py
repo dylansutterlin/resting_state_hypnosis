@@ -228,8 +228,8 @@ def con_matrix(
             pickle.dump(fcdict, f)
         with open(os.path.join(save_to, 'data.pkl'), 'wb') as f:
             pickle.dump(data, f)
-        with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
-            pickle.dump(atlas_labels, f)
+        #with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
+        #    pickle.dump(atlas_labels, f)
 
         # Convert connectivity matrices to txt files and save them
         # Used for comptabilities with Matlab BCT > NBS toolboxes
@@ -304,9 +304,9 @@ def connectome_analyses(data, fcdict, bootstrap = 10 ):
     # compute graphs, extracts df of nodes x metrics, and change of each subject (keys of dict)
     graphs['randCon_nodeChange_dfs'] = dict()         
     for sub in subjects: # In a loop, cause compute_graphs() is usually for a list of subjects
-        subi_rand_pre, _, _ = graphsCV.compute_graphs_metrics(graphs['randCon_pre'][sub], permNames, atlas_labels, out_type='dict', verbose='Pre')
+        subi_rand_pre, _, _ = graphsCV.compute_graphs_metrics(graphs['randCon_pre'][sub], permNames, atlas_labels, out_type='dict', verbose=f'Pre-{sub}')
         #rand_pre_graphs[sub] = subi_rand_pre  # But here the list is for one sub (list of rand mat)
-        subi_rand_post,_,_ = graphsCV.compute_graphs_metrics(graphs['randCon_post'][sub], permNames, atlas_labels, out_type='dict', verbose='Post')
+        subi_rand_post,_,_ = graphsCV.compute_graphs_metrics(graphs['randCon_post'][sub], permNames, atlas_labels, out_type='dict', verbose=f'Post-{sub}')
         #rand_post_graphs[sub] = subi_rand_post
         # Graph to dataframe/n_permut
         rand_pre_dfs, ids = graphsCV.node_attributes2df(subi_rand_pre, node_metrics)
@@ -319,10 +319,15 @@ def connectome_analyses(data, fcdict, bootstrap = 10 ):
     # Return a df (node x metrics) of pvalues for each subjects
     graphs['pval_ls_nodes'] = graphsCV.bootstrap_pvals_df(graphs['change_nodes'], graphs['randCon_nodeChange_dfs'], subjects, mult_comp = 'fdr_bh')
     
+    if os.path.exists(save_to) is False:
+            os.mkdir(save_to)
+    with open(os.path.join(save_to, 'graphs_dict.pkl'), 'wb') as f:
+            pickle.dump(graphs, f)
+
     return graphs 
 
 
-def prediction_analyses(data, graphs, verbose = False):
+def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = '90%', verbose = False):
     # Models to test
     # - Yi ~ Strenghts, Clustering, EigenCentrality, LocalEfficiency
     # Yi ~ PO multivariate node metrics
@@ -343,25 +348,24 @@ def prediction_analyses(data, graphs, verbose = False):
     save_to = data.save_to
 
     print(r'---CROSS-VAL REGRESSION [Yi ~ Node] METRICS---')
-    n_permut = 5000
-    test_size = 0.2
-    pca = '90%'
+    
+    
     # 1) Extracts metric column for each node (1 x Nodes) and stack them/sub --> (N sub x Nodes) ~ Yi
     # 2) Compute CV regression for Yi variable
     for node_metric in pred_node_metrics:
         feat_mat = pd.DataFrame(np.array([sub_mat[node_metric] for sub_mat in graphs['change_nodes']]), columns = atlas_labels, index = subjects)
-        cv_results['change'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col) 
+        cv_results['change'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca) 
 
     for node_metric in pred_node_metrics:
         feat_mat = pd.DataFrame(np.array([sub_mat[node_metric] for sub_mat in graphs['post_nodes_metrics']]), columns = atlas_labels, index = subjects)
-        cv_results['post'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col)
+        cv_results['post'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
 
     # Edge based prediction for post and change
     edge_feat_mat = graphsCV.edge_attributes2df(cv_results['post'], edge_metric = 'weight')
-    cv_results['post']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col)
+    cv_results['post']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
 
     edge_feat_mat = graphsCV.edge_attributes2df(cv_results['change'], edge_metric = 'weight')
-    cv_results['change']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col)
+    cv_results['change']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
 
     # ROI specific multivariate (multi-node metric) prediction
     for roi in single_ROI_reg: # compute N sub x M metrics df for prediction of Yi

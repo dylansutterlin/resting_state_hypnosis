@@ -26,9 +26,9 @@ data, fcdict, atlas_labels, save_to = m.con_matrix(
     remove_subjects = ['APM_07_H1', 'APM_11_H1', 'APM_22_H2'] # based on rainville et al., 2019 and .xlsx file
     )
 
-graphs = m.connectome_analyses(data, fcdict, n_iter = 10)
+graphs = m.connectome_analyses(data, fcdict, n_iter = 100)
 
-cv_results = m.prediction_analyses(data, graphs, save_to, verbose = False)
+cv_results = m.prediction_analyses(data, graphs, save_to, n_permut = 100, verbose = False)
 
 '''
 import matplotlib.pyplot as plt
