@@ -216,9 +216,12 @@ def con_matrix(
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
             os.mkdir(os.path.join(save_base, save_folder))
         save_to = os.path.join(save_base, save_folder)  
-        save_to_plot = os.path.join(save_base, save_folder, 'plots')
         print(f'---SAVING RESULTS to {save_to}---')
 
+        save_to_plot = os.path.join(save_base, save_folder, 'plots')
+        if os.path.exists(save_to_plot) is False:
+            os.mkdir(save_to_plot)
+        
         if os.path.exists(os.path.join(save_to, 'reports')) is False:
             os.mkdir(os.path.join(save_to, 'reports'))
         voxel_masker.generate_report().save_as_html(os.path.join(save_to, 'reports', 'voxelMasker_report.html'))
