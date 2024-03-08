@@ -4,7 +4,7 @@ import os
 import glob as glob
 import pickle
 import pandas as pd
-#import bct.algorithms as bct 
+import bct.algorithms as bct 
 from sklearn.model_selection import permutation_test_score
 from scipy.stats import pearsonr
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
@@ -14,10 +14,11 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Ridge, Lasso, LinearRegression
 from sklearn.linear_model import RidgeCV
-from statsmodels.stats.multitest import fdrcorrection
+#from statsmodels.stats.multitest import fdrcorrection
+from statsmodels.stats.multitest import multipletests
 
 
-def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # random_graphs =True, n_permut = 50):
+def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict', verbose = False): # random_graphs =True, n_permut = 50):
     """
     Compute graph metrics for each subject's graph
     and return a dict of networkX graphs, or a list of graphs if out_type = 'list'
@@ -55,7 +56,6 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # ra
         # strenght = degree but for weighted graphs, remove weight attribute for binary graphs
         strengths = {node: val for (node, val) in nx.degree(graph, weight="weight")}  # nx.degree return tuple; store as dict{node: val}
         nx.set_node_attributes(graph, strengths, "strength")
-        breakpoint()
         norm_strengths = {
             node: val * 1 / (len(graph.nodes) - 1) for (node, val) in nx.degree(graph, weight="weight")
         } # normalization for easier interpretation
@@ -65,6 +65,7 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # ra
         #nx.set_edge_attributes(graph, G_distance_dict, "d")
         nx.set_node_attributes(graph, norm_strengths, "strengthnorm")
         nx.set_edge_attributes(graph, G_distance_dict, "distance")
+        #nx.set_node_attributes(graph, nx.degree(graph, weight="weight"), 'degree')
         nx.set_node_attributes(graph, nx.eigenvector_centrality(graph, weight = 'weight'), 'eigenCent')
         nx.set_node_attributes(graph, nx.betweenness_centrality(graph, weight="distance"), "betCentrality")
         nx.set_node_attributes(graph, nx.closeness_centrality(graph, distance="distance"), "closecent")
@@ -76,22 +77,79 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict'): # ra
 
         Gs[subject] = graph #update graph to list of graphs
         ls_Gs.append(graph) 
-        # Save metrics in a dict for easier access  
-          
-        #metric_dict["strengthnorm"].append(list(dict(norm_strengths).values()))
-        #metric_dict["degreeCent"] = list(degree.values()) # Save metric in a dict
-        #metric_dict["betweennessCent"].append(list(betweenness.values()))
-        #metric_dict["closenessCent"].append(list(closeness.values()))
-        #metric_dict["clustering"].append(list(clust.values()))
-        #metric_dict["communities"].append(list(communities.values()))
-        #metric_dict["strengths"].append(list(strengths.values()))
-        #metric_dict["norm_strengths"].append(list(norm_strengths.values()))
-
+    
         metric_list = ['weight', 'strength', 'strengthnorm', 'distance', 'eigenCent', 'betCentrality', 'closecent', 'degCentrality', 'clustering', 'community', 'localEfficiency']
+    
     if out_type == 'list' : # Use case for permutation, where keys (subnames) are not needed
         return ls_Gs, metric_list, metric_dict
     
+    if verbose != False:
+        print(r'[compute_graphs_metrics()] Done computing N = {} graphs and metrics for {} condition'.format(len(subjects), verbose))
+
     return Gs, metric_list, metric_dict
+
+def node_attributes2df(Gs_dict, node_metrics):
+    '''
+    Return a list of dataframes for each subject, each dataframe contains the node attributes for each node
+    
+    Parameters
+    ----------
+    Gs_dict : dict of subjects containing list of graphs
+    node_metrics : list of node attributes to be included in each dataframe
+    
+    return : list of dataframes, list of subjects/keys names
+    '''
+
+    ls_df = []
+    keys_ls = []
+    for sub, G in Gs_dict.items(): # sub is key, G is value (graph), otherwise a tuple
+        nan_array = np.full((len(G.nodes), len(node_metrics)), np.nan)
+        df = pd.DataFrame(nan_array, index=G.nodes, columns=node_metrics)
+
+        for node in G.nodes:
+            attributes = G.nodes[node] #dict for node i{'metric1' : int., 'm2':int.}
+
+            for metric in node_metrics: # for node i, fix columns with metric
+                df.loc[node, metric] = attributes[metric]
+
+        ls_df.append(df)
+        keys_ls.append(sub)
+
+    return ls_df, keys_ls
+
+def edge_attributes2df(Gs_dict, edge_metric = 'weight', subjects = False):
+    ''' 
+    Takes dict of networkX graphs, extracts its specified edge values.
+    Returns a sub x pairs of nodes dataframe, with values being, e.g. weights
+    
+    Parameters
+    ----------
+    Gs_dict : dict
+        Keys are subjects, or e.g. permutations, and items() are networkX graphs
+    edge_metric : str.
+        Name to pass to G.edges().data('str'). Default = 'weight'
+        https://networkx.org/documentation/stable/reference/classes/generated/networkx.Graph.edges.html
+    subjects list
+        list of sub to put as row names in output dfs. else, dict keys are used.
+    
+    return : pd.DataFrameS
+    '''
+    if subjects is False:
+        subjects = Gs_dict.keys()
+    assert len(subjects) == Gs_dict.keys(), 'Subjects names and Gs_dict items do not match'
+
+    tuple_ls = [G.edges().data(edge_metric) for G in Gs_dict.values()] # (node 1, node 2, value)
+    edges_dfs = [] # to append sub i x pairs of single row dfs
+    for i, sub in enumerate(subjects):
+        l_nodes = []
+        l_edges = []
+        for u, v, edge in tuple_ls[i]:
+            l_nodes.append(u+'-'+v) # pair of nodes
+            l_edges.append(edge) # edge value
+        edges_dfs.append(pd.DataFrame([np.array(l_edges)], columns = l_nodes, index = [sub]))    
+    
+    return pd.concat(edges_dfs, axis=0)
+
 
 def rand_conmat(ls_connectomes, subjects, n_permut = 1000, algo= 'hqs'):
     """
@@ -120,7 +178,7 @@ def rand_conmat(ls_connectomes, subjects, n_permut = 1000, algo= 'hqs'):
             var = np.mean(np.diag(mat))
             rand_conmat = hqs_algorithm(e, cov, var, N, seeds[j], return_correlation=True)
             perms.append(rand_conmat)
-        print(N, e, cov, var, rand_conmat.min(), rand_conmat.max())
+        #print(N, e, cov, var, rand_conmat.min(), rand_conmat.max())
         perm_matrices[sub] = perms
 
     return perm_matrices
@@ -206,28 +264,51 @@ def rand_graphs(dict_graphs, subjects, n_permut):
     return perm_graphs
 
 
-def metrics_diff_postpre(subjects, post_graphs, pre_graphs):
+def node_metric_diff(post_df, pre_df, subjects):
 
+    change_dfs = []
+    for i, sub in range(len(subjects)):
+        assert list(post_df[i].columns) == list(pre_df[i].columns)
+
+        temp_df = post_df[i].copy(deep=True)
+        temp_df = post_df[i] - pre_df[i]
+        change_dfs.append(temp_df)
+
+    return change_dfs
+
+def bootstrap_pvals_df(df_metric_ls, dict_dfs_permut, subjects, mult_comp = 'fdr_bh'):
+    '''
+    Compute cell-wise p_values of each cell (node x metric/i,j) compared to
+    i,jth disrtibution of permuted dataframes (node x metric x permuts)
+    '''
+    pval_dfs_ls = []
     for i, sub in enumerate(subjects):
+        df_metric = df_metric_ls[i]
+        rand_dist_3d = np.stack(dict_dfs_permut[sub], axis=2) # stack list of 2d rand dfs on 3d dim
+        assert df_metric.shape == rand_dist.shape[0:2]
+        #mean_val = np.mean(rand_dist, axis=2)
+        #td_val = np.std(rand_dist, axis=2)
 
+        p_df = np.zeros_like(df_metric, dtype=float)
+        for i in range(df_metric.shape[0]):
+            # Compute p-values for each cell compare to dist along 3d dim of permut
+            for j in range(df_metric.shape[1]):
+                cell_value = df_metric.iloc[i, j]
+                p_df[i, j] = np.mean(np.abs(rand_dist_3d[i, j, :]) >= np.abs(cell_value)) # Two-tailed test
+
+        p_values_df = pd.DataFrame(p_df, index=df_metric.index, columns=df_metric.columns)
         
+        if mult_comp == 'fdr_bh':
+            for column in p_values_df.columns:
+                p_values = p_values_df[column]
+                _, corrected_p_values, _, _ = multipletests(p_values, method='fdr_bh')
+                p_values_df[column] = corrected_p_values
+        pval_dfs_ls.append(p_values_df)
+
+    if mult_comp == 'fdr_bn':
+        print('FDR correction applied to change metric p-values')
         
-        for metric in list(post_dict.keys()):
-            post_dict[metric][sub] = post_dict[metric][sub] - pre_dict[metric][sub]
-
-
-def metrics_diff_postpre(post_dict, pre_dict, subjects, exclude_keys = []):
-
-    assert post_dict.keys() == pre_dict.keys()
-    change_dict = {}
-
-    for metric in list(post_dict.keys()):
-        if metric not in exclude_keys:
-            postpre_diff = post_dict[metric] - pre_dict[metric]
-            df = pd.DataFrame(postpre_diff, columns=post_dict["nodes"], index=subjects)
-            change_dict[metric] = df
-
-    return change_dict
+    return pval_dfs_ls
 
 
 def connectome2feature_matrices(ls_connectomes, subjects):
@@ -279,7 +360,7 @@ def compute_permutation(
     See also scikit-learn permutation_test_score documentation
     """
     if gr == None and cv == None:
-        cv = kf = KFold(n_splits=5, random_state=random_seed, shuffle=True)
+        cv = KFold(n_splits=5, random_state=random_seed, shuffle=True)
     # ShuffleSplit(n_splits = 5, test_size = 0.3, random_state = random_seed)
     elif gr != None and cv == None:
         cv = GroupShuffleSplit(n_splits=5, test_size=0.3, random_state=random_seed)
@@ -296,175 +377,168 @@ def compute_permutation(
 
     return score, perm_scores, pvalue
 
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
+from sklearn.linear_model import Ridge
+from scipy.stats import pearsonr
+import numpy as np
 
-def regression_cv(graph_dict, Y, target_columns, exclude_keys = [], rdm_seed=40):
+def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 5000, test_size = 0.2, pca='80%'):
+
     """
     Compute the regression with cross-validation for each graph metric
     and return a dict of results
-    X_ls : list of feature matrices
+    features_matrix : Feature matrix N subjects x M features
     Y : dataframe, index = subject names and columns = target columns
     target_columns : list of strings from the target columns
     metrics_names : list of strings from the graph metrics but written in a way that will figure in the plots outputs.
     """
 
-    # SVR model for each graph metric
-    from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-    from sklearn.model_selection import KFold, GridSearchCV
-    from sklearn.pipeline import Pipeline
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.svm import SVR
-    from sklearn.linear_model import Ridge
-    from scipy.stats import pearsonr
-    import numpy as np
 
     mean_metrics = []
     out_dict = dict()
-    random_seed = rdm_seed
-    # Output information : dict_keys(['nodes', 'degree', 'closenessCent', 'betweennessCent', 'clustering', 'communities'])
-    # ([X_con, X_degree, X_closeness, X_betweenness, X_clustering], ['Connectivity matrix', 'Degree', 'Closeness centrality', 'Betweenness centrality', 'Clustering'])
+    
+    prePipeline = Pipeline([("scaler", StandardScaler())])
+    feat_mat = prePipeline.fit_transform(features_matrix)
+    pipeline = Pipeline([("pca", PCA(n_components=pca)), ("reg", Ridge(alpha=1.0))])
+    # cv = KFold(n_splits=5, random_state=randrdm_seedom_seed, shuffle=True)
+    cv = ShuffleSplit(n_splits=10, test_size=test_size, random_state=rdm_seed)
 
-    for metrics_name in [m for m in list(graph_dict.keys()) if m not in exclude_keys]:
-        print("================ \n{}\n================".format(metrics_name))
-        # Prep dataframe with std scaler
-        rawfeatures_matrix = graph_dict[metrics_name]
-        prePipeline = Pipeline([("scaler", StandardScaler())])
-        features_matrix = prePipeline.fit_transform(rawfeatures_matrix)
-        pipeline = Pipeline([("pca", PCA(n_components=0.80)), ("reg", SVR(kernel='linear'))])
-        # cv = KFold(n_splits=5, random_state=random_seed, shuffle=True)
-        cv = ShuffleSplit(n_splits=10, test_size=0.20, random_state=random_seed)
+    for target_column in target_columns:
+        print(f"--- {target_column} ---")
+        y_preds = []
+        y_tests = []
+        y = Y[target_column].values
 
-        result_per_col = dict() # dict to store results for each dependent var.
-        for target_column in target_columns:
-            print(f"--- {target_column} ---")
-            y_preds = []
-            y_tests = []
-            y = Y[target_column].values
+        pearson_r_scores = []
+        pval_pearsonr_scores = []
+        r2_scores = []
+        mse_scores = []
+        rmse_scores = []
+        n_components = []
+        all_coefficients = []
 
-            pearson_r_scores = []
-            pval_pearsonr_scores = []
-            r2_scores = []
-            mse_scores = []
-            rmse_scores = []
-            n_components = []
-            all_coefficients = []
-
-            for train_index, test_index in cv.split(features_matrix):
-                # Split the data into train and test sets based on the current fold
-                X_train, X_test = (
-                    features_matrix[train_index],
-                    features_matrix[test_index],
-                )
-                y_train, y_test = y[train_index], y[test_index]
-                # Fit pipeline model with best hyperparameters
-                pipeline.fit(X_train, y_train)
-                y_pred = pipeline.predict(X_test)
-                y_preds.append(y_pred)
-                y_tests.append(y_test)
-
-                # Calculate evaluation metrics
-                pearson_r, pval_pearsonr = pearsonr(y_test, y_pred)
-                r2 = r2_score(y_test, y_pred)
-                mse = mean_squared_error(y_test, y_pred)
-                rmse = np.sqrt(mse)
-                cov_x = np.cov(
-                    pipeline.named_steps["pca"]
-                    .transform(X_test)
-                    .transpose()
-                    .astype(np.float64)
-                )
-                cov_y = np.cov(y_test.transpose().astype(np.float64))
-
-                # Append metrics to the respective lists
-                pearson_r_scores.append(pearson_r)
-                pval_pearsonr_scores.append(pval_pearsonr)
-                r2_scores.append(r2)
-                mse_scores.append(mse)
-                rmse_scores.append(rmse)
-                n_components.append(pipeline.named_steps["pca"].n_components_)
-                coefficients = pipeline.named_steps["reg"].coef_
-
-                # debug prints
-                # print('feature matrix shape', features_matrix.shape)
-                # print('X_test shape', X_test.shape)
-                # print('X_test pca transf shape', pipeline.named_steps["pca"].transform(X_test).shape)
-                # print('transposed pca tranf shape', pipeline.named_steps["pca"].transform(X_test).transpose().shape)
-                # print('cov_x type and shape', type(cov_x), cov_x.shape)
-                # print('cov y shape', cov_y.shape)
-                # print('coeff transposed shape', coefficients.transpose().shape)
-
-                # correction from Eqn 6 (Haufe et al., 2014)
-                corr_coeffs = np.matmul(cov_x, coefficients.transpose()) * (1 / cov_y)
-                all_coefficients.append(
-                    pipeline.named_steps["pca"].inverse_transform(
-                        corr_coeffs.transpose()
-                    )
-                )
-
-            # Permutation tests
-            r2score, _, r2p_value = compute_permutation(
-                features_matrix,
-                y,
-                pipeline,
-                n_permutations=5000,
-                cv=cv,
-                scoring="r2",
-                random_seed=random_seed
+        for train_index, test_index in cv.split(feat_mat):
+            # Split the data into train and test sets based on the current fold
+            X_train, X_test = (
+                feat_mat[train_index],
+                feat_mat[test_index],
             )
-            rmse_score, _, rmse_p_value = compute_permutation(
-                features_matrix,
-                y,
-                pipeline,
-                n_permutations= 5000,
-                cv=cv,
-                scoring="neg_root_mean_squared_error",
-                random_seed=random_seed
-            )
-            # Calculate mean metrics across all folds
-            mean_pearson_r = np.mean(pearson_r_scores)
-            mean_pval_pearsonr = np.mean(pval_pearsonr_scores)
-            mean_r2 = np.mean(r2_scores)
-            mean_mse = np.mean(mse_scores)
-            mean_rmse = np.mean(rmse_scores)
-            mean_n_components = np.mean(n_components)
+            y_train, y_test = y[train_index], y[test_index]
+            # Fit pipeline model with best hyperparameters
+            pipeline.fit(X_train, y_train)
+            y_pred = pipeline.predict(X_test)
+            y_preds.append(y_pred)
+            y_tests.append(y_test)
 
-            # print(f"Mean pca comp: p={r2p_value:.4f}")
-            print(
-                f"Permutation test for r2 and RMSE values: p={r2p_value:.4f} and {rmse_p_value:.4f} and Pearson R : {mean_pearson_r:.4f} ({mean_pval_pearsonr:.4f})"
+            # Calculate evaluation metrics
+            pearson_r, pval_pearsonr = pearsonr(y_test, y_pred)
+            r2 = r2_score(y_test, y_pred)
+            mse = mean_squared_error(y_test, y_pred)
+            rmse = np.sqrt(mse)
+            cov_x = np.cov(
+                pipeline.named_steps["pca"]
+                .transform(X_test)
+                .transpose()
+                .astype(np.float64)
+            )
+            cov_y = np.cov(y_test.transpose().astype(np.float64))
+
+            # Append metrics to the respective lists
+            pearson_r_scores.append(pearson_r)
+            pval_pearsonr_scores.append(pval_pearsonr)
+            r2_scores.append(r2)
+            mse_scores.append(mse)
+            rmse_scores.append(rmse)
+            n_components.append(pipeline.named_steps["pca"].n_components_)
+            coefficients = pipeline.named_steps["reg"].coef_
+
+            # debug prints
+            # print('feature matrix shape', features_matrix.shape)
+            # print('X_test shape', X_test.shape)
+            # print('X_test pca transf shape', pipeline.named_steps["pca"].transform(X_test).shape)
+            # print('transposed pca tranf shape', pipeline.named_steps["pca"].transform(X_test).transpose().shape)
+            # print('cov_x type and shape', type(cov_x), cov_x.shape)
+            # print('cov y shape', cov_y.shape)
+            # print('coeff transposed shape', coefficients.transpose().shape)
+
+            # correction from Eqn 6 (Haufe et al., 2014)
+            corr_coeffs = np.matmul(cov_x, coefficients.transpose()) * (1 / cov_y)
+            all_coefficients.append(
+                pipeline.named_steps["pca"].inverse_transform(
+                    corr_coeffs.transpose()
+                )
             )
 
-            # Calculate standard deviation metrics across all folds
-            # avg_z_score = np.mean(np.array(all_coefficients), axis=0) / np.std(all_coefficients, axis=0)
-            # print(f"Average z-score = {avg_z_score} std = {np.std(all_coefficients, axis=0)}")
-            # Plot
-            plot_title = f"{metrics_name} based CV-prediction of {target_column}"
-            # reg_plot_performance(
-            #    y_tests,
-            #    y_preds,
-            #    target_column,
-            #    mean_pearson_r,
-            #    mean_rmse,
-            #    mean_r2,
-            #    r2p_value,
-            #    rmse_p_value,
-            #    mean_n_components,
-            #    title=plot_title,
-            # )
+        # Permutation tests
+        r2score, _, r2p_value = compute_permutation(
+            features_matrix,
+            y,
+            pipeline,
+            n_permutations=n_permut,
+            cv=cv,
+            scoring="r2",
+            rdm_seed=rdm_seed
+        )
+        rmse_score, _, rmse_p_value = compute_permutation(
+            features_matrix,
+            y,
+            pipeline,
+            n_permutations= n_permut,
+            cv=cv,
+            scoring="neg_root_mean_squared_error",
+            rdm_seed=rdm_seed
+        )
+        # Calculate mean metrics across all folds
+        mean_pearson_r = np.mean(pearson_r_scores)
+        mean_pval_pearsonr = np.mean(pval_pearsonr_scores)
+        mean_r2 = np.mean(r2_scores)
+        mean_mse = np.mean(mse_scores)
+        mean_rmse = np.mean(rmse_scores)
+        mean_n_components = np.mean(n_components)
 
-            mean_metrics.append((mean_rmse, mean_mse, mean_r2, mean_pearson_r))
+        # print(f"Mean pca comp: p={r2p_value:.4f}")
+        print(
+            f"Permutation test for r2 and RMSE values: p={r2p_value:.4f} and {rmse_p_value:.4f} and Pearson R : {mean_pearson_r:.4f} ({mean_pval_pearsonr:.4f})"
+        )
 
-            result_per_col[target_column] = {
-                "plot_title": plot_title,
-                "CV_mse": mse_scores,
-                "CV_rmse": rmse_scores,
-                "CV_r2": r2_scores,
-                "CV_pearson_r": pearson_r_scores,
-                "pca_n_components": n_components,
-                "r2p_value": r2p_value,
-                "rmse_p_value": rmse_p_value,
-                "y_preds": y_preds,
-                "y_tests": y_tests,
-                "corr_coeffs": all_coefficients,
-            }
+        # Calculate standard deviation metrics across all folds
+        # avg_z_score = np.mean(np.array(all_coefficients), axis=0) / np.std(all_coefficients, axis=0)
+        # print(f"Average z-score = {avg_z_score} std = {np.std(all_coefficients, axis=0)}")
+        # Plot
+        plot_title = f"{metrics_name} based CV-prediction of {target_column}"
+        # reg_plot_performance(
+        #    y_tests,
+        #    y_preds,
+        #    target_column,
+        #    mean_pearson_r,
+        #    mean_rmse,
+        #    mean_r2,
+        #    r2p_value,
+        #    rmse_p_value,
+        #    mean_n_components,
+        #    title=plot_title,
+        # )
 
-        out_dict[metrics_name] = result_per_col
+        mean_metrics.append((mean_rmse, mean_mse, mean_r2, mean_pearson_r))
+
+        result_Yi[target_column] = {
+            "plot_title": plot_title,
+            "CV_mse": mse_scores,
+            "CV_rmse": rmse_scores,
+            "CV_r2": r2_scores,
+            "CV_pearson_r": pearson_r_scores,
+            "pca_n_components": n_components,
+            "r2p_value": r2p_value,
+            "rmse_p_value": rmse_p_value,
+            "y_preds": y_preds,
+            "y_tests": y_tests,
+            "corr_coeffs": all_coefficients,
+        }
+
+    out_dict[metrics_name] = result_Yi
+
     return out_dict

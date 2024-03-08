@@ -20,7 +20,6 @@ from nilearn import datasets, plotting, image
 from nilearn.image import concat_imgs
 from nilearn.regions import connected_label_regions
 from nilearn.signal import clean as signal_clean
-#breakpoint()
 #sys.path.append(os.path.split(os.getcwd())[0]) # add '../' to path, i.e. the main path
 from src import glm_func
 from src import graphs_regressionCV as graphsCV
@@ -107,7 +106,7 @@ def con_matrix(
             pwd_main, atlas_name, remove_ROI_maps = remove_ROI_maps, bilat=True
         ) # confounds is not used further
 
-        
+    
     print('---WHOLE BRAIN MASKING ON TIMESERIES---')
     #p_data = r'projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
     voxel_masker = NiftiMasker(
@@ -154,7 +153,7 @@ def con_matrix(
         seed_masker = NiftiSpheresMasker(
             sphere_coord,mask_img=voxel_masker.mask_img_, radius=15, standardize=False, verbose=5
         )
-        fcdict["seed_pre_series"] = [ # /!!!\ Adjust this section according to report tests made up
+        fcdict["seed_pre_series"] = [ 
             seed_masker.fit_transform(ts) for ts in pre_masked_img
         ]
         fcdict["seed_post_series"] = [
@@ -204,15 +203,20 @@ def con_matrix(
         post_connectomes,arctanh=False, absolute_weights= False, remove_negw=False, normalize=False
     )
     # weight substraction to compute change from pre to post
-    fcdict["diff_weight_connectomes"] = func.weight_substraction_postpre(
-        fcdict["post_connectomes"],
-        fcdict["pre_connectomes"],
-    )
+    if connectivity_measure == 'correlation':
+        arctanh = True # arctanh (r to z transform) is used prior to change post-pre on weights
+    tmp_proc_pre = func.proc_connectomes(
+        fcdict["pre_connectomes"],arctanh=arctanh)
+    tmp_proc_post = func.proc_connectomes(
+        fcdict["post_connectomes"],arctanh=arctanh)
+    fcdict["diff_weight_connectomes"] = func.weight_substraction_postpre(tmp_proc_post, tmp_proc_pre)
+
     # Saving
     if save_base != None:
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
             os.mkdir(os.path.join(save_base, save_folder))
-        save_to = os.path.join(save_base, save_folder)
+        save_to = os.path.join(save_base, save_folder)  
+        save_to_plot = os.path.join(save_base, save_folder, 'plots')
         print(f'---SAVING RESULTS to {save_to}---')
 
         if os.path.exists(os.path.join(save_to, 'reports')) is False:
@@ -224,8 +228,8 @@ def con_matrix(
             pickle.dump(fcdict, f)
         with open(os.path.join(save_to, 'data.pkl'), 'wb') as f:
             pickle.dump(data, f)
-        with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
-            pickle.dump(atlas_labels, f)
+        #with open(os.path.join(save_to, 'atlas_labels.pkl'), 'wb') as f:
+        #    pickle.dump(atlas_labels, f)
 
         # Convert connectivity matrices to txt files and save them
         # Used for comptabilities with Matlab BCT > NBS toolboxes
@@ -237,7 +241,7 @@ def con_matrix(
     # Plotting connectomes and weights distribution
     for cond, matrix_list in zip(fcdict['conditions'],[
             fcdict["pre_connectomes"],fcdict['post_connectomes'], fcdict["diff_weight_connectomes"]]): 
-        plot_func.dist_mean_edges(cond, matrix_list, save_to)
+        plot_func.dist_mean_edges(cond, matrix_list, save_to_plot)
         
     # Replication of Rainville et al., 2019 automaticity ~ rCBF in parietal Operculum(supramarg. gyrus in difumo64)
     Y = data.phenotype
@@ -245,134 +249,143 @@ def con_matrix(
     auto = list(np.array(Y[vd])) # list convert to np.object>float (somehow?)
     mean_rCBF_diff = np.array([np.mean(post-pre) for post, pre in zip(fcdict['seed_post_series'], fcdict['seed_pre_series'])])
 
-    plot_func.visu_correl(auto, mean_rCBF_diff, save_to, vd_name = vd, vi_name = 'rCBF change in PO', title = 'Automaticity score vs Mean rCBF diff')
+    plot_func.visu_correl(auto, mean_rCBF_diff, save_to_plot, vd_name = vd, vi_name = 'rCBF change in PO', title = 'Automaticity score vs Mean rCBF diff')
     # pair ttest on post-pre seed signal
     if sphere_coord != None:
-        plot_func.visu_correl(auto, tvalues, save_to, vd_name = vd, vi_name = 'T test change in PO', title = 'Automaticity score vs mean ttest')
+        plot_func.visu_correl(auto, tvalues, save_to_plot, vd_name = vd, vi_name = 'T test change in PO', title = 'Automaticity score vs mean ttest')
     print('---DONE with connectivity matrices and plots---')
 
+    data.atlas_labels = atlas_labels
+    data.save_to = save_to
 
-    return data, fcdict, atlas_labels
-
-
-
-def connectome_analyses(data, fcdict, atlas_labels, save_base=None, save_folder=None, n_iter = 10 ):
+    return data, fcdict
 
 
+
+def connectome_analyses(data, fcdict, bootstrap = 10 ):
+
+    subjects = data.subjects
+    atlas_labels = data.atlas_labels
+    save_to = data.save_to
+    save_to_plots = os.path.join(save_to, 'plots')
+    node_metrics = ['strength','strengthnorm', 'eigenCent', 'betCentrality', 'degCentrality', 'clustering', 'localEfficiency']
     graphs = dict()
+
+    print('---COMPUTING GRAPHS METRICS and CHANGE POST-PRE---')
     # Graphs metrics computation for pre and post layers : Return a dict of graphs. where keys=subjs and values=nxGraphs
     graphs['pre_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
-        fcdict["pre_connectomes"], data.subjects, atlas_labels, out_type='list'
+        fcdict["pre_connectomes"], data.subjects, atlas_labels, out_type='dict'
     )
     graphs['post_graphs'], metric_ls, _ = graphsCV.compute_graphs_metrics(
-        fcdict["post_connectomes"], data.subjects, atlas_labels, out_type='list'
+        fcdict["post_connectomes"], data.subjects, atlas_labels, out_type='dict'
     )
-    # Return a dict of matrices (Nodes x metrics) for each subject (keys)
-    #graphs["metric_change"] = graphsCV.metrics_diff_postpre(
-    #     data.subjects, graphs['post_graphs'], graphs['pre_graphs'], exclude_keys = ['nodes', 'communities']
-    #)
-    
-    permNames = [f"perm_{i}" for i in range(n_iter)]
-    # Randomize connectomes : returns dict of subs with permuted connectomes (lists)
-    graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_permut=n_iter, algo='hqs')
-    graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_permut=n_iter)
+    # Compute df with Nodes as rows, and metrics as columns. /subs
+    graphs['pre_nodes_metrics'], keys_id = graphsCV.node_attributes2df(graphs['pre_graphs'], node_metrics)
+    graphs['post_nodes_metrics'], keys_id = graphsCV.node_attributes2df(graphs['post_graphs'], node_metrics)
+    # Compute change post-pre :returns list of dfs (Nodes x metrics df)
+    graphs['change_nodes'] = graphsCV.node_metric_diff(graphs['post_nodes_metrics'], graphs['pre_nodes_metrics'], subjects)
 
+    print('---RANDOMIZATION OF CONNECTOMES---')
+    permNames = [f"perm_{i}" for i in range(bootstrap)]
+    # Randomize connectomes : returns dict of subs with permuted connectomes (lists)
+    graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_permut=bootstrap, algo='hqs')
+    graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_permut=bootstrap)
+    print('---checking rand matrices distribution---')
+    all_pre = []                
+    for sub in subjects:
+        all_pre += list(graphs['randCon_pre'][sub]) # list of all permuted connectomes to mean
+    plot_func.dist_mean_edges('All_rand_pre', all_pre, save_to_plots)
+    all_post = []
+    for sub in subjects:
+        all_post += list(graphs['randCon_post'][sub])
+    plot_func.dist_mean_edges('All_rand_post', all_post, save_to_plots )
+
+    print('---COMPUTING RANDOMIZED GRAPHS---')
+    # compute graphs, extracts df of nodes x metrics, and change of each subject (keys of dict)
+    graphs['randCon_nodeChange_dfs'] = dict()         
+    for sub in subjects: # In a loop, cause compute_graphs() is usually for a list of subjects
+        subi_rand_pre, _, _ = graphsCV.compute_graphs_metrics(graphs['randCon_pre'][sub], permNames, atlas_labels, out_type='dict', verbose=f'Pre-{sub}')
+        #rand_pre_graphs[sub] = subi_rand_pre  # But here the list is for one sub (list of rand mat)
+        subi_rand_post,_,_ = graphsCV.compute_graphs_metrics(graphs['randCon_post'][sub], permNames, atlas_labels, out_type='dict', verbose=f'Post-{sub}')
+        #rand_post_graphs[sub] = subi_rand_post
+        # Graph to dataframe/n_permut
+        rand_pre_dfs, ids = graphsCV.node_attributes2df(subi_rand_pre, node_metrics)
+        rand_post_dfs, ids = graphsCV.node_attributes2df(subi_rand_post, node_metrics)
+
+        # Compute diff directly on each permuted graphs_dfs/sub
+        graphs['randCon_nodeChange_dfs'][sub] = graphsCV.node_metric_diff(rand_post_dfs,rand_pre_dfs, permNames)
+
+    print('---CHANGE P VALUES---')
+    # Return a df (node x metrics) of pvalues for each subjects
+    graphs['pval_ls_nodes'] = graphsCV.bootstrap_pvals_df(graphs['change_nodes'], graphs['randCon_nodeChange_dfs'], subjects, mult_comp = 'fdr_bh')
+    
+    if os.path.exists(save_to) is False:
+            os.mkdir(save_to)
+    with open(os.path.join(save_to, 'graphs_dict.pkl'), 'wb') as f:
+            pickle.dump(graphs, f)
 
     return graphs 
-'''
-
-    # Compute graph from list of permuted connectomes (list) for very sub (keys)
-    tmp_randPre = dict()
-    tmp_randPost = dict()
-    for sub in data.subjects:
-        tmp_randPre[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_pre'], permNames, atlas_labels, out_type='list')
-        tmp_randPost[sub] = graphsCV.compute_graphs_metrics(graphs['randCon_post'], permNames, atlas_labels, out_type='list')
-    graphs['pre_hqs_graph'] = tmp_randPre
-    graphs['post_hqs_graph'] = tmp_randPost
-
-    # Randomize graphs : returns dict of subs with permuted graphs (lists) : Not implemented !
-    #graphs['randGraph_pre'] = graphsCV.rand_graphs(pre_graphs, data.subjects, n_iter=n_iter, graph=True)
-    #graphs['randGraph_post'] = graphsCV.rand_graphs(post_graphs, data.subjects, n_iter=n_iter, graph=True)
-
-    # Compute change post-pre for each connectome metric and permutation graphs
-    
-    change_hqs_graphs = dict()
-    # Extracts list of perm graphs for each sub
-    for i, sub in enumerate(data.subjects): # compute a list of 
-        change_hqs_graphs[sub] = graphsCV.metrics_diff_postpre(
-            graphs['post_hqs_graph'][i], graphs['pre_hqs_graph'][i], metrics = 'nodes')
-            
-
-    # Compute change post-pre for each connectome metric and permutation graphs
-    graphs['change_randCon'] = graphsCV.metrics_diff_postpre(subjects, graphs['randCon_pre'], graphs['randCon_post']) 
-       
-    
 
 
-    pre_X_weights = graphsCV.connectome2feature_matrices(
-        fcdict["pre_connectomes"], data.subjects
-    )
-    post_X_weights = graphsCV.connectome2feature_matrices(
-        fcdict["post_connectomes"], data.subjects
-    )
-    change_X_weights = post_X_weights - pre_X_weights
-    print("change X shape :", change_X_weights.shape)
-    Xmat_names = ["Degree", "Closeness", "Betweenness", "Clustering", "Edge_weights"]
-
+def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = '90%', verbose = False):
+    # Models to test
+    # - Yi ~ Strenghts, Clustering, EigenCentrality, LocalEfficiency
+    # Yi ~ PO multivariate node metrics
     # Prediction of behavioral variables from connectomes
-    xlsx_file = r"Hypnosis_variables_20190114_pr_jc.xlsx"
-    xlsx_path = os.path.join(pwd_main, "atlases", xlsx_file)
-    Y, target_columns = graphsCV.load_process_y(xlsx_path, data.subjects)
-    results_graph['Y'] = Y
+    Y = data.phenotype
+    target_col = [
+        "SHSS_score",
+        "total_chge_pain_hypAna",
+        "Chge_hypnotic_depth",
+        "Mental_relax_absChange",
+        "Abs_diff_automaticity",
+    ]
+    pred_node_metrics = ['strength','strengthnorm', 'eigenCent', 'localEfficiency']
+    #Xmat_names = ["Degree", "Closeness", "Betweenness", "Clustering", "Edge_weights"]
+    cv_results = dict(pre= dict(), post=dict(), change=dict())
+    cv_results['phenotype'] = Y
+    single_ROI_reg = ['Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior',' Cingulate cortex posterior'] # PO, 
+    save_to = data.save_to
 
-    # Save main fcdict and prep results_dir for regression results
-    with open(os.path.join(save_to, "dict_graphsMetrics.pkl"), "wb") as f:
-        pickle.dump(results_graph, f)
+    print(r'---CROSS-VAL REGRESSION [Yi ~ Node] METRICS---')
+    
+    
+    # 1) Extracts metric column for each node (1 x Nodes) and stack them/sub --> (N sub x Nodes) ~ Yi
+    # 2) Compute CV regression for Yi variable
+    for node_metric in pred_node_metrics:
+        feat_mat = pd.DataFrame(np.array([sub_mat[node_metric] for sub_mat in graphs['change_nodes']]), columns = atlas_labels, index = subjects)
+        cv_results['change'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca) 
 
-    # CV prediciton for each connectome condition
-    results_pred['behavioral'] = Y
+    for node_metric in pred_node_metrics:
+        feat_mat = pd.DataFrame(np.array([sub_mat[node_metric] for sub_mat in graphs['post_nodes_metrics']]), columns = atlas_labels, index = subjects)
+        cv_results['post'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
 
-    print("=====PRE-HYP CONNECTOMES====")
-    concat = copy.deepcopy(results_graph["pre_metrics"])
-    concat.update({'Edge_weights': pre_X_weights})
-    results_pred["pre"] = graphsCV.regression_cv( # Manually adding the weight connectomes to concat inside function, along other graph's metric dfs
-        concat,
-        Y,
-        target_columns,
-        exclude_keys = ['nodes', 'communities'],
-        rdm_seed=40,
-    )
-    print("=====POST-HYP CONNECTOMES====")
-    concat = copy.deepcopy(results_graph["post_metrics"])
-    concat.update({'Edge_weights': post_X_weights})
-    results_pred["post"] = graphsCV.regression_cv(
-        concat,
-        Y,
-        target_columns,
-        exclude_keys = ['nodes', 'communities'],
-        rdm_seed=40,
-    )
-    print("=====CHANGE-HYP CONNECTOMES====")
-    concat = copy.deepcopy(results_graph["change_feat"])
-    concat.update({'Edge_weights': change_X_weights}) # N x features matrix resulting from post - pre feature matrices
-    results_pred["change"] = graphsCV.regression_cv(
-        concat,
-        Y,
-        target_columns,
-        exclude_keys = ['nodes', 'communities'],
-        rdm_seed=40,
-    )
+    # Edge based prediction for post and change
+    edge_feat_mat = graphsCV.edge_attributes2df(cv_results['post'], edge_metric = 'weight')
+    cv_results['post']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
+
+    edge_feat_mat = graphsCV.edge_attributes2df(cv_results['change'], edge_metric = 'weight')
+    cv_results['change']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
+
+    # ROI specific multivariate (multi-node metric) prediction
+    for roi in single_ROI_reg: # compute N sub x M metrics df for prediction of Yi
+        roi_feat_mat = pd.DataFrame(np.array([sub_mat.loc[roi,:] for sub_mat in graphs['change_nodes']]), columns = pred_node_metrics, index = subjects) 
+        cv_results['change'][roi] = graphsCV.regression_cv(roi_feat_mat, Y, target_col)
+    
     # Save reg results
-    with open(os.path.join(save_to, "dict_regression.pkl"), "wb") as f:
-        pickle.dump(results_pred, f)
+    with open(os.path.join(save_to, "cv_results.pkl"), "wb") as f:
+        pickle.dump(cv_results, f)
 
-    print("Saved result dict!")
+    print("Saved CV result as dict!")
 
+    return cv_results
+
+'''
     # --Prints and plot--
     if verbose:
         print([ts.shape for ts in fcdict["pre_series"]])
         print([ts.shape for ts in fcdict["post_series"]])
-        print(atlas.shape)
+        #print(atlas.shape)
         print(np.unique(atlas.get_fdata(), return_counts=True))
         for correlation_matrix in [
             fcdict["pre_mean_connectome"],
@@ -389,8 +402,6 @@ def connectome_analyses(data, fcdict, atlas_labels, save_base=None, save_folder=
             )
             func.plot_bilat_nodes(correlation_matrix, atlas, atlas_name)
 
-        plotting.plot_roi(atlas, title=atlas_name)
-
-    return fcdict
+        #plotting.plot_roi(atlas, title=atlas_name)
 
 '''
