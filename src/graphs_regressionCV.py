@@ -4,7 +4,7 @@ import os
 import glob as glob
 import pickle
 import pandas as pd
-import bct.algorithms as bct 
+import bct.algorithms as bct
 from sklearn.model_selection import permutation_test_score
 from scipy.stats import pearsonr
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
@@ -136,7 +136,7 @@ def edge_attributes2df(Gs_dict, edge_metric = 'weight', subjects = False):
     '''
     if subjects is False:
         subjects = Gs_dict.keys()
-    assert len(subjects) == Gs_dict.keys(), 'Subjects names and Gs_dict items do not match'
+    #assert len(subjects) == Gs_dict.keys(), 'Subjects names and Gs_dict items do not match'
 
     tuple_ls = [G.edges().data(edge_metric) for G in Gs_dict.values()] # (node 1, node 2, value)
     edges_dfs = [] # to append sub i x pairs of single row dfs
@@ -224,32 +224,33 @@ def hqs_algorithm(e, cov, var, N, seed, return_correlation=False):
     else:
         return C
 
- 
-    resulting_covariance_matrix = hqs_algorithm(e, v, edash, N)
-    print("Covariance Matrix:")
-    print(resulting_covariance_matrix)
+   # Old code can remove if run success /11 march 24
 
-    resulting_correlation_matrix = hqs_algorithm(e, v, edash, N, return_correlation=True)
-    print("\nCorrelation Matrix:")
-    print(resulting_correlation_matrix)
+    #resulting_covariance_matrix = hqs_algorithm(e, v, edash, N)
+    #print("Covariance Matrix:")
+    #print(resulting_covariance_matrix)
+
+    #resulting_correlation_matrix = hqs_algorithm(e, v, edash, N, return_correlation=True)
+    #print("\nCorrelation Matrix:")
+    #print(resulting_correlation_matrix)#
 
 
     # ---Feature matrices based on subjects' graphs---#
-    subject_names = list(Gs.keys())
-    node_names = list(Gs[subject_names[0]].nodes())
+    #subject_names = list(Gs.keys())
+    #node_names = list(Gs[subject_names[0]].nodes())#
 
     # Reorganize data structure from lists of vectors to pd (N x nodes array) for each dict key
-    for metric in list(metric_dict.keys()):  # Excluding nodes and communities
-        tmp_data = metric_dict[metric]
-        if metric != 'communities' and metric != 'nodes':
-            metric_dict[metric] = pd.DataFrame(
-                np.array(tmp_data), columns=labels, index=subjects
-            )
-    breakpoint() # check data structure for each nodes ( clustering ?)
-    #maybe save as a df would be easier to compute 2samp t tests
-    breakpoint()#store the yeo7 id of ROI tocompute network metrics/subjects
-    
-    return metric_dict  # dict w/ keys = metrics and values = list of list vectors (one list per subject)
+    #for metric in list(metric_dict.keys()):  # Excluding nodes and communities
+    #    tmp_data = metric_dict[metric]
+    #    if metric != 'communities' and metric != 'nodes':
+    #        metric_dict[metric] = pd.DataFrame(
+    #            np.array(tmp_data), columns=labels, index=subjects
+    #        )
+    ##breakpoint() # check data structure for each nodes ( clustering ?)
+    ##maybe save as a df would be easier to compute 2samp t tests
+    ##breakpoint()#store the yeo7 id of ROI tocompute network metrics/subjects
+
+    #return metric_dict  # dict w/ keys = metrics and values = list of list vectors (one list per subject)
 
 def rand_graphs(dict_graphs, subjects, n_permut):
     '''
@@ -260,14 +261,14 @@ def rand_graphs(dict_graphs, subjects, n_permut):
     for i, sub in enumerate(subjects):
         perms = []
         seeds = np.random.randint(0, 1000000, n_permut)
-    
+
     return perm_graphs
 
 
 def node_metric_diff(post_df, pre_df, subjects):
 
     change_dfs = []
-    for i, sub in range(len(subjects)):
+    for i, sub in enumerate(subjects):
         assert list(post_df[i].columns) == list(pre_df[i].columns)
 
         temp_df = post_df[i].copy(deep=True)
@@ -285,7 +286,7 @@ def bootstrap_pvals_df(df_metric_ls, dict_dfs_permut, subjects, mult_comp = 'fdr
     for i, sub in enumerate(subjects):
         df_metric = df_metric_ls[i]
         rand_dist_3d = np.stack(dict_dfs_permut[sub], axis=2) # stack list of 2d rand dfs on 3d dim
-        assert df_metric.shape == rand_dist.shape[0:2]
+        assert df_metric.shape == rand_dist_3d.shape[0:2]
         #mean_val = np.mean(rand_dist, axis=2)
         #td_val = np.std(rand_dist, axis=2)
 
@@ -297,7 +298,7 @@ def bootstrap_pvals_df(df_metric_ls, dict_dfs_permut, subjects, mult_comp = 'fdr
                 p_df[i, j] = np.mean(np.abs(rand_dist_3d[i, j, :]) >= np.abs(cell_value)) # Two-tailed test
 
         p_values_df = pd.DataFrame(p_df, index=df_metric.index, columns=df_metric.columns)
-        
+
         if mult_comp == 'fdr_bh':
             for column in p_values_df.columns:
                 p_values = p_values_df[column]
@@ -307,7 +308,7 @@ def bootstrap_pvals_df(df_metric_ls, dict_dfs_permut, subjects, mult_comp = 'fdr
 
     if mult_comp == 'fdr_bn':
         print('FDR correction applied to change metric p-values')
-        
+
     return pval_dfs_ls
 
 
@@ -336,7 +337,7 @@ def compute_permutation(
     n_components=0.80,
     n_permutations=5000,
     scoring="r2",
-    random_seed=40
+    rdm_seed=40
 ):
     """
     Compute the permutation test for a specified metric (r2 by default)
@@ -372,7 +373,7 @@ def compute_permutation(
         scoring=scoring,
         cv=cv,
         n_permutations=n_permutations,
-        random_state=random_seed,
+        random_state=rdm_seed,
     )
 
     return score, perm_scores, pvalue
@@ -386,7 +387,7 @@ from sklearn.linear_model import Ridge
 from scipy.stats import pearsonr
 import numpy as np
 
-def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 5000, test_size = 0.2, pca='80%'):
+def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred', rdm_seed=40, n_permut = 5000, test_size = 0.2, pca='80%'):
 
     """
     Compute the regression with cross-validation for each graph metric
@@ -397,10 +398,10 @@ def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 50
     metrics_names : list of strings from the graph metrics but written in a way that will figure in the plots outputs.
     """
 
-
     mean_metrics = []
-    out_dict = dict()
-    
+    #out_dict = dict()
+    result_Yi = dict()
+
     prePipeline = Pipeline([("scaler", StandardScaler())])
     feat_mat = prePipeline.fit_transform(features_matrix)
     pipeline = Pipeline([("pca", PCA(n_components=pca)), ("reg", Ridge(alpha=1.0))])
@@ -408,7 +409,7 @@ def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 50
     cv = ShuffleSplit(n_splits=10, test_size=test_size, random_state=rdm_seed)
 
     for target_column in target_columns:
-        print(f"--- {target_column} ---")
+        print(f"[CV-regression] : __{target_column} ~ -{pred_metric_name}__")
         y_preds = []
         y_tests = []
         y = Y[target_column].values
@@ -420,6 +421,7 @@ def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 50
         rmse_scores = []
         n_components = []
         all_coefficients = []
+        all_corr_coefficients = []
 
         for train_index, test_index in cv.split(feat_mat):
             # Split the data into train and test sets based on the current fold
@@ -441,11 +443,11 @@ def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 50
             rmse = np.sqrt(mse)
             cov_x = np.cov(
                 pipeline.named_steps["pca"]
-                .transform(X_test)
+                .transform(X_train)
                 .transpose()
                 .astype(np.float64)
             )
-            cov_y = np.cov(y_test.transpose().astype(np.float64))
+            cov_y = np.cov(y_train.transpose().astype(np.float64))
 
             # Append metrics to the respective lists
             pearson_r_scores.append(pearson_r)
@@ -464,12 +466,16 @@ def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 50
             # print('cov_x type and shape', type(cov_x), cov_x.shape)
             # print('cov y shape', cov_y.shape)
             # print('coeff transposed shape', coefficients.transpose().shape)
-
             # correction from Eqn 6 (Haufe et al., 2014)
             corr_coeffs = np.matmul(cov_x, coefficients.transpose()) * (1 / cov_y)
-            all_coefficients.append(
+            all_corr_coefficients.append(
                 pipeline.named_steps["pca"].inverse_transform(
                     corr_coeffs.transpose()
+                )
+            )
+            all_coefficients.append(
+                pipeline.named_steps["pca"].inverse_transform(
+                    coefficients.transpose()
                 )
             )
 
@@ -509,7 +515,7 @@ def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 50
         # avg_z_score = np.mean(np.array(all_coefficients), axis=0) / np.std(all_coefficients, axis=0)
         # print(f"Average z-score = {avg_z_score} std = {np.std(all_coefficients, axis=0)}")
         # Plot
-        plot_title = f"{metrics_name} based CV-prediction of {target_column}"
+        plot_title = f"{pred_metric_name} based CV-prediction of {target_column}"
         # reg_plot_performance(
         #    y_tests,
         #    y_preds,
@@ -536,9 +542,10 @@ def regression_cv(features_matrix, Y, target_columns, rdm_seed=40, n_permut = 50
             "rmse_p_value": rmse_p_value,
             "y_preds": y_preds,
             "y_tests": y_tests,
-            "corr_coeffs": all_coefficients,
+            "coeffs" : all_coefficients,
+	    "corr_coeffs": all_corr_coefficients,
         }
 
-    out_dict[metrics_name] = result_Yi
+   # out_dict[metrics_name] = result_Yi
 
-    return out_dict
+    return result_Yi

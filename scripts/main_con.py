@@ -5,6 +5,7 @@ import os
 import copy
 import glob
 import numpy as np
+import pandas as pd
 import nibabel as nib
 from scipy.stats import pearsonr
 from nilearn.maskers import (
@@ -221,11 +222,14 @@ def con_matrix(
         save_to_plot = os.path.join(save_base, save_folder, 'plots')
         if os.path.exists(save_to_plot) is False:
             os.mkdir(save_to_plot)
-        
+
         if os.path.exists(os.path.join(save_to, 'reports')) is False:
             os.mkdir(os.path.join(save_to, 'reports'))
         voxel_masker.generate_report().save_as_html(os.path.join(save_to, 'reports', 'voxelMasker_report.html'))
         masker.generate_report(displayed_maps='all').save_as_html(os.path.join(save_to,'reports','mapsMasker_report.html'))
+
+        data.atlas_labels = atlas_labels
+        data.save_to = save_to
 
         with open(os.path.join(save_to, "dict_connectomes.pkl"), "wb") as f:
             pickle.dump(fcdict, f)
@@ -239,13 +243,13 @@ def con_matrix(
         if os.path.exists(os.path.join(save_to,'NBS_txtData')) is False:
             os.mkdir(os.path.join(save_to,'NBS_txtData'))
         func.export_txt_NBS(os.path.join(save_to,'NBS_txtData'), atlas, atlas_labels, fcdict['pre_connectomes'],fcdict["post_connectomes"], fcdict["diff_weight_connectomes"], data.subjects)
-    
+
     print('---PREPARING AND SAVING PLOTS---')
     # Plotting connectomes and weights distribution
     for cond, matrix_list in zip(fcdict['conditions'],[
             fcdict["pre_connectomes"],fcdict['post_connectomes'], fcdict["diff_weight_connectomes"]]): 
         plot_func.dist_mean_edges(cond, matrix_list, save_to_plot)
-        
+
     # Replication of Rainville et al., 2019 automaticity ~ rCBF in parietal Operculum(supramarg. gyrus in difumo64)
     Y = data.phenotype
     vd = 'Abs_diff_automaticity'
@@ -258,14 +262,11 @@ def con_matrix(
         plot_func.visu_correl(auto, tvalues, save_to_plot, vd_name = vd, vi_name = 'T test change in PO', title = 'Automaticity score vs mean ttest')
     print('---DONE with connectivity matrices and plots---')
 
-    data.atlas_labels = atlas_labels
-    data.save_to = save_to
-
     return data, fcdict
 
 
 
-def connectome_analyses(data, fcdict, bootstrap = 10 ):
+def connectome_analyses(data, fcdict, bootstrap = 1000 ):
 
     subjects = data.subjects
     atlas_labels = data.atlas_labels
@@ -330,7 +331,7 @@ def connectome_analyses(data, fcdict, bootstrap = 10 ):
     return graphs 
 
 
-def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = '90%', verbose = False):
+def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = 0.90, verbose = False):
     # Models to test
     # - Yi ~ Strenghts, Clustering, EigenCentrality, LocalEfficiency
     # Yi ~ PO multivariate node metrics
@@ -343,39 +344,39 @@ def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = '
         "Mental_relax_absChange",
         "Abs_diff_automaticity",
     ]
-    pred_node_metrics = ['strength','strengthnorm', 'eigenCent', 'localEfficiency']
+    pred_node_metrics = ['strength','strengthnorm', 'eigenCent'] #'localEfficiency']
     #Xmat_names = ["Degree", "Closeness", "Betweenness", "Clustering", "Edge_weights"]
     cv_results = dict(pre= dict(), post=dict(), change=dict())
     cv_results['phenotype'] = Y
     single_ROI_reg = ['Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior',' Cingulate cortex posterior'] # PO, 
+    subjects = data.subjects
     save_to = data.save_to
     atlas_labels = data.atlas_labels
-    
+
     print(r'---CROSS-VAL REGRESSION [Yi ~ Node] METRICS---')
-    
-    
+
     # 1) Extracts metric column for each node (1 x Nodes) and stack them/sub --> (N sub x Nodes) ~ Yi
     # 2) Compute CV regression for Yi variable
     for node_metric in pred_node_metrics:
         feat_mat = pd.DataFrame(np.array([sub_mat[node_metric] for sub_mat in graphs['change_nodes']]), columns = atlas_labels, index = subjects)
-        cv_results['change'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca) 
+        cv_results['change'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, pred_metric_name = node_metric, n_permut = n_permut, test_size = test_size, pca=pca) 
 
     for node_metric in pred_node_metrics:
         feat_mat = pd.DataFrame(np.array([sub_mat[node_metric] for sub_mat in graphs['post_nodes_metrics']]), columns = atlas_labels, index = subjects)
-        cv_results['post'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
+        cv_results['post'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, pred_metric_name = node_metric, n_permut = n_permut, test_size = test_size, pca=pca)
 
     # Edge based prediction for post and change
     edge_feat_mat = graphsCV.edge_attributes2df(cv_results['post'], edge_metric = 'weight')
-    cv_results['post']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
+    cv_results['post']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, pred_metric_name = 'weight', n_permut = n_permut, test_size = test_size, pca=pca)
 
     edge_feat_mat = graphsCV.edge_attributes2df(cv_results['change'], edge_metric = 'weight')
-    cv_results['change']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, n_permut = n_permut, test_size = test_size, pca=pca)
+    cv_results['change']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, pred_metric_name = 'weight', n_permut = n_permut, test_size = test_size, pca=pca)
 
     # ROI specific multivariate (multi-node metric) prediction
     for roi in single_ROI_reg: # compute N sub x M metrics df for prediction of Yi
         roi_feat_mat = pd.DataFrame(np.array([sub_mat.loc[roi,:] for sub_mat in graphs['change_nodes']]), columns = pred_node_metrics, index = subjects) 
-        cv_results['change'][roi] = graphsCV.regression_cv(roi_feat_mat, Y, target_col)
-    
+        cv_results['change'][roi] = graphsCV.regression_cv(roi_feat_mat, Y, target_col,  pred_metric_name = roi)
+
     # Save reg results
     with open(os.path.join(save_to, "cv_results.pkl"), "wb") as f:
         pickle.dump(cv_results, f)
