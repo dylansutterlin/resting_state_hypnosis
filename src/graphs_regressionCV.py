@@ -68,7 +68,7 @@ def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict', verbo
         #nx.set_node_attributes(graph, nx.degree(graph, weight="weight"), 'degree')
         nx.set_node_attributes(graph, nx.eigenvector_centrality(graph, weight = 'weight'), 'eigenCent')
         nx.set_node_attributes(graph, nx.betweenness_centrality(graph, weight="distance"), "betCentrality")
-        nx.set_node_attributes(graph, nx.closeness_centrality(graph, distance="distance"), "closecent")
+        nx.set_node_attributes(graph, nx.closeness_centrality(graph, distance="distance"), "closeCent")
         nx.set_node_attributes(graph, nx.degree_centrality(G), "degCentrality")
         nx.set_node_attributes(graph, nx.clustering(graph, weight="weight"), "clustering")
         nx.set_node_attributes(graph, nx.community.louvain_communities(graph), "community")

@@ -9,8 +9,10 @@ pwd_main = r"/data/rainville/dSutterlin/projects/resting_hypnosis/resting_state_
 
 #p = r'/home/dsutterlin/projects/test_data/ASL_RS_hypnosis/CBF_4D_normalized'
 #conf_dir = False
-pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
-'''
+
+
+#pwd_main = r"/home/dsutterlin/projects/resting_state_hypnosis/resting_state_hypnosis"
+
 data, fcdict = m.con_matrix(
     p,
     pwd_main=pwd_main,
@@ -20,21 +22,21 @@ data, fcdict = m.con_matrix(
     atlas_name="difumo64",
     sphere_coord = [(54, -28, 26)],
     connectivity_measure="correlation",
-    n_sub = 10,
+    n_sub = None,
     verbose=True,
     remove_ROI_maps = [8,14,43], # based on masker report, outside brain or no interest
     remove_subjects = ['APM_07_H1', 'APM_11_H1', 'APM_22_H2'] # based on rainville et al., 2019 and .xlsx file
     )
 
-graphs = m.connectome_analyses(data, fcdict, bootstrap = 10)
-'''
+graphs = m.connectome_analyses(data, fcdict, bootstrap = 400)
+
 with open(os.path.join(pwd_main,'debug', 'difumo64_correl_noProc', 'data.pkl'),'rb') as f:
     data = pickle.load(f)
 
 with open(os.path.join(pwd_main,'debug', 'difumo64_correl_noProc', 'graphs_dict.pkl'),'rb') as f:
     graphs = pickle.load(f)
 
-cv_results = m.prediction_analyses(data, graphs, n_permut = 10, verbose = False)
+cv_results = m.prediction_analyses(data, graphs, n_permut = 200, verbose = False)
 
 '''
 import matplotlib.pyplot as plt

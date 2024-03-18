@@ -272,7 +272,7 @@ def connectome_analyses(data, fcdict, bootstrap = 1000 ):
     atlas_labels = data.atlas_labels
     save_to = data.save_to
     save_to_plots = os.path.join(save_to, 'plots')
-    node_metrics = ['strength','strengthnorm', 'eigenCent', 'betCentrality', 'degCentrality', 'clustering', 'localEfficiency']
+    node_metrics = ['strength','strengthnorm', 'eigenCent','closeCent', 'betCentrality', 'degCentrality', 'clustering', 'localEfficiency']
     graphs = dict()
 
     print('---COMPUTING GRAPHS METRICS and CHANGE POST-PRE---')
@@ -344,17 +344,17 @@ def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = 0
         "Mental_relax_absChange",
         "Abs_diff_automaticity",
     ]
-    pred_node_metrics = ['strength','strengthnorm', 'eigenCent'] #'localEfficiency']
+    pred_node_metrics = ['strengthnorm', 'eigenCent'] # bet matmul error(??), 'betCentrality'] #'localEfficiency']
     #Xmat_names = ["Degree", "Closeness", "Betweenness", "Clustering", "Edge_weights"]
     cv_results = dict(pre= dict(), post=dict(), change=dict())
     cv_results['phenotype'] = Y
-    single_ROI_reg = ['Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior',' Cingulate cortex posterior'] # PO, 
+    single_ROI_reg = ['Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior','Cingulate cortex posterior'] # PO, 
     subjects = data.subjects
     save_to = data.save_to
     atlas_labels = data.atlas_labels
 
     print(r'---CROSS-VAL REGRESSION [Yi ~ Node] METRICS---')
-
+    '''
     # 1) Extracts metric column for each node (1 x Nodes) and stack them/sub --> (N sub x Nodes) ~ Yi
     # 2) Compute CV regression for Yi variable
     for node_metric in pred_node_metrics:
@@ -366,16 +366,18 @@ def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = 0
         cv_results['post'][node_metric] = graphsCV.regression_cv(feat_mat, Y, target_col, pred_metric_name = node_metric, n_permut = n_permut, test_size = test_size, pca=pca)
 
     # Edge based prediction for post and change
-    edge_feat_mat = graphsCV.edge_attributes2df(cv_results['post'], edge_metric = 'weight')
-    cv_results['post']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, pred_metric_name = 'weight', n_permut = n_permut, test_size = test_size, pca=pca)
+    post_edge_feat_mat = graphsCV.edge_attributes2df(graphs['post_graphs'], edge_metric = 'weight')
+    cv_results['post']['edge_weight'] = graphsCV.regression_cv(post_edge_feat_mat, Y, target_col, pred_metric_name = 'weight', n_permut = n_permut, test_size = test_size, pca=pca)
 
-    edge_feat_mat = graphsCV.edge_attributes2df(cv_results['change'], edge_metric = 'weight')
-    cv_results['change']['edge_weight'] = graphsCV.regression_cv(edge_feat_mat, Y, target_col, pred_metric_name = 'weight', n_permut = n_permut, test_size = test_size, pca=pca)
+    pre_edge_feat_mat = graphsCV.edge_attributes2df(graphs['pre_graphs'], edge_metric = 'weight')
+    change_edge_feat_mat = post_edge_feat_mat - pre_edge_feat_mat
+    cv_results['change']['edge_weight'] = graphsCV.regression_cv(change_edge_feat_mat, Y, target_col, pred_metric_name = 'weight', n_permut = n_permut, test_size = test_size, pca=pca)
+    '''
 
     # ROI specific multivariate (multi-node metric) prediction
     for roi in single_ROI_reg: # compute N sub x M metrics df for prediction of Yi
-        roi_feat_mat = pd.DataFrame(np.array([sub_mat.loc[roi,:] for sub_mat in graphs['change_nodes']]), columns = pred_node_metrics, index = subjects) 
-        cv_results['change'][roi] = graphsCV.regression_cv(roi_feat_mat, Y, target_col,  pred_metric_name = roi)
+        roi_feat_mat = pd.DataFrame(np.array([sub_mat.loc[roi,pred_node_metrics] for sub_mat in graphs['change_nodes']]), columns = pred_node_metrics, index = subjects) 
+        cv_results['change'][roi] = graphsCV.regression_cv(roi_feat_mat, Y, target_col,  pred_metric_name = roi, n_permut= n_permut, test_size=test_size, pca=None)
 
     # Save reg results
     with open(os.path.join(save_to, "cv_results.pkl"), "wb") as f:
