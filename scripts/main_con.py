@@ -85,8 +85,11 @@ def con_matrix(
 
     remove_subjects : list, optional
         List of subjects to remove from the data, by default False. Passed in func.load_data()
+
     Returns
     -------
+    data : Bunch struct
+        Contains functional data, subjects, Behavioral...
     fcdict : dict
         Dictionary containing all functionnal connectivity results, including timeseries, connectomes, connectome metrics, etc.
     """
@@ -212,7 +215,7 @@ def con_matrix(
         fcdict["post_connectomes"],arctanh=arctanh)
     fcdict["diff_weight_connectomes"] = func.weight_substraction_postpre(tmp_proc_post, tmp_proc_pre)
 
-    # Saving
+    # ----- saving -----
     if save_base != None:
         if os.path.exists(os.path.join(save_base, save_folder)) is False:
             os.mkdir(os.path.join(save_base, save_folder))

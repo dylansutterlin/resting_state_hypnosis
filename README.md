@@ -1,4 +1,77 @@
 
+# Pipeline organization
+
+#### /src/
+#### /scripts/
+#### /visu/
+#### /results/
+
+**main.py**
+   1. from scripts/main_con.py : calls `con_matrix()`
+      - **Returns** data that contains a all important variables used, plus the connectomes for each condition, and the difference post-pre node and edge-wise.
+           
+         E.g. pre_connectomes = [conMatrix-sub01, ..., conMatrixSubXX]
+
+      **Dict keys** : 
+      ```
+      ['subjects', 'conditions', 'pre_series', 'post_series', 'labels', 'atlas', 'seed_pre_series', 'seed_post_series', 'seed_to_pre_correlations', 'seed_pre_masker', 'seed_to_post_correlations', 'seed_post_masker', 'ttest_rel', 'connectivity_obj', 'pre_connectomes', 'post_connectomes', 'diff_weight_connectomes']
+      ```
+
+
+   2. calls `connectome_analyses()` 
+      - **returns** a dict `graphs` that contains dict for different metric/conditions
+
+      **Dict keys** :
+
+      ```
+       (['pre_graphs', 'post_graphs', 'pre_nodes_metrics', 'post_nodes_metrics', 'change_nodes', 'randCon_pre', 'randCon_post', 'randCon_nodeChange_dfs', 'pval_ls_nodes'])
+      ```
+
+      **pre_graphs** : One key for each subject
+      **randomized arrays (e.g. ranCon_post)** : One key/subject, `Dict[randCon_post][sub]` is a `list` of permtuted connectome or graph of lenght perm=N
+   
+   3. calls `prediction_analyses()`
+   - **Input** : `graphs` : graph[change_nodes] = list of Node x node Metric arrays of len(subs)
+   - Specific columns e.g. nodeStrenght will be extracted for each subj, then inversed and used as a N sub X M nodes feature matrix to predict Y. 
+
+   - **returns** an embeded dict that has four levels : 
+   
+      **regressionDict>Condition>Node metric>Yi variable> Performance mertrics**
+      
+      `Dict['change'].keys()` : Each node metric/ROI feature matrices
+      ```
+      dict_keys(['strengthnorm', 'eigenCent', 'edge_weight', 'Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior', 'Cingulate cortex posterior'])
+      ```
+      That is, dict per node metric or ROI nodes that contains :
+
+      `reg_dict['change']['strengthnorm'].keys()` Contain a dict for each dependant variable/model (Yi~node metrics)
+
+      ```
+      dict_keys(['SHSS_score', 'total_chge_pain_hypAna', 'Chge_hypnotic_depth', 'Mental_relax_absChange', 'Abs_diff_automaticity'])
+      ``` 
+      `reg_dict['change']['strengthnorm']['SHSS_score'].keys()` Contains performance metrics, and input to visualize cross-val info : 
+
+      ```
+      dict_keys(['plot_title', 'CV_mse', 'CV_rmse', 'CV_r2', 'CV_pearson_r', 'pca_n_components', 'r2p_value', 'rmse_p_value', 'y_preds', 'y_tests', 'coeffs', 'corr_coeffs'])
+      ```
+
+
+
+#### Load results
+##### files are saved from runing main.py. 
+
+   ```
+   def load_dict(p,folder, name):
+    with open(os.path.join(p,folder, name), 'rb') as f:
+        results = pickle.load(f)
+    return results
+
+   con_dict = load_dict(p, resultsFolder, 'dict_connectomes.pkl')
+   graph_dict = load_dict(p, resultsFolder, 'graphs_dict.pkl')
+   reg_dict = load_dict(p, resultsFolder, 'cv_results.pkl')
+   ```
+   
+# Project
 
 <div style="text-align: center;">
    <img src="images/cover_hypnosis.png" height="200px;" alt=""/>
@@ -11,8 +84,7 @@ Summary: "This project aims to better understand neural correlates of hypnosis, 
 tags: [ASL-fMRI, hypnosis, connectome, ML]
 
 
-
-# 1. Background
+## 1. Background
 Hypnosis is defined as an experiential state of focused attention and heightened response to suggestions. Hypnotic experience can be assessed in part with the automaticity associated with hypnotic experience, with hypnotic depth and with hypnotizalibility scores. Efficiency of hypnosis to modulate pain is well grounded in litterature (see Thompson et al., 2019 for a systematic review).
 
 For a informative discussion about neural correlates involved in hypnosis and clinical implications, by David Speigel, see [this link](https://www.youtube.com/watch?v=PctD-ki8dCc).
