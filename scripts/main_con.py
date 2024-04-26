@@ -294,7 +294,8 @@ def connectome_analyses(data, fcdict, bootstrap = 1000 ):
     # Randomize connectomes : returns dict of subs with permuted connectomes (lists)
     graphs['randCon_pre'] = graphsCV.rand_conmat(fcdict['pre_connectomes'], data.subjects, n_permut=bootstrap, algo='hqs')
     graphs['randCon_post'] = graphsCV.rand_conmat(fcdict['post_connectomes'], data.subjects, n_permut=bootstrap)
-    print('---checking rand matrices distribution---')
+
+    print('---checking rand matrices distribution : Saving plots---')
     all_pre = []                
     for sub in subjects:
         all_pre += list(graphs['randCon_pre'][sub]) # list of all permuted connectomes to mean
@@ -350,7 +351,7 @@ def prediction_analyses(data, graphs, n_permut = 5000, test_size = 0.20, pca = 0
     cv_results['phenotype'] = Y
     single_ROI_reg = ['Supramarginal gyrus', 'Anterior Cingulate Cortex', 'Cingulate gyrus mid-anterior','Cingulate cortex posterior'] # PO, 
     subjects = data.subjects
-    save_to = data.save_to
+    save_to = data.save_to              
     atlas_labels = data.atlas_labels
 
     print(r'---CROSS-VAL REGRESSION [Yi ~ Node] METRICS---')
