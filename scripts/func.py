@@ -255,32 +255,62 @@ def load_choose_atlas(main_cwd, atlas_name, remove_ROI_maps = False, mask_conf =
     return atlas, atlas_labels, atlas_type, mask_conf
 
 
-def make_mask_bilat(bilateral_mask):
-    mask_data = bilateral_mask.get_fdata()
-    affine = bilateral_mask.affine
 
-    # Get center X-coord
+def make_mask_bilat(sym_mask, labels=None):
+    """
+    Make the atlas symetrical (same index in both hemispheres) by splitting each region into left and right
+    and modifying both voxel labels and text labels accordingly.
+
+    Parameters:
+    - bilateral_mask: 3D Nifti image of the bilateral atlas.
+    - labels:  None, list
+        If not none, List of labels corresponding to the regions in the bilateral atlas.
+
+    Returns:
+     new_bilat_mask: Nifti image of the new bilateral atlas.
+     new_labels: List of updated labels for the bilateral atlas, prefixed with 'L_' and 'R_'.
+    """
+    
+    # Extract the mask data and affine
+    mask_data = sym_mask.get_fdata()
+
+    if mask_data.ndim == 4 and mask_data.shape[3] != 1:
+        raise ValueError(f"The 4th dimension of the atlas must be 1, but got {mask_data.shape[3]} n\
+                            the mask is propably probabilistic (dim > 1)")
+
+    affine = sym_mask.affine
+
+    # Get center X-coordinate (to split between left and right)
     x_dim = mask_data.shape[0]
     x_center = int(x_dim / 2)
 
-    # Get left mask
+    # Create a copy for the left mask (zero out the right hemisphere)
     mask_data_left = mask_data.copy()
-    mask_data_left[:x_center, :, :] = 0
-    # mask_left = nilearn.image.new_img_like(bilateral_mask, mask_data_left, affine=affine, copy_header=True)
-
-    # Get right mask
+    mask_data_left[x_center:, :, :] = 0
+    
     mask_data_right = mask_data.copy()
-    mask_data_right[x_center:, :, :] = 0
-    # mask_right = nilearn.image.new_img_like(bilateral_mask, mask_data_right, affine=affine, copy_header=True)
-
-    # Labels corrections
+    mask_data_right[:x_center, :, :] = 0
+    
+    # Combine left and right hemispheres into a single mask
     mask_data_right[mask_data_right > 0] += mask_data.max()
     new_bilat_mask_data = mask_data_left + mask_data_right
 
-    return new_img_like(
-        bilateral_mask, new_bilat_mask_data, affine=affine, copy_header=True
-    )
+    if labels is not None:
+       # Modify the labels to include 'L_' and 'R_'
+        new_labels = []
+        # Copy labels twice: once for right and once for left
+        new_labels.extend([f'R_{label}' for label in labels])  # Right hemisphere
+        new_labels.extend([f'L_{label}' for label in labels])  # Left hemisphere
+    
+        # Return the new bilateral mask and updated labels
+        return new_img_like(sym_mask, new_bilat_mask_data, affine=affine, copy_header=True), new_labels
 
+    else:
+        
+        return new_img_like(
+            sym_mask, new_bilat_mask_data, affine=affine, copy_header=True
+            )
+   
 
 def compute_cov_measures(correlation_measure, results):
     """

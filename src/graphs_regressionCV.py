@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+import sys
 import os
 import glob as glob
 import pickle
@@ -17,6 +18,8 @@ from sklearn.linear_model import RidgeCV
 #from statsmodels.stats.multitest import fdrcorrection
 from statsmodels.stats.multitest import multipletests
 
+sys.path.append(os.path.abspath('../scripts'))
+from scripts import plot_func
 
 def compute_graphs_metrics(connectomes, subjects, labels, out_type='dict', verbose = False): # random_graphs =True, n_permut = 50):
     """
@@ -283,6 +286,7 @@ def bootstrap_pvals_df(df_metric_ls, dict_dfs_permut, subjects, mult_comp = 'fdr
     i,jth disrtibution of permuted dataframes (node x metric x permuts)
     '''
     pval_dfs_ls = []
+    pvalfdr_dfs_ls = []
     for i, sub in enumerate(subjects):
         df_metric = df_metric_ls[i]
         rand_dist_3d = np.stack(dict_dfs_permut[sub], axis=2) # stack list of 2d rand dfs on 3d dim
@@ -298,17 +302,20 @@ def bootstrap_pvals_df(df_metric_ls, dict_dfs_permut, subjects, mult_comp = 'fdr
                 p_df[i, j] = np.mean(np.abs(rand_dist_3d[i, j, :]) >= np.abs(cell_value)) # Two-tailed test
 
         p_values_df = pd.DataFrame(p_df, index=df_metric.index, columns=df_metric.columns)
+        pval_dfs_ls.append(p_values_df)
 
         if mult_comp == 'fdr_bh':
             for column in p_values_df.columns:
                 p_values = p_values_df[column]
                 _, corrected_p_values, _, _ = multipletests(p_values, method='fdr_bh')
                 p_values_df[column] = corrected_p_values
-        pval_dfs_ls.append(p_values_df)
+        pvalfdr_dfs_ls.append(p_values_df)
 
     if mult_comp == 'fdr_bn':
         print('FDR correction applied to change metric p-values')
 
+        return pval_dfs_ls, pvalfdr_dfs_ls
+    
     return pval_dfs_ls
 
 
@@ -383,11 +390,12 @@ from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from sklearn.linear_model import Ridge
-from scipy.stats import pearsonr
+from sklearn.linear_model import Ridge, Lasso
+from scipy.stats import pearsonr, spearmanr
 import numpy as np
+import pandas as pd
 
-def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred', rdm_seed=40, n_permut = 5000, test_size = 0.2, pca='80%'):
+def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred', rdm_seed=40, n_permut = 5000, test_size = 0.2, pca='80%', doPlot = False):
 
     """
     Compute the regression with cross-validation for each graph metric
@@ -404,9 +412,9 @@ def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred
 
     prePipeline = Pipeline([("scaler", StandardScaler())])
     feat_mat = prePipeline.fit_transform(features_matrix)
-    pipeline = Pipeline([("pca", PCA(n_components=pca)), ("reg", Ridge(alpha=1.0))])
+    pipeline = Pipeline([("pca", PCA(n_components=pca)), ("reg", Lasso(alpha=1.0))])
     # cv = KFold(n_splits=5, random_state=randrdm_seedom_seed, shuffle=True)
-    cv = ShuffleSplit(n_splits=10, test_size=test_size, random_state=rdm_seed)
+    cv = ShuffleSplit(n_splits=5, test_size=test_size, random_state=rdm_seed)
 
     for target_column in target_columns:
         print(f"[CV-regression] : __{target_column} ~ -{pred_metric_name}__")
@@ -422,6 +430,8 @@ def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred
         n_components = []
         all_coefficients = []
         all_corr_coefficients = []
+        pca_ls = []
+        pca_coeffs = []
 
         for train_index, test_index in cv.split(feat_mat):
             # Split the data into train and test sets based on the current fold
@@ -437,6 +447,7 @@ def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred
             y_tests.append(y_test)
 
             # Calculate evaluation metrics
+            #print(y_test, y_pred)
             pearson_r, pval_pearsonr = pearsonr(y_test, y_pred)
             r2 = r2_score(y_test, y_pred)
             mse = mean_squared_error(y_test, y_pred)
@@ -456,7 +467,9 @@ def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred
             mse_scores.append(mse)
             rmse_scores.append(rmse)
             n_components.append(pipeline.named_steps["pca"].n_components_)
-            coefficients = pipeline.named_steps["reg"].coef_
+            coefficients = pipeline.named_steps["reg"].coef_ # used later to inverse transform and get features coeffs
+            pca_ls.append(pipeline.named_steps["pca"])
+            pca_coeffs.append(coefficients)
 
             # debug prints
             # print('feature matrix shape', features_matrix.shape)
@@ -508,7 +521,7 @@ def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred
 
         # print(f"Mean pca comp: p={r2p_value:.4f}")
         print(
-            f"Permutation test for r2 and RMSE values: p={r2p_value:.4f} and {rmse_p_value:.4f} and Pearson R : {mean_pearson_r:.4f} ({mean_pval_pearsonr:.4f})"
+            f"Permutation test scores (CV mean) : R2={mean_r2:.4f}, p={r2p_value:.4f} | RMSE={mean_rmse:.4f}, p={rmse_p_value:.4f} | Pearson r={mean_pearson_r:.4f}, p={mean_pval_pearsonr:.4f})"
         )
 
         # Calculate standard deviation metrics across all folds
@@ -516,18 +529,23 @@ def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred
         # print(f"Average z-score = {avg_z_score} std = {np.std(all_coefficients, axis=0)}")
         # Plot
         plot_title = f"{pred_metric_name} based CV-prediction of {target_column}"
-        # reg_plot_performance(
-        #    y_tests,
-        #    y_preds,
-        #    target_column,
-        #    mean_pearson_r,
-        #    mean_rmse,
-        #    mean_r2,
-        #    r2p_value,
-        #    rmse_p_value,
-        #    mean_n_components,
-        #    title=plot_title,
-        # )
+
+        
+
+        if doPlot :
+
+            plot_func.reg_plot_performance(
+                y_tests,
+                y_preds,
+                target_column,
+                mean_pearson_r,
+                mean_rmse,
+                mean_r2,
+                r2p_value,
+                rmse_p_value,
+                mean_n_components,
+                title=plot_title,
+            )
 
         mean_metrics.append((mean_rmse, mean_mse, mean_r2, mean_pearson_r))
 
@@ -538,10 +556,13 @@ def regression_cv(features_matrix, Y, target_columns, pred_metric_name = 'X_pred
             "CV_r2": r2_scores,
             "CV_pearson_r": pearson_r_scores,
             "pca_n_components": n_components,
-            "r2p_value": r2p_value,
-            "rmse_p_value": rmse_p_value,
+            "r2_pvals": r2p_value,
+            "rmse_pvals": rmse_p_value,
+            "pearson_pvals" : pval_pearsonr_scores,
             "y_preds": y_preds,
             "y_tests": y_tests,
+            "pca_objects" : pca_ls,
+            "pca_reg_coeffs" : pca_coeffs,
             "coeffs" : all_coefficients,
 	    "corr_coeffs": all_corr_coefficients,
         }
