@@ -191,7 +191,7 @@ def con_matrix(
     # -- Covariance Estimation--
     print(f'---CONNECTIVITY COMPUTATION with {connectivity_measure} estimation ---')
     connectivity_obj = ConnectivityMeasure(
-        kind=connectivity_measure, discard_diagonal=False,standardize = True
+        kind=connectivity_measure, discard_diagonal=False,standardize = False
     )
     # Connectomes computation : returns a list of connectomes
     pre_connectomes, post_connectomes = func.compute_cov_measures(
@@ -325,7 +325,7 @@ def connectome_analyses(data, fcdict, bootstrap = 1000 ):
 
     print('---CHANGE P VALUES---')
     # Return a df (node x metrics) of pvalues for each subjects
-    graphs['pval_ls_nodes'] = graphsCV.bootstrap_pvals_df(graphs['change_nodes'], graphs['randCon_nodeChange_dfs'], subjects, mult_comp = 'fdr_bh')
+    graphs['pval_ls_nodes'], graphs['pval_fdr_nodes'] = graphsCV.bootstrap_pvals_df(graphs['change_nodes'], graphs['randCon_nodeChange_dfs'], subjects, mult_comp = 'fdr_bh')
     
     if os.path.exists(save_to) is False:
             os.mkdir(save_to)
