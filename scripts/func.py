@@ -152,7 +152,7 @@ def load_data(path, main_cwd, conf_path = False, n_sub = None, remove_subjects =
 
 def load_choose_atlas(main_cwd, atlas_name, remove_ROI_maps = False, mask_conf = False, bilat=True):
     '''
-    Loads the chosen atlas into memory
+    Loads atlas as an object
     Parameters
     ----------
     main_cwd : str
@@ -191,6 +191,8 @@ def load_choose_atlas(main_cwd, atlas_name, remove_ROI_maps = False, mask_conf =
         atlas_file = datasets.fetch_atlas_yeo_2011()["thick_17"]
         # Missing ROIs correction
         atlas = nib.load(atlas_file)
+        labels_df = read_csv(os.path.join(main_cwd, 'atlases', '17NetworksOrderedNames.csv'))
+        atlas_labels = labels_df.iloc[:,1]
         atlas_type = "labels"
 
     elif atlas_name == "difumo64":
@@ -229,13 +231,16 @@ def load_choose_atlas(main_cwd, atlas_name, remove_ROI_maps = False, mask_conf =
                 "R Frontoparietal",
                 "R Default",
             ]
-    if atlas_name == "yeo_17":
+        elif atlas_name == "yeo_17":
+            atlas, atlas_labels = make_mask_bilat(atlas, atlas_labels)
+
+    #if atlas_name == "yeo_17":
         # -- Removing missing ROIs--
         filt_mask = np.array(atlas.dataobj)
         # filt_mask[filt_mask == 9.0] = 0
         # filt_mask[filt_mask == 26.0] = 0  # 9. is the label of this ROI we are removing
-        atlas = new_img_like(atlas, filt_mask)
-        atlas_labels = np.unique(atlas.get_fdata())  # remove 0
+        #atlas = new_img_like(atlas, filt_mask)
+        #atlas_labels = np.unique(atlas.get_fdata())  # remove 0
 
     if atlas_name == "BASC":
         atlas_file = datasets.fetch_atlas_basc_multiscale_2015(
@@ -253,7 +258,6 @@ def load_choose_atlas(main_cwd, atlas_name, remove_ROI_maps = False, mask_conf =
         atlas_labels = atlas_labels.drop(remove_ROI_maps) 
 
     return atlas, atlas_labels, atlas_type, mask_conf
-
 
 
 def make_mask_bilat(sym_mask, labels=None):
@@ -292,7 +296,7 @@ def make_mask_bilat(sym_mask, labels=None):
     mask_data_right[:x_center, :, :] = 0
     
     # Combine left and right hemispheres into a single mask
-    mask_data_right[mask_data_right > 0] += mask_data.max()
+    mask_data_right[mask_data_right > 0] += mask_data.max() +1 # +1 keeps 0 as background
     new_bilat_mask_data = mask_data_left + mask_data_right
 
     if labels is not None:
