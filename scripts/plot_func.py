@@ -295,3 +295,129 @@ def visu_correl(vd, vi, save_to, vd_name, vi_name, title):
     plt.annotate(text, xy=(0.05, 0.85), xycoords='axes fraction', fontsize=10, ha='left', va='top')
     plt.savefig(os.path.join(save_to, 'fig_autoXrCBF-correl.png'))
     plt.close()
+
+
+'''
+def reg_plot_performance(y_test, y_pred, y_name, mean_pearson_r, mean_rmse, mean_r2, mean_r2_pval,rmse_p_value, mean_comp, title='', path_output='', filename='regplot'):
+    """
+    Plot the regression plot associated with the model performance. One regression line will be plotted per fold.
+
+    Parameters
+    ----------
+    y_test: list
+        list containing the values of y in the test set for each fold
+    y_pred: list
+        list containing the values of the predicted y for each fold
+    y_name: string
+        name of the target variable (Y-axis label)
+    mean_pearson_r: float
+        mean Pearson's R value
+    mean_rmse: float
+        mean RMSE value
+    mean_r2: float
+        mean R^2 value
+    mean_r2_pval: float
+        mean p-value for R^2
+    rmse_p_value : float
+        mean p-value for RMSE
+    mean_comp: float
+        mean number of components
+    path_output: string
+        path for saving the output
+    filename: string
+        name of the output file
+
+    Code adapted from https://github.com/mpcoll/coll_painvalue_2021/tree/main/figures
+    """
+    import matplotlib.ticker as ticker
+
+    blue_palette_10 = sns.color_palette("Blues", 10)
+    fig1, ax1 = plt.subplots(figsize=(5, 5))
+    ax1.set_xlim([min([min(y) for y in y_test]), max([max(y) for y in y_test])])
+    ax1.set_ylim([min([min(y) for y in y_test]), max([max(y) for y in y_test])])
+    for idx, elem in enumerate(y_test):
+        df = pd.DataFrame(list(zip(elem, y_pred[idx])), columns=['Y_true', 'Y_pred'])
+        sns.regplot(data=df, x='Y_true', y='Y_pred',
+                    ci=None, scatter=False, color=blue_palette_10[idx],
+                    ax=ax1, line_kws={'linewidth': 1.4}, truncate=False)
+        ax1.xaxis.set_major_locator(ticker.AutoLocator())
+        ax1.yaxis.set_major_locator(ticker.AutoLocator())
+    plt.xlabel(y_name)
+    plt.ylabel('Cross-validated prediction')
+    for axis in ['top', 'bottom', 'left', 'right']:
+        ax1.spines[axis].set_linewidth(2.6)
+    ax1.tick_params(width=2.6, direction='out', length=10)
+    plt.title(title)
+
+    # Add metrics at the bottom
+    metrics_text = f"Mean Pearson's R: {mean_pearson_r:.4f}\nMean RMSE: {mean_rmse:.4f} (p={rmse_p_value:.4f})\nMean R^2: {mean_r2:.4f} (p={mean_r2_pval:.4f})\nMean PCA components: {mean_comp}"
+    plt.text(0.49, 0.05, metrics_text, ha='left', transform=ax1.transAxes, fontsize=  9)
+
+    plt.show()
+
+'''
+
+def reg_plot_performance(y_test, y_pred, y_name, mean_pearson_r, mean_rmse, mean_r2, pearson_pval, r2_pval, rmse_pval, mean_comp, title='', path_output='', filename='regplot', ax1=None):
+    """
+    Plot the regression plot associated with the model performance. One regression line will be plotted per fold.
+
+    Parameters
+    ----------
+    y_test: list
+        list containing the values of y in the test set for each fold
+    y_pred: list
+        list containing the values of the predicted y for each fold
+    y_name: string
+        name of the target variable (Y-axis label)
+    mean_pearson_r: float
+        mean Pearson's R value
+    mean_rmse: float
+        mean RMSE value
+    mean_r2: float
+        mean R^2 value
+    pearson_pval : float
+    r2_pval: float
+        mean p-value for R^2
+    rmse_p_value : float
+        mean p-value for RMSE
+    mean_comp: float
+        mean number of components
+    path_output: string
+        path for saving the output
+    filename: string
+        name of the output file
+
+    Code adapted from https://github.com/mpcoll/coll_painvalue_2021/tree/main/figures
+    """
+    import matplotlib.ticker as ticker
+
+    if ax1 is None:
+        fig1, ax1 = plt.subplots(figsize=(5, 5))
+    else:
+        fig1 = ax1.figure  # Reuse the existing figure
+        ax1.clear()
+        
+    blue_palette_10 = sns.color_palette("Blues", 5)
+
+    ax1.set_xlim([min([min(y) for y in y_test]), max([max(y) for y in y_test])])
+    ax1.set_ylim([min([min(y) for y in y_test]), max([max(y) for y in y_test])])
+    for idx, elem in enumerate(y_test):
+        df = pd.DataFrame(list(zip(elem, y_pred[idx])), columns=['Y_true', 'Y_pred'])
+        sns.regplot(data=df, x='Y_true', y='Y_pred',
+                    ci=None, scatter=False, color=blue_palette_10[idx],
+                    ax=ax1, line_kws={'linewidth': 1.4}, truncate=False)
+        ax1.xaxis.set_major_locator(ticker.AutoLocator())
+        ax1.yaxis.set_major_locator(ticker.AutoLocator())
+    plt.xlabel(y_name)
+    plt.ylabel('Cross-validated prediction')
+    for axis in ['top', 'bottom', 'left', 'right']:
+        ax1.spines[axis].set_linewidth(2.6)
+    ax1.tick_params(width=2.6, direction='out', length=10)
+    ax1.set_title(title)
+
+
+    # Add metrics at the bottom
+    metrics_text = f"Mean Pearson's r={mean_pearson_r:.4f}, p={pearson_pval:.4f} \nMean RMSE={mean_rmse:.4f}, p={rmse_pval:.4f}\nMean R^2={mean_r2:.4f}, p={r2_pval:.4f}\nMean PCA components: {mean_comp}"
+    ax1.text(0.49, 0.05, metrics_text, ha='left', transform=ax1.transAxes, fontsize=  9)
+
+    return fig1, ax1 #plt.show()
